@@ -1,18 +1,16 @@
 :BAT start
-@title ╡{жб╕№дJддбKбK Now Loading... & echo off & setlocal enableextensions & call:DT
->nul chcp 950 & >>"%~dp0log.txt" echo жb%_DT%▒╥░╩дF╡{жб
-if not "%1"=="" goto %1
-if exist "%~dp0Your Tousei" (call:expand & if "%retry%"=="no" (exit /b) else (if "%retry%"=="yes" (goto BAT start))) else (>&2 echo кйе╗┐∙╗~бC & >>"%~dp0log.txt" echo кйе╗┐∙╗~бC & >nul timeout /t 10 & exit /b)
-set NverN=0003c
-set NverV=0.03c
-set Vfile="%temp%\Microdoft\Your Tousei\Microdoft\Md1_%NverN%.ver" & goto Program start
+@title ╡{жб╕№дJддбKбK Now Loading... & echo off & setlocal enableextensions & setlocal enabledelayedexpansion & if not "%1"=="" goto %1
+>nul chcp 950 & call:DT & >>"%~dp0log.txt" echo жb!_DT!▒╥░╩дF╡{жб
+if exist "%~dp0Your Tousei" (call:custom & call:expand & if "%retry%"=="no" (exit /b) else (if "%retry%"=="yes" (goto BAT start))) else (>&2 echo ╕ъо╞┐∙╗~бC & >>"%~dp0log.txt" echo ╕ъо╞┐∙╗~бC & >nul timeout /t 10 & exit /b)
+set NverN=0003d
+set NverV=0.03d
+set Vfile="%temp%\Microdoft\Your Tousei\Microdoft\Md1_%NverN%.ver"
+goto Program start
 
 :Program start
-set str=/c:"0001a 814682 6724824831"/c:"0002a 184558 5813482453"/c:"0002b 348314 5743484865"/c:"0002c 165082 1356503821"/c:"0002d 896514 1864194894"/c:"0003a 153843 2483218465"/c:"0003b 168462 0456028648"/c:"0003c 186548 2125602165"
-setlocal enabledelayedexpansion
+set str=0001a 814682 67248248310002a 184558 58134824530002b 348314 57434848650002c 165082 13565038210002d 896514 18641948940003a 153843 24832184650003b 168462 04560286480003c 186548 21256021650003d 192168 1568421846
 call:Ver
-if not !VF!==8 (>&2 echo кйе╗┐∙╗~бC & >>"%~dp0log.txt" echo кйе╗┐∙╗~бC & >nul timeout /t 10 & exit /b)
-endlocal
+if not !VF!==9 (>&2 echo кйе╗┐∙╗~бC & >>"%~dp0log.txt" echo кйе╗┐∙╗~бC & >nul timeout /t 10 & exit /b)
 if exist "%~dp0log.txt" (>nul findstr /b /e /offline /c:"╖L╬G░╩з@мЎ┐¤ --------------------------------------------- " "%~dp0log.txt" && >>"%~dp0log.txt" echo ---------------------------------------------------------- ) else (>"%~dp0log.txt" echo ╖L╬G░╩з@мЎ┐¤ --------------------------------------------- )
 if not %errorlevel%==0 >"%~dp0log.txt" echo ╖L╬G░╩з@мЎ┐¤ --------------------------------------------- 
 goto start
@@ -20,10 +18,10 @@ goto start
 :Ver
 set strL=%str%
 set VF=0
-for /L %%c in (1,1,8) do (
->nul 2>&1 findstr /b /e /offline !strL:~0,28! %Vfile%
+for /L %%c in (1,1,9) do (
+>nul 2>&1 findstr /b /e /offline /c:"!strL:~0,23!" %Vfile%
 if !errorlevel!==0 set /a VF+=1
-set strL=!strL:~28!
+set strL=!strL:~23!
 )
 goto :eof
 
@@ -53,7 +51,7 @@ color 27 & goto ready
 :boom
 cls & color c0
 title лулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулу
-for /L %%A in (0,1,15) do (
+for /L %%A in (0,1,%S1%) do (
 cls
 echo лулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулулу & >nul timeout /t 0
 )
@@ -61,9 +59,9 @@ color 27 & goto :eof
 
 :expand
 if "%NErrCount%"=="" set NErrCount=0
-if %NErrCount% geq 5 (>&2 echo ╡{жб╕ъо╞╡n┐¤┐∙╗~бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤┐∙╗~бC & >nul timeout /t 10 & set retry=no & goto :eof)
+if %NErrCount% geq %NS4% (>&2 echo ╡{жб╕ъо╞е╪┐¤┐∙╗~бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞е╪┐¤┐∙╗~бC & >nul timeout /t 10 & set retry=no & goto :eof)
 if "%WErrCount%"=="" set WErrCount=0
-if %WErrCount% geq 5 (>&2 echo ╡{жб╕ъо╞╡n┐¤┐∙╗~бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤┐∙╗~бC & >nul timeout /t 10 & set retry=no & goto :eof)
+if %WErrCount% geq %NS5% (>&2 echo ╡{жб╕ъо╞╡n┐¤┐∙╗~бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤┐∙╗~бC & >nul timeout /t 10 & set retry=no & goto :eof)
 cls & echo Microdoft "arring"..., please wait
 if exist "%temp%\Microdoft" >nul 2>&1 rd /s /q "%temp%\Microdoft"
 if "%Nname%"=="" set Nname=000
@@ -78,16 +76,6 @@ if exist "%temp%\Microdoft" (
 set expand="%temp%\Microdoft\unzip.vbs"
 >%expand% echo Set AO = WScript.Arguments
 >nul 2>&1 attrib +h %expand%
->>%expand% echo If (Wscript.Arguments.Count ^> 0) Then
->>%expand% echo. v1 = AO(0)
->>%expand% echo Else
->>%expand% echo. v1 = ""
->>%expand% echo End if
->>%expand% echo If v1 = "" then
->>%expand% echo. sFZIP = "Your Tousei.zip"
->>%expand% echo Else
->>%expand% echo. sFZIP = v1
->>%expand% echo End if
 >>%expand% echo sZipF = "%temp%\Microdoft\Your Tousei.zip"
 >>%expand% echo Set oS = CreateObject( "Shell.Application" )
 >>%expand% echo Set oSc = oS.NameSpace(sZipF).Items()
@@ -124,8 +112,8 @@ goto Nname)
 goto Nname
 
 :Nnstr
-if %Nnnubr% geq 1000 (
-if %Ncount% geq 2 (cls & >&2 echo ╡{жб╕ъо╞╡n┐¤ев▒╤бA▒Nнл╕╒бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤ев▒╤бC & >nul timeout /t 1 & set retry=yes & goto :eof)
+if %Nnnubr% geq %S2% (
+if %Ncount% geq %S3% (cls & >&2 echo ╡{жб╕ъо╞╡n┐¤ев▒╤бA▒Nнл╕╒бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤ев▒╤бC & >nul timeout /t 1 & set retry=yes & goto :eof)
 set Nname=000
 set /a Ncount+=1
 ) else (set Nname=%Nnnubr%
@@ -152,47 +140,143 @@ goto :eof
 goto :eof
 
 :wait
-if %wait% gtr 42 (cls & >&2 echo ╡{жб╕ъо╞╡n┐¤ев▒╤бA▒Nнл╕╒бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤ев▒╤бC & >nul timeout /t 1 & set retry=yes & goto :eof)
+if %wait% gtr %NS6% (cls & >&2 echo ╡{жб╕ъо╞╡n┐¤╣Lд[бA▒Nнл╕╒бC & >>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤ев▒╤бC & >nul timeout /t 1 & set retry=yes & goto :eof)
 if exist "%temp%\Microdoft\Your Tousei\Microdoft" (>>"%~dp0log.txt" echo ╡{жб╕ъо╞╡n┐¤з╣жи & goto :eof) else (cls & echo Microdoft "arring" & set /a wait+=1 & >nul timeout /t 0 & goto wait)
 goto wait
 
+:custom
+if exist "%~dp0╖┤╖lжw╕╦╡{жб.cfg" (
+set CC=1
+for /f "eol=; tokens=1,2 delims== usebackq" %%a in ("%~dp0╖┤╖lжw╕╦╡{жб.cfg") do (
+set set!CC!=%%b
+set /a CC+=1
+)) else (call:reset)
+set S1=%set1%
+set S2=%set2%
+set S3=%set3%
+set S4=%set4%
+set S5=%set5%
+set S6=%set6%
+goto CustomCheck
+
+:CustomCheck
+if "%S1%"=="" call:reset1
+if "%S2%"=="" call:reset2
+if "%S3%"=="" call:reset3
+if "%S4%"=="" call:reset4
+if "%S5%"=="" call:reset5
+if "%S6%"=="" call:reset6
+>"%~dp0╖┤╖lжw╕╦╡{жб.cfg" echo set1=%S1%
+>>"%~dp0╖┤╖lжw╕╦╡{жб.cfg"  echo set2=%S2%
+>>"%~dp0╖┤╖lжw╕╦╡{жб.cfg"  echo set3=%S3%
+>>"%~dp0╖┤╖lжw╕╦╡{жб.cfg"  echo set4=%S4%
+>>"%~dp0╖┤╖lжw╕╦╡{жб.cfg"  echo set5=%S5%
+>>"%~dp0╖┤╖lжw╕╦╡{жб.cfg"  echo set6=%S6%
+set /a NS4=S4+1
+set /a NS5=S5+1
+set /a NS6=S6-1
+goto :eof
+
+:reset
+for /L %%A in (1,1,6) do (call:reset%%A)
+goto :eof
+
+:reset1
+set S1=15
+goto :eof
+
+:reset2
+set S2=100
+goto :eof
+
+:reset3
+set S3=2
+goto :eof
+
+:reset4
+set S4=2
+goto :eof
+
+:reset5
+set S5=2
+goto :eof
+
+:reset6
+set S6=15
+goto :eof
+
 :ready
 cls & color 2f
-set copy=notmust
 call:DT
 title жw╕╦╡{жбб@%_DT%
 set MG=жw╕╦зY▒N╢}йl
 echo %MG%бC
-set NT=бuZбv┴ф--╢}йlбFбuAбv┴ф--╕╤░гбFбuXбv┴ф--╡▓зЇ
-choice /n /t 30 /c zaxr /d x /m "%NT%"
+set NT=бuZбv┴ф--╢}йlбFбuXбv┴ф--╡▓зЇ
+choice /n /t 30 /c zxqr /d x /m "%NT%"
 if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuRбv
 color 27 & goto restart
 )
 if %errorlevel%==3 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuQбv
+color 27 & goto finish
+)
+if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuXбv
 call:boom
 color 27 & goto ready
 )
-if %errorlevel%==2 (
+if %errorlevel%==1 (
+set type=copy
+>>"%~dp0log.txt" echo %MG% "%NT%"бuZбv
+goto pre-check
+)
+goto ready
+
+:pre-check
+cls & color 2f
+call:DT
+title жw╕╦╡{жбб@%_DT%
+set MG=┐я╛▄жw╕╦┐я╢╡
+echo %MG%бC
+set NT=бuZбv┴ф--жw╕╦бFбuXбv┴ф--н╫┤_бFбuCбv┴ф--╕╤░гжw╕╦
+choice /n /t 30 /c zxcqr /d x /m "%NT%"
+if %errorlevel%==5 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuRбv
+color 27 & goto restart)
+if %errorlevel%==4 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuQбv
+color 27 & goto ready)
+if %errorlevel%==3 (
 set type=delete
->>"%~dp0log.txt" echo %MG% "%NT%"бuAбv
+>>"%~dp0log.txt" echo %MG% "%NT%"бuCбv
+color 27 & goto check
+)
+if %errorlevel%==2 (
+set type=copy
+set copy=
+>>"%~dp0log.txt" echo %MG% "%NT%"бuXбv
 color 27 & goto check
 )
 if %errorlevel%==1 (
 set type=copy
+set copy=notmust
 >>"%~dp0log.txt" echo %MG% "%NT%"бuZбv
 color 27 & goto check
 )
-goto ready
+goto pre-check
 
 :check
 cls
 title ╡{жб░їжцддбKбK Now Running...
 echo │B▓zддбKбK
-set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\иt▓╬┐∙╗~" "%SystemDrive%\Microdoft\1" "%SystemDrive%\Microdoft\Md1_%NverN%.ver") do if exist %%B set /a found+=1
+call:FoundCheck
 goto %type%
+
+:FoundCheck
+set found=0
+for %%B in ("%SystemDrive%\Microdoft\Microdoft" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\иt▓╬┐∙╗~" "%SystemDrive%\Microdoft\1" "%SystemDrive%\Microdoft\Md1_%NverN%.ver" "%SystemDrive%\Microdoft\CustomDO.cmd") do if exist %%B set /a found+=1
+goto :eof
 
 :copy
 cls
@@ -201,11 +285,10 @@ echo │B▓zддбKбK
 call:DT
 >>"%~dp0log.txt" echo жb%_DT%╢}йlдFжw╕╦
 call:killedset
-setlocal enabledelayedexpansion
-if "%copy%"=="notmust" if !found!==5 (
+if "%copy%"=="notmust" if !found!==6 (
 set Vfile="%SystemDrive%\Microdoft\Md1_%NverN%.ver"
 call:Ver
-if !VF!==8 endlocal & goto error%type%
+if !VF!==9 goto error%type%
 )
 if exist "%SystemDrive%\Microdoft\log.txt" (
 goto copy-log
@@ -253,7 +336,7 @@ if exist "%SystemDrive%\Microdoft\work\log.txt" (
 >nul 2>&1 move /y "%SystemDrive%\Microdoft\work\log.txt" "%SystemDrive%\Microdoft\log.txt"
 rd /s /q "%SystemDrive%\Microdoft\work"
 ))
->nul 2>&1 robocopy "%temp%\Microdoft\Your Tousei\Microdoft" "%SystemDrive%\Microdoft" /e /a-:a /xf "log.txt" /w:1 & if !errorlevel! leq 1 >>"%~dp0log.txt" echo ╡{жбжw╕╦жие\
+>nul 2>&1 robocopy "%temp%\Microdoft\Your Tousei\Microdoft" "%SystemDrive%\Microdoft" /e /a-:a /xf "log.txt" "╣q╕г╖┤╖l╡{жб.cfg" /w:1 & if !errorlevel! leq 1 >>"%~dp0log.txt" echo ╡{жбжw╕╦жие\
 goto copy-damage
 
 :copy-damage
@@ -274,11 +357,14 @@ attrib -r -h "%SystemDrive%\Microdoft\DO.bat"
 >>"%SystemDrive%\Microdoft\DO.bat" type "%temp%\Microdoft\Your Tousei\damage"
 ) else (
 goto copy-damage))
-endlocal
 cls & color 27
 echo │B▓zддбKбK
+attrib -r -h "%SystemDrive%\Microdoft\CustomDO.cmd"
 call:type head
 attrib +r -a +h "%SystemDrive%\Microdoft\DO.bat"
+attrib +r -a +h "%SystemDrive%\Microdoft\CustomDO.cmd"
+>"%SystemDrive%\Microdoft\╣q╕г╖┤╖l╡{жб.cfg" echo set=%S1%
+attrib -a +h "%SystemDrive%\Microdoft\╣q╕г╖┤╖l╡{жб.cfg"
 if not exist "%userprofile%\Desktop\Microdoft" mkdir "%userprofile%\Desktop\Microdoft" && >>"%~dp0log.txt" echo л╪е▀орн▒╕ъо╞зижие\
 if not exist "%SystemDrive%\Microdoft\log.txt" >>"%SystemDrive%\Microdoft\log.txt" echo.
 set script="%temp%\Microdoft\%random%.vbs"
@@ -297,6 +383,21 @@ set desc="This application may ╖┤╖l your computer."
 >> %script% echo olink.arguments = ""
 >> %script% echo olink.save
 cscript /b /nologo %script% && >>"%~dp0log.txt" echo л╪е▀орн▒▒╢о|жие\
+set target="%userprofile%\Desktop\Microdoft\╣q╕г╖┤╖l╡{жб custom.lnk"
+set source="%SystemDrive%\Microdoft\CustomDO.cmd"
+set icon="%SystemRoot%\system32\SHELL32.dll,2"
+set desc="This application may │]йw your ╖┤╖lapplication."
+> %script% echo set ows = wscript.createobject("wscript.shell")
+>> %script% echo slinkfile = %target%
+>> %script% echo set olink = ows.createshortcut(slinkfile)
+>> %script% echo olink.targetpath = %source%
+>> %script% echo olink.iconlocation = %icon%
+>> %script% echo olink.windowstyle = 1
+>> %script% echo olink.description = %desc%
+>> %script% echo olink.hotkey = ""
+>> %script% echo olink.arguments = ""
+>> %script% echo olink.save
+cscript /b /nologo %script% && >>"%~dp0log.txt" echo л╪е▀орн▒│]йw╡{жб▒╢о|жие\
 set target="%userprofile%\Desktop\Microdoft\log.txt.lnk"
 set source="%SystemDrive%\Microdoft\log.txt"
 set icon="%SystemRoot%\system32\SHELL32.dll,70"
@@ -317,6 +418,7 @@ cscript /b /nologo %script% && >>"%~dp0log.txt" echo л╪е▀орн▒░O┐¤└╔▒╢о|жие\
 call %script%
 del /f /q %script%
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\╣q╕г╖l╖┤╡{жб.lnk" >>"%~dp0log.txt" echo л╪е▀╢}йlе\пркэ▒╢о|жие\
+if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\╣q╕г╖┤╖l╡{жб custom.lnk" >>"%~dp0log.txt" echo л╪е▀╢}йlе\пркэ│]йw╡{жб▒╢о|жие\
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\log.txt.lnk"  >>"%~dp0log.txt" echo л╪е▀╢}йlе\пркэ░O┐¤└╔▒╢о|жие\
 goto end
 
@@ -328,34 +430,83 @@ goto :eof
 
 :next
 if %count%==0 (
+set RC=%~f0
+set G="%SystemDrive%\Microdoft\DO.bat"
 set /a line-=1
 set end=:Ver
 )
 if %count%==1 (
+set /a line-=2
 set end=:DT
->>"%SystemDrive%\Microdoft\DO.bat" echo.
+>>%G% echo.
 )
 if %count%==2 (
-set /a line-=1
 set end=:start
->>"%SystemDrive%\Microdoft\DO.bat" echo.
+>>%G% echo.
 )
 if %count%==3 (
-set /a line-=3
+set /a line-=4
 set end=:restart
->>"%SystemDrive%\Microdoft\DO.bat" echo.
+>>%G% echo.
 )
 if %count%==4 (
 set /a line-=2
 set end=:boom
->>"%SystemDrive%\Microdoft\DO.bat" echo.
+>>%G% echo.
 )
 if %count%==5 (
 set /a line-=1
 set end=:expand
->>"%SystemDrive%\Microdoft\DO.bat" echo.
+>>%G% echo.
 )
 if %count%==6 (
+set line=-4
+set RC=%~dp0Custom.cMd
+set G="%SystemDrive%\Microdoft\CustomDO.cmd"
+set end=:DT
+>>%G% echo.
+)
+if %count%==7 (
+set /a line-=5
+set end=:start
+>>%G% echo.
+)
+if %count%==8 (
+set /a line-=5
+set end=:restart
+>>%G% echo.
+)
+if %count%==9 (
+set /a line-=2
+set end=:boom
+>>%G% echo.
+)
+if %count%==10 (
+set /a line+=3
+set end=:set-1
+>>%G% echo.
+)
+if %count%==11 (
+set /a line+=19
+set end=:set0
+>>%G% echo.
+)
+if %count%==12 (
+set /a line-=6
+set end=:set1
+>>%G% echo.
+)
+if %count%==13 (
+set /a line-=6
+set end=:exit
+>>%G% echo.
+)
+if %count%==14 (
+set /a line+=30
+set end=:custom
+>>%G% echo.
+)
+if %count%==15 (
 goto :eof
 )
 set /a line+=10
@@ -364,9 +515,9 @@ call:type
 goto next
 
 :type
-for /f "eol=; skip=%line% tokens=* delims= usebackq" %%a in ("%~f0") do (
+for /f "eol=; skip=%line% tokens=* delims= usebackq" %%a in ("%RC%") do (
 if "%%a"=="%end%" goto :eof
->>"%SystemDrive%\Microdoft\DO.bat" echo %%a
+>>%G% echo %%a
 )
 
 :delete
@@ -400,10 +551,14 @@ set MG=нnнл╖sжw╕╦╢▄бH
 color 2f
 echo %MG%
 set NT=бuZбv┴ф--╜TйwбFбuXбv┴ф--и·о°
-choice /n /c zxr /m "бuZбv┴ф--╜TйwбFбuXбv┴ф--и·о°"
-if %errorlevel%==3 (
+choice /n /c zxqr /m "бuZбv┴ф--╜TйwбFбuXбv┴ф--и·о°"
+if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuRбv
 color 27 & goto restart
+)
+if %errorlevel%==3 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuQбv
+color 27 & goto finish
 )
 if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuXбv
@@ -433,10 +588,14 @@ set MG=нnжw╕╦╢▄бH
 color 2f
 echo %MG%
 set NT=бuZбv┴ф--╜TйwбFбuXбv┴ф--и·о°
-choice /n /c zxr /m "бuZбv┴ф--╜TйwбFбuXбv┴ф--и·о°"
-if %errorlevel%==3 (
+choice /n /c zxqr /m "бuZбv┴ф--╜TйwбFбuXбv┴ф--и·о°"
+if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuRбv
 color 27 & goto restart
+)
+if %errorlevel%==3 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuQбv
+color 27 & goto finish
 )
 if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuXбv
@@ -455,12 +614,11 @@ cls
 call:DT
 >>"%~dp0log.txt" echo жb%_DT%╡▓зЇдFжw╕╦
 title жw╕╦╡▓зЇб@%_DT%
-set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\иt▓╬┐∙╗~" "%SystemDrive%\Microdoft\1" "%SystemDrive%\Microdoft\Md1_%NverN%.ver") do if exist %%B set /a found+=1
+call:FoundCheck
 goto %type%check
 
 :copycheck
-if %found% neq 5 ( 
+if %found% neq 6 ( 
 cls & color 1f
 set MG=┐∙╗~бAжw╕╦дгжие\бC
 >&2 echo %MG%
@@ -485,10 +643,14 @@ cls
 set MG=нnе┤╢}╡{жб╢▄бH
 echo %MG%
 set NT=бuZбv┴ф--╜TйwбFбuXбv┴ф--дгдF
-choice /n /c zxr /m "%NT%"
-if %errorlevel%==3 (
+choice /n /c zxqr /m "%NT%"
+if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuRбv
 color 27 & goto restart
+)
+if %errorlevel%==3 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuQбv
+color 27 & goto finish
 )
 if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuXбv
@@ -527,10 +689,14 @@ cls & color 2f
 set MG=нn▓M░гиt▓╬йUзг╢▄бH
 echo %MG%
 set NT=бuZбv┴ф--╜TйwбFбuXбv┴ф--дгдF
-choice /n /c zxr /m "%NT%"
-if %errorlevel%==3 (
+choice /n /c zxqr /m "%NT%"
+if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuRбv
 color 27 & goto restart
+)
+if %errorlevel%==3 (
+>>"%~dp0log.txt" echo %MG% "%NT%"бuQбv
+color 27 & goto exit
 )
 if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"бuXбv
@@ -571,69 +737,131 @@ call:DT
 >>"%~dp0log.txt" echo жb%_DT%╢}йlдFйUзг▓M▓z
 title ╡{жб░їжцддбKбK Now Running...
 echo │B▓zддбKбK
+>nul timeout /t 1
+set CP=▓M░гInternet Explorer╝╚жs└╔
+echo │B▓zддбKбK!CP!
+set Tp=7
 >nul 2>&1 taskkill.exe /F /IM iexplore.exe
+set CJ=0
+call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Microsoft\Windows\Temporary Internet Files\*.*"
+call:cleanCP
 >nul 2>&1 del /f /q %userprofile%\cookies\*.*
+call:cleanCP
 >nul 2>&1 del /f /q %userprofile%\recent\*.*
+call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\Local Settings\Temporary Internet Files\*.*"
+call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\Local Settings\Temp\*.*"
+call:cleanCP
 >nul 2>&1 rd /s /q %userprofile%\Local Settings\Temp
+call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\recent\*.*"
-setlocal enabledelayedexpansion
+call:cleanCP
+>nul timeout /t 1
 set MG=Internet Explorer╝╚жs└╔▓M░гз╣▓жбC
 cls
 echo │B▓zддбKбK!MG!
 >>"%~dp0log.txt" echo !MG!
+>nul timeout /t 1
+set Tp=3
 >nul 2>&1 taskkill.exe /F /IM chrome.exe
+set CJ=0
 if exist "%LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache" (
+set CP=▓M░гGoogle Chrome╝╚жs└╔
+echo │B▓zддбKбK!MG!!CP!
+call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\Local Settings\Application Data\Chromium\User Data\Default\Cache\*.*"
+call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\Local Settings\Application Data\Google\Chrome\User Data\Default\Cache\*.*"
+call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache\*.*"
+call:cleanCP
+>nul timeout /t 1
 set MG=Google Chrome╝╚жs└╔▓M░гз╣▓жбC
 cls
 echo │B▓zддбKбK!MG!
 >>"%~dp0log.txt" echo !MG!
+>nul timeout /t 1
 )
+set Tp=1
 >nul 2>&1 taskkill.exe /F /IM firefox.exe
+set CJ=0
 if exist "%LOCALAPPDATA%\Mozilla\Firefox\Profiles" (
+set CP=▓M░гFirefox╝╚жs└╔
+echo │B▓zддбKбK!MG!!CP!
+call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Mozilla\Firefox\Profiles\*.*"
+call:cleanCP
 set MG=Firefox╝╚жs└╔▓M░гз╣▓жбC
 cls
 echo │B▓zддбKбK!MG!
 >>"%~dp0log.txt" echo !MG!
+>nul timeout /t 1
 )
+set Tp=1
 >nul 2>&1 taskkill.exe /F /IM opera.exe
+set CJ=0
 if exist "%LOCALAPPDATA%\Opera Software\Opera Stable\Cache" (
+set CP=▓M░гOpera╝╚жs└╔
+echo │B▓zддбKбK!MG!!CP!
+call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Opera Software\Opera Stable\Cache\*.*"
+call:cleanCP
+>nul timeout /t 1
 set MG=Opera╝╚жs└╔▓M░гз╣▓жбC
 cls
 echo │B▓zддбKбK!MG!
 >>"%~dp0log.txt" echo !MG!
+>nul timeout /t 1
 )
+set Tp=18
+set CJ=0
+set CP=▓M░гиt▓╬йUзг└╔о╫
+echo │B▓zддбKбK!MG!!CP!
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.tmp
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*._mp
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.gid
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.chk
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.old
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.err 
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.wbk
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.xlk
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.diz
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.dmp 
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.ftg
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.fts 
+call:cleanCP
 >nul 2>&1 del /f /s /q %windir%\*.bak
+call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\recycled\*.*
+call:cleanCP
 >nul 2>&1 del /f /s /q %windir%\*.bak
+call:cleanCP
 >nul 2>&1 del /f /s /q %windir%\prefetch\*.*
+call:cleanCP
 >nul 2>&1 rd /s /q %windir%\temp & >nul 2>&1 md %windir%\temp
+call:cleanCP
 >nul 2>&1 net user aspnet /delete
+call:cleanCP
+>nul timeout /t 1
 set MG=иt▓╬йUзг└╔о╫▓M░гз╣▓жбC
 cls
 echo │B▓zддбKбK!MG!
 >>"%~dp0log.txt" echo !MG!
-endlocal
->nul timeout /t 1 /nobreak
+>nul timeout /t 1
 cls & color 2f
 echo ▓M░гз╣▓жбC
 >nul timeout /t 1 /nobreak
@@ -643,6 +871,12 @@ call:DT
 >>"%~dp0log.txt" echo жb%_DT%╡▓зЇдF▓M▓z
 title ▓M░г╡▓зЇб@%_DT%
 goto exit
+
+:cleanCP
+cls
+echo %MG%%CP%бKбK%CJ%б■%Tp%
+set /a CJ+=1
+goto :eof
 
 :exit
 call:DT
