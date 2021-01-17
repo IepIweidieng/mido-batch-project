@@ -1,6 +1,6 @@
 :BAT start
-@title 程式載入中…… & echo off & setlocal enableextensions & setlocal enabledelayedexpansion & call:DT
->nul chcp 950 & >>"%~dp0log.txt" echo 在%_DT%啟動了設定程式
+@echo off & setlocal enableextensions & setlocal enabledelayedexpansion & call:DT
+>nul chcp 950 & title 程式載入中…… & >>"%~dp0log.txt" echo 在%_DT%啟動了設定程式
 if not exist "%~dp0毀損安裝程式.bAt" (>&2 echo 沒有可以進行設定的程式。 & >>"%~dp0log.txt" echo 沒有可以進行設定的程式。 & >nul timeout /t 10 & exit /b 1)
 call:custom & set Bdots=Microdoft "arring", please wait & set Adots= 
 call:dots & goto ProgramStart
