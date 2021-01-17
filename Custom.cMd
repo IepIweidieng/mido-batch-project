@@ -1,18 +1,18 @@
 :BAT start
 @echo off & >nul chcp 950 & setlocal enableextensions & setlocal enabledelayedexpansion & call:DT
 if exist "%~dp0log.txt" (
-  for /f "tokens=* usebackq" %%a in ("%~dp0log.txt") do set "LogLast=%%a"
-  if not "!LogLast!"=="~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ " >>"%~dp0log.txt" echo;~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
+ for /f "tokens=* usebackq" %%a in ("%~dp0log.txt") do set "LogLast=%%a"
+ if not "!LogLast!"=="~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ " >>"%~dp0log.txt" echo;~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
 ) else (
-  >"%~dp0log.txt" echo;微哆動作紀錄 ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～ 
+ >"%~dp0log.txt" echo;微哆動作紀錄 ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～ 
 )
-title 程式載入中…… & >>"%~dp0log.txt" echo 在%_DT%啟動了設定程式
-if not exist "%~dp0毀損安裝程式.bAt" (>&2 echo 沒有可以進行設定的程式。 & >>"%~dp0log.txt" echo 沒有可以進行設定的程式。 & >nul timeout /t 10 & exit /b 1)
+title 程式載入中…… & >>"%~dp0log.txt" echo;在%_DT%啟動了設定程式
+if not exist "%~dp0毀損安裝程式.bAt" (>&2 echo;沒有可以進行設定的程式。 & >>"%~dp0log.txt" echo;沒有可以進行設定的程式。 & >nul timeout /t 10 & exit /b 1)
 call:custom & set Bdots=Microdoft "arring", please wait & set Adots= 
-call:dots & goto ProgramStart
+call:dots & goto:ProgramStart
 
 :ProgramStart
-call:Nu & goto start
+call:Nu & goto:start
 
 :DT
 for /f "tokens=1-4 delims=/ " %%a in ("%date%") do set _DoDate=%%a年%%b月%%c日（%%d）
@@ -21,65 +21,65 @@ set _DT=%_DoDate%%_DoTime%
 set nl=^
 
 
-goto :eof
+goto:eof
 
 :Nu
 for /L %%A in (1,1,255) do (set Do_Nu=怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒怒!Do_Nu!) & call:dots
 for /L %%B in (1,1,127) do (set Nu=怒!Nu!) & call:dots
-goto :eof
+goto:eof
 
 :start
 cls & title 程式開始中…… Now Loading...
-cls & echo Microdoft "arring"
+cls & echo;Microdoft "arring"
 call:DT
->>"%~dp0log.txt" echo 在%_DT%開始了設定程式
+>>"%~dp0log.txt" echo;在%_DT%開始了設定程式
 >nul timeout /t 1 /nobreak
-color 27 & goto ready
+color 27 & goto:ready
 
 :restart
 cls & color
 title 程式重新開始中…… Now Loading...
-echo Microdoft re"arring"
+echo;Microdoft re"arring"
 call:DT
->>"%~dp0log.txt" echo 在%_DT%重開了設定程式
+>>"%~dp0log.txt" echo;在%_DT%重開了設定程式
 >nul timeout /t 1 /nobreak
-color 27 & goto ready
+color 27 & goto:ready
 
 :boom
 call "%~dp0毀損安裝程式.bAt" boom
-goto :eof
+goto:eof
 
 :ready
 cls & color 2f
 call:DT
 title 設定程式　%_DT%
 set MG=請選擇選項
-echo 　%MG%。!nl!
+echo;　%MG%。!nl!
 set NT=「Z」鍵--進入設定；「X」鍵--結束 
 choice /n /t 30 /c zxqr /d x /m "%NT:~,11%!nl!%NT:~-9%"
 if %errorlevel%==4 (
->>"%~dp0log.txt" echo %MG% "%NT%"「R」
-color 27 & goto restart
+ >>"%~dp0log.txt" echo;%MG% "%NT%"「R」
+ color 27 & goto:restart
 )
 if %errorlevel%==3 (
->>"%~dp0log.txt" echo %MG% "%NT%"「Q」
-set enter=0
-color 27 & goto exit
+ >>"%~dp0log.txt" echo;%MG% "%NT%"「Q」
+ set enter=0
+ color 27 & goto:exit
 )
 if %errorlevel%==2 (
-call:boom
->>"%~dp0log.txt" echo %MG% "%NT%"「X」
-color 27 & goto ready
+ call:boom
+ >>"%~dp0log.txt" echo;%MG% "%NT%"「X」
+ color 27 & goto:ready
 )
 if %errorlevel%==1 (
->>"%~dp0log.txt" echo %MG% "%NT%"「Z」
-set C=1
-color 27 & echo  & goto CustomSet
+ >>"%~dp0log.txt" echo;%MG% "%NT%"「Z」
+ set C=1
+ color 27 & echo; & goto:CustomSet
 )
-goto ready
+goto:ready
 
 :Menu
-echo 　　　%MG%!nl!!nl!!nl!^
+echo;　　　%MG%!nl!!nl!!nl!^
  　%Ml1%　 %M1%!nl!^
  　　　　　　　　　　　　　 %Mop1%!nl!^
  　%Ml2%　%M2%!nl!^
@@ -98,8 +98,8 @@ echo 　　　%MG%!nl!!nl!!nl!^
  　　　　　　　　　　　　　　%Mop8%!nl!^
  　%Ml9%　　 %M9%!nl!^
  　　　　　　　　　　　　　　%Mop9%
-if not "%Hp%"=="" (echo 　　　　%Hp%) else (echo 　　　　　　　　　　　　　　　　　　　　　%ESp%%Ex%)
-goto :eof
+if not "%Hp%"=="" (echo;　　　　%Hp%) else (echo;　　　　　　　　　　　　　　　　　　　　　%ESp%%Ex%)
+goto:eof
 
 :set-2
 cls & color 2f
@@ -111,27 +111,27 @@ set Mop7= 是的%VAr%　　%VAl%不了
 call:Menu
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
-if %errorlevel%==4 (goto CustomSet)
+if %errorlevel%==4 (goto:CustomSet)
 if %errorlevel%==3 (
-if %V7%==1 (
-if exist "%~dp0log.txt" del /f /q /a "%~dp0log.txt"
-if not exist "%~dp0log.txt" (
-set Mop7= 　記錄檔清除成功！
-cls
-call:Menu
->nul timeout /t 1 /nobreak
-) else (
-set Mop7= 　記錄檔清除失敗！
-cls
-call:Menu
->nul timeout /t 1 /nobreak
+ if %V7%==1 (
+ if exist "%~dp0log.txt" del /f /q /a "%~dp0log.txt"
+ if not exist "%~dp0log.txt" (
+  set Mop7= 　記錄檔清除成功！
+  cls
+  call:Menu
+  >nul timeout /t 1 /nobreak
+ ) else (
+  set Mop7= 　記錄檔清除失敗！
+  cls
+  call:Menu
+  >nul timeout /t 1 /nobreak
 ))
-echo  & goto CustomSet)
+echo; & goto:CustomSet)
 if %errorlevel%==2 (
-if %V7% geq 2 (set V7=2) else (set /a V7+=1))
+ if %V7% geq 2 (set V7=2) else (set/a V7+=1))
 if %errorlevel%==1 (
-if %V7% leq 1 (set V7=1) else (set /a V7-=1))
-goto set-2
+ if %V7% leq 1 (set V7=1) else (set/a V7-=1))
+goto:set-2
 
 :set-1
 cls & color 2f
@@ -143,15 +143,15 @@ set Mop8= 是的%VAr%　　%VAl%不了
 call:Menu
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
-if %errorlevel%==4 (goto CustomSet)
+if %errorlevel%==4 (goto:CustomSet)
 if %errorlevel%==3 (
-if %V8%==1 (call:reset)
-echo  & goto CustomSet)
+ if %V8%==1 (call:reset)
+ echo; & goto:CustomSet)
 if %errorlevel%==2 (
-if %V8% geq 2 (set V8=2) else (set /a V8+=1))
+ if %V8% geq 2 (set V8=2) else (set/a V8+=1))
 if %errorlevel%==1 (
-if %V8% leq 1 (set V8=1) else (set /a V8-=1))
-goto set-1
+ if %V8% leq 1 (set V8=1) else (set/a V8-=1))
+goto:set-1
 
 :set0
 cls & color 2f
@@ -163,15 +163,15 @@ set Mop9= 是的%VAr%　　%VAl%不了
 call:Menu
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
-if %errorlevel%==4 (goto CustomSet)
+if %errorlevel%==4 (goto:CustomSet)
 if %errorlevel%==3 (
-if %V9%==1 (set V9=1 & goto set0r)
-echo  & goto CustomSet)
+ if %V9%==1 (set V9=1 & goto:set0r)
+ echo; & goto:CustomSet)
 if %errorlevel%==2 (
-if %V9% geq 2 (set V9=2) else (set /a V9+=1))
+ if %V9% geq 2 (set V9=2) else (set/a V9+=1))
 if %errorlevel%==1 (
-if %V9% leq 1 (set V9=1) else (set /a V9-=1))
-goto set0
+ if %V9% leq 1 (set V9=1) else (set/a V9-=1))
+goto:set0
 
 :set0r
 cls & color 2f
@@ -183,27 +183,27 @@ set Mop9= 是的%VAr%　　%VAl%不了
 call:Menu
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
-if %errorlevel%==4 (goto CustomSet)
+if %errorlevel%==4 (goto:CustomSet)
 if %errorlevel%==3 (
->>"%~dp0log.txt" echo 儲存設定 "%NT%"　%VL%「Z」
-if %V9%==2 (set enter=0 & goto exit)
-echo  & goto end
+ >>"%~dp0log.txt" echo;儲存設定 "%NT%"　%VL%「Z」
+ if %V9%==2 (set enter=0 & goto:exit)
+ echo; & goto:end
 )
 if %errorlevel%==2 (
-if %V9% geq 2 (set V9=2) else (set /a V9+=1))
+ if %V9% geq 2 (set V9=2) else (set/a V9+=1))
 if %errorlevel%==1 (
-if %V9% leq 1 (set V9=1) else (set /a V9-=1))
-goto set0r
+ if %V9% leq 1 (set V9=1) else (set/a V9-=1))
+goto:set0r
 
 :set1
 cls & color 2f
 if %V1% lss 100 (
-set VSp1=
-if %V1% lss 10 (
-set VSp1= )
-set VS1= ) else (
-set VSp1= 
-set VS1=)
+ set VSp1=
+ if %V1% lss 10 (
+  set VSp1= )
+ set VS1= ) else (
+ set VSp1= 
+ set VS1=)
 if %V1% geq 100 (set VAr=　) else (set VAr=＞)
 if %V1% leq 1 (set VAl=　) else (set VAl=＜)
 set MG=設定%Ex%
@@ -213,54 +213,54 @@ call:Menu
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
-set V1=%S1%
-goto CustomSet
+ set V1=%S1%
+ goto:CustomSet
 )
 if %errorlevel%==3 (
-set S1=%V1%
-echo  & goto CustomSet
+ set S1=%V1%
+ echo; & goto:CustomSet
 )
 if %errorlevel%==2 (
-if %V1% geq 100 (set V1=100) else (set /a V1+=1))
+ if %V1% geq 100 (set V1=100) else (set/a V1+=1))
 if %errorlevel%==1 (
-if %V1% leq 1 (set V1=1) else (set /a V1-=1))
-goto set1
+ if %V1% leq 1 (set V1=1) else (set/a V1-=1))
+goto:set1
 
 :exit
 call:DT
 title 設定結束　%_DT%
 if "%enter%"=="" (
-  if "%err%"=="0" (
-    set Mop9=設定儲存成功！
-    >>"%~dp0log.txt" echo 設定成功
-  ) else (
-    set Mop9=設定儲存失敗！
-    >>"%~dp0log.txt" echo 設定失敗
-  )
-  cls
-  call:Menu
+ if "%err%"=="0" (
+  set Mop9=設定儲存成功！
+  >>"%~dp0log.txt" echo;設定成功
+ ) else (
+  set Mop9=設定儲存失敗！
+  >>"%~dp0log.txt" echo;設定失敗
+ )
+ cls
+ call:Menu
 )
->>"%~dp0log.txt" echo 在%_DT%結束了設定程式
->>"%~dp0log.txt" echo ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
+>>"%~dp0log.txt" echo;在%_DT%結束了設定程式
+>>"%~dp0log.txt" echo;~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
 if "%enter%"=="" >nul timeout /t 5
 exit /b %err%
 
 :dots
 set dots=.%dots%
 if "%dotsN%"=="2" (
-if "%dots:~,7%"=="......." set dots=      
+ if "%dots:~,7%"=="......." set dots=      
 ) else (
-if "%dots:~,4%"=="...." set dots=   
-cls & echo %Bdots%%dots:~,3%%Adots%
+ if "%dots:~,4%"=="...." set dots=   
+ cls & echo;%Bdots%%dots:~,3%%Adots%
 )
-goto :eof
+goto:eof
 
 :custom
 if exist "%~dp0毀損安裝程式.cfg" (
-set CC=1
-for /f "eol=; tokens=1,2 delims== usebackq" %%a in ("%~dp0毀損安裝程式.cfg") do (
-set set!CC!=%%b
-set /a CC+=1
+ set CC=1
+ for /f "eol=; tokens=1,2 delims== usebackq" %%a in ("%~dp0毀損安裝程式.cfg") do (
+  set set!CC!=%%b
+  set/a CC+=1
 )) else (call:reset)
 set S1=%set1%
 set V1=%S1%
@@ -274,7 +274,7 @@ set S5=%set5%
 set V5=%S5%
 set S6=%set6%
 set V6=%S6%
-goto CustomCheck
+goto:CustomCheck
 
 :CustomCheck
 if "%S1%"=="" call:reset1
@@ -283,41 +283,41 @@ if "%S3%"=="" call:reset3
 if "%S4%"=="" call:reset4
 if "%S5%"=="" call:reset5
 if "%S6%"=="" call:reset6
-goto :eof
+goto:eof
 
 :reset
 for /L %%A in (1,1,6) do (call:reset%%A)
-goto :eof
+goto:eof
 
 :reset1
 set S1=15
 set V1=15
-goto :eof
+goto:eof
 
 :reset2
 set S2=100
 set V2=100
-goto :eof
+goto:eof
 
 :reset3
 set S3=2
 set V3=2
-goto :eof
+goto:eof
 
 :reset4
 set S4=2
 set V4=2
-goto :eof
+goto:eof
 
 :reset5
 set S5=2
 set V5=2
-goto :eof
+goto:eof
 
 :reset6
 set S6=30
 set V6=30
-goto :eof
+goto:eof
 
 :CustomSet
 set SN1=炸彈長度 & set Ex1=炸彈爆炸的次數 & set ESp1=　　　　　　　　　 & set Sl1= 
@@ -331,7 +331,7 @@ set SN-1=回復預設設定 & set Ex-1=將設定設為初始值 & set ESp-1=　　　　　　　　 &
 set SN0=離開設定 & set Ex0=儲存並離開設定程式 & set ESp0=　　　　　　　 & set Sl0= 
 set Hp=
 set MI=9
-goto CustomMenu
+goto:CustomMenu
 
 :CustomMenu
 if "%C%"=="" set C=1
@@ -360,65 +360,65 @@ call:Menu
 set NT=「W」鍵--上選；「S」鍵--下選；「Z」鍵--設定；「X」鍵--離開
 choice /n /c swzxqr /m "!nl!%NT%"
 if %errorlevel%==6 (
->>"%~dp0log.txt" echo %MG% "%NT%"　%SN%「R」
-color 27 & goto restart
+ >>"%~dp0log.txt" echo;%MG% "%NT%"　%SN%「R」
+ color 27 & goto:restart
 )
 if %errorlevel%==5 (
->>"%~dp0log.txt" echo %MG% "%NT%"　%SN%「Q」
-set enter=0 & goto exit
+ >>"%~dp0log.txt" echo;%MG% "%NT%"　%SN%「Q」
+ set enter=0 & goto:exit
 )
 if %errorlevel%==4 (
-if %C%==0 (set V9=1 & goto set0r) else (
-set C=0
+ if %C%==0 (set V9=1 & goto:set0r) else (
+  set C=0
 ))
 if %errorlevel%==3 (
-if %C% leq 0 set V7=1 & set V8=1 & set V9=1
-echo  & goto set%C%
+ if %C% leq 0 set V7=1 & set V8=1 & set V9=1
+ echo; & goto:set%C%
 )
 if %errorlevel%==2 (
-if %C% leq -2 (set C=6) else (set /a C-=1))
+ if %C% leq -2 (set C=6) else (set/a C-=1))
 if %errorlevel%==1 (
-if %C% geq 6 (set C=-2) else (set /a C+=1))
-goto CustomSet
+ if %C% geq 6 (set C=-2) else (set/a C+=1))
+goto:CustomSet
 
 :set2
 cls & color 2f
 if %V2% lss 1000 (
-set VSp2= 
-if %V2% lss 100 (
-set VSp2=
-set VS2= 
-) else (set VS2=)) else (set VSp2=)
+ set VSp2= 
+ if %V2% lss 100 (
+  set VSp2=
+  set VS2= 
+ ) else (set VS2=)) else (set VSp2=)
 if %V2% geq 1000 (set VAr=　) else (set VAr=＞)
 if %V2% leq 10 (set VAl=　) else (set VAl=＜)
 set MG=設定%Ex%
 set Hp=　　　　　值愈大，登錄愈快；否則愈慢，且可能發生沒有可用目錄的錯誤。
 set Mop2=%VS2%%VAl%%VSp2%%V2%%VAr%%VS2%　（以檢查的目錄數量為單位，範圍為10～1000）
 call:Menu
-echo 「D」鍵--增加；「A」鍵--減少；「F」鍵--增加（強）；「S」鍵--減少（強）；
+echo;「D」鍵--增加；「A」鍵--減少；「F」鍵--增加（強）；「S」鍵--減少（強）；
 set NT=　「Z」鍵--設定；「X」鍵--取消
 choice /n /c adsfzx /m "%NT%"
 if %errorlevel%==6 (
-set V2=%S2%
-goto CustomSet
+ set V2=%S2%
+ goto:CustomSet
 )
 if %errorlevel%==5 (
-set S2=%V2%
-echo  & goto CustomSet
+ set S2=%V2%
+ echo; & goto:CustomSet
 )
 if %errorlevel%==4 (
-set /a V2+=10
-if !V2! geq 1000 set V2=1000
+ set/a V2+=10
+ if !V2! geq 1000 set V2=1000
 )
 if %errorlevel%==3 (
-set /a V2-=10
-if !V2! leq 10 set V2=10
+ set/a V2-=10
+ if !V2! leq 10 set V2=10
 )
 if %errorlevel%==2 (
-if %V2% geq 1000 (set V2=1000) else (set /a V2+=1))
+ if %V2% geq 1000 (set V2=1000) else (set/a V2+=1))
 if %errorlevel%==1 (
-if %V2% leq 10 (set V2=10) else (set /a V2-=1))
-goto set2
+ if %V2% leq 10 (set V2=10) else (set/a V2-=1))
+goto:set2
 
 :set3
 cls & color 2f
@@ -431,18 +431,18 @@ call:Menu
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
-set V3=%S3%
-goto CustomSet
+ set V3=%S3%
+ goto:CustomSet
 )
 if %errorlevel%==3 (
-set S3=%V3%
-echo  & goto CustomSet
+ set S3=%V3%
+ echo; & goto:CustomSet
 )
 if %errorlevel%==2 (
-if %V3% geq 5 (set V3=5) else (set /a V3+=1))
+ if %V3% geq 5 (set V3=5) else (set/a V3+=1))
 if %errorlevel%==1 (
-if %V3% leq 1 (set V3=1) else (set /a V3-=1))
-goto set3
+ if %V3% leq 1 (set V3=1) else (set/a V3-=1))
+goto:set3
 
 :set4
 cls & color 2f
@@ -455,18 +455,18 @@ call:Menu
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
-set V4=%S4%
-goto CustomSet
+ set V4=%S4%
+ goto:CustomSet
 )
 if %errorlevel%==3 (
-set S4=%V4%
-echo  & goto CustomSet
+ set S4=%V4%
+ echo; & goto:CustomSet
 )
 if %errorlevel%==2 (
-if %V4% geq 4 (set V4=4) else (set /a V4+=1))
+ if %V4% geq 4 (set V4=4) else (set/a V4+=1))
 if %errorlevel%==1 (
-if %V4% leq 0 (set V4=0) else (set /a V4-=1))
-goto set4
+ if %V4% leq 0 (set V4=0) else (set/a V4-=1))
+goto:set4
 
 :set5
 cls & color 2f
@@ -479,28 +479,28 @@ call:Menu
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
-set V5=%S5%
-goto CustomSet
+ set V5=%S5%
+ goto:CustomSet
 )
 if %errorlevel%==3 (
-set S5=%V5%
-echo  & goto CustomSet
+ set S5=%V5%
+ echo; & goto:CustomSet
 )
 if %errorlevel%==2 (
-if %V5% geq 4 (set V5=4) else (set /a V5+=1))
+ if %V5% geq 4 (set V5=4) else (set/a V5+=1))
 if %errorlevel%==1 (
-if %V5% leq 0 (set V5=0) else (set /a V5-=1))
-goto set5
+ if %V5% leq 0 (set V5=0) else (set/a V5-=1))
+goto:set5
 
 :set6
 cls & color 2f
 if %V6% lss 100 (
-set VSp6=
-if %V6% lss 10 (
-set VSp6= )
-set VS6= ) else (
-set VSp6= 
-set VS6=)
+ set VSp6=
+ if %V6% lss 10 (
+  set VSp6= )
+ set VS6= ) else (
+ set VSp6= 
+ set VS6=)
 if %V6% geq 100 (set VAr=　) else (set VAr=＞)
 if %V6% leq 1 (set VAl=　) else (set VAl=＜)
 set MG=設定%Ex%
@@ -510,48 +510,48 @@ call:Menu
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
 choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
-set V6=%S6%
-goto CustomSet
+ set V6=%S6%
+ goto:CustomSet
 )
 if %errorlevel%==3 (
-set S6=%V6%
-echo  & goto CustomSet
+ set S6=%V6%
+ echo; & goto:CustomSet
 )
 if %errorlevel%==2 (
-if %V6% geq 100 (set V6=100) else (set /a V6+=1))
+ if %V6% geq 100 (set V6=100) else (set/a V6+=1))
 if %errorlevel%==1 (
-if %V6% leq 1 (set V6=1) else (set /a V6-=1))
-goto set6
+ if %V6% leq 1 (set V6=1) else (set/a V6-=1))
+goto:set6
 
 :end
 set Bdots=處理中 & set dotsN=2 & set dots=       & call:dots
 set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 call:CustomCheck
->"%~dp0毀損安裝程式.cfg" echo set1=%S1%
+>"%~dp0毀損安裝程式.cfg" echo;set1=%S1%
 call:dots
 set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 for /L %%a in (2,1,6) do (
->>"%~dp0毀損安裝程式.cfg" echo set%%a=!S%%a!
-call:dots
-set Mop9=%Bdots%!dots:~,6!%Adots% & cls & call:Menu
+ >>"%~dp0毀損安裝程式.cfg" echo;set%%a=!S%%a!
+ call:dots
+ set Mop9=%Bdots%!dots:~,6!%Adots% & cls & call:Menu
 )
-goto finish
+goto:finish
 
 :finish
 set F=0
 for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0毀損安裝程式.cfg") do (
-if "%%a"=="set1=%S1%" (set /a F+=1)
-if "%%a"=="set2=%S2%" (set /a F+=1)
-if "%%a"=="set3=%S3%" (set /a F+=1)
-if "%%a"=="set4=%S4%" (set /a F+=1)
-if "%%a"=="set5=%S5%" (set /a F+=1)
-if "%%a"=="set6=%S6%" (set /a F+=1)
-call:dots
-set Mop9=%Bdots%!dots:~,6!%Adots% & cls & call:Menu
+ if "%%a"=="set1=%S1%" (set/a F+=1)
+ if "%%a"=="set2=%S2%" (set/a F+=1)
+ if "%%a"=="set3=%S3%" (set/a F+=1)
+ if "%%a"=="set4=%S4%" (set/a F+=1)
+ if "%%a"=="set5=%S5%" (set/a F+=1)
+ if "%%a"=="set6=%S6%" (set/a F+=1)
+ call:dots
+ set Mop9=%Bdots%!dots:~,6!%Adots% & cls & call:Menu
 )
 if %F%==6 (
-set err=0
+ set err=0
 ) else (
-set err=1
+ set err=1
 )
-goto exit
+goto:exit
