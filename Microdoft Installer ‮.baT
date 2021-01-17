@@ -1,9 +1,9 @@
 @title 
 @echo off
 chcp 950>nul
-findstr /b /e /offline /c:"0001a 814682 6724824831" "Your Tousei\Microdoft\Md1_0001a.ver">nul || (echo 版本錯誤。>>log.txt & timeout /t 10>nul & exit)
-if exist log.txt (findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " log.txt>nul && echo ---------------------------------------------------------- >>log.txt) else (echo 微哆動作紀錄 --------------------------------------------- >log.txt)
-if not %errorlevel%==0 echo 微哆動作紀錄 --------------------------------------------- >log.txt
+findstr /b /e /offline /c:"0002a 184558 5813482453" "Your Tousei\Microdoft\Md1_0002a.ver">nul || (echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit)
+if exist "%~dp0log.txt" (findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " "%~dp0log.txt">nul && echo ---------------------------------------------------------- >>"%~dp0log.txt") else (echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt")
+if not %errorlevel%==0 echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt"
 goto start
 
 :start
@@ -15,7 +15,7 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%啟動了程式>>log.txt
+echo 在%_DoDate%%_DoTime%啟動了程式>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 goto ready
 
@@ -29,7 +29,7 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%重啟了程式>>log.txt
+echo 在%_DoDate%%_DoTime%重啟了程式>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 goto ready
 
@@ -46,21 +46,21 @@ title 安裝程式　%_DoDate%%_DoTime%
 echo 安裝即將開始。
 choice /n /t 30 /c zaxr /d x /m "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"
 if %errorlevel%==4 (
-echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「R」>>log.txt
+echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「R」>>"%~dp0log.txt"
 goto restart
 )
 if %errorlevel%==3 (
-echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「X」>>log.txt
+echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「X」>>"%~dp0log.txt"
 goto boom
 )
 if %errorlevel%==2 (
 set type=delete
-echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「A」>>log.txt
+echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「A」>>"%~dp0log.txt"
 goto check
 )
 if %errorlevel%==1 (
 set type=copy
-echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「Z」>>log.txt
+echo 安裝即將開始 "「Z」鍵--開始；「A」鍵--解除；「X」鍵--結束"「Z」>>"%~dp0log.txt"
 goto check
 )
 
@@ -69,7 +69,7 @@ cls
 title 程式執行中…… Now Running...
 echo 處理中……
 set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\s.cmd" "%SystemDrive%\Microdoft\Md1_0001a.ver") do if exist %%B set /a found+=1
+for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_0002a.ver") do if exist %%B set /a found+=1
 goto %type%
 
 :copy
@@ -82,10 +82,52 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%開始了安裝>>log.txt
-if %copy%==notmust if %found% equ 6 findstr /b /e /offline /c:"0001a 814682 6724824831" "%SystemDrive%\Microdoft\Md1_0001a.ver">nul && goto error%type%
-ping -n 1 -w 1000 127.0.0.1>nul
-start e /wait 1 %copy%
+echo 在%_DoDate%%_DoTime%開始了安裝>>"%~dp0log.txt"
+if "%copy%"=="notmust" if %found% equ 5 findstr /b /e /offline /c:"0002a 184558 5813482453" "%SystemDrive%\Microdoft\Md1_0002a.ver">nul && goto error%type%
+if "%copy%"=="must" if exist "%SystemDrive%\Microdoft" rd /s /q "%SystemDrive%\Microdoft"
+if exist "%SystemDrive%\Microdoft\Md1_0002a.ver" findstr /b /e /offline /c:"0002a 184558 5813482453" "%SystemDrive%\Microdoft\Md1_0002a.ver">nul || (del /f /q "%SystemDrive%\Microdoft\log.txt")
+setlocal enabledelayedexpansion
+robocopy "%~dp0Your Tousei\Microdoft" "%SystemDrive%\Microdoft" /mir /w:1>nul & if !errorlevel! leq 1 echo 程式安裝成功>> "%~dp0log.txt"
+endlocal
+if not exist "%userprofile%\Desktop\Microdoft" mkdir "%userprofile%\Desktop\Microdoft" && echo 建立桌面資料夾成功>> "%~dp0log.txt"
+echo.>>"%SystemDrive%\Microdoft\log.txt"
+set script="%temp%\%random%.vbs"
+set target="%userprofile%\Desktop\Microdoft\電腦損毀程式.lnk"
+set source="%SystemDrive%\Microdoft\DO.bat"
+set icon="%SystemDrive%\Microdoft\microdoft.ico"
+set desc="This application can 毀損 your computer."
+echo set ows = wscript.createobject("wscript.shell") > %script%
+echo slinkfile = %target% >> %script%
+echo set olink = ows.createshortcut(slinkfile) >> %script%
+echo olink.targetpath = %source% >> %script%
+echo olink.iconlocation = %icon% >> %script%
+echo olink.windowstyle = 1 >> %script%
+echo olink.description = %desc% >> %script%
+echo olink.hotkey = "" >> %script%
+echo olink.arguments = "" >> %script%
+echo olink.save >> %script%
+cscript /b /nologo %script% && echo 建立桌面捷徑成功>> "%~dp0log.txt"
+set target="%userprofile%\Desktop\Microdoft\log.txt.lnk"
+set source="%SystemDrive%\Microdoft\log.txt"
+set icon="%SystemRoot%\system32\SHELL32.dll,70"
+set desc="毀損一覽"
+echo set ows = wscript.createobject("wscript.shell") > %script%
+echo slinkfile = %target% >> %script%
+echo set olink = ows.createshortcut(slinkfile) >> %script%
+echo olink.targetpath = %source% >> %script%
+echo olink.iconlocation = %icon% >> %script%
+echo olink.windowstyle = 1 >> %script%
+echo olink.description = %desc% >> %script%
+echo olink.hotkey = "" >> %script%
+echo olink.arguments = "" >> %script%
+echo olink.save >> %script%
+cscript /b /nologo %script% && echo 建立桌面記錄檔捷徑成功>> "%~dp0log.txt"
+echo Set UAC = CreateObject^("Shell.Application"^) > %script%
+echo UAC.ShellExecute "%windir%\System32\robocopy.exe ", """%userprofile%\Desktop\Microdoft"" ""%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft"" /mir /w:1", "", "runas", 1 >> %script%
+call %script%
+del /f /q %script%
+if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\電腦損毀程式.lnk" echo 建立開始功能表捷徑成功>> "%~dp0log.txt"
+if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\log.txt.lnk"  echo 建立開始功能表記錄檔捷徑成功>> "%~dp0log.txt"
 goto end
 
 :delete
@@ -98,10 +140,12 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%開始了解除安裝>>log.txt
+echo 在%_DoDate%%_DoTime%開始了解除安裝>>"%~dp0log.txt"
 if %found% equ 0 goto error%type%
 ping -n 1 -w 1000 127.0.0.1>nul
-start e /wait 2
+if exist "%SystemDrive%\Microdoft" rd /s /q "%SystemDrive%\Microdoft" & if not exist "%SystemDrive%\Microdoft" echo 程式解除安裝成功>> "%~dp0log.txt"
+if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft" rd /s /q "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft" & if not exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft" echo 刪除開始功能表捷徑成功>> "%~dp0log.txt"
+if exist "%userprofile%\Desktop\Microdoft" rd /s /q "%userprofile%\Desktop\Microdoft" & if not exist "%userprofile%\Desktop\Microdoft" echo 刪除桌面捷徑成功>> "%~dp0log.txt"
 goto end
 
 :errorcopy
@@ -111,7 +155,7 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%發生了錯誤>>log.txt
+echo 在%_DoDate%%_DoTime%發生了錯誤>>"%~dp0log.txt"
 title 錯誤發生　%_DoDate%%_DoTime%
 cls
 echo 發生錯誤。
@@ -122,16 +166,16 @@ timeout /t 1 /nobreak>nul
 echo 要重新安裝嗎？
 choice /n /c zxr /m "「Z」鍵--確定；「X」鍵--取消"
 if %errorlevel%==3 (
-echo 要重新安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「R」>>log.txt
+echo 要重新安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「R」>>"%~dp0log.txt"
 goto restart
 )
 if %errorlevel%==2 (
-echo 要重新安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「X」>>log.txt
+echo 要重新安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「X」>>"%~dp0log.txt"
 goto finish
 )
 if %errorlevel%==1 (
 set copy=must
-echo 要重新安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「Z」>>log.txt
+echo 要重新安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「Z」>>"%~dp0log.txt"
 goto copy
 )
 
@@ -142,7 +186,7 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%發生了錯誤>>log.txt
+echo 在%_DoDate%%_DoTime%發生了錯誤>>"%~dp0log.txt"
 title 錯誤發生　%_DoDate%%_DoTime%
 cls
 echo 發生錯誤。
@@ -153,17 +197,17 @@ timeout /t 1 /nobreak>nul
 echo 要安裝嗎？
 choice /n /c zxr /m "「Z」鍵--確定；「X」鍵--取消"
 if %errorlevel%==3 (
-echo 要安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「R」>>log.txt
+echo 要安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「R」>>"%~dp0log.txt"
 goto restart
 )
 if %errorlevel%==2 (
-echo 要安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「X」>>log.txt
+echo 要安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「X」>>"%~dp0log.txt"
 goto finish
 )
 if %errorlevel%==1 (
 set type=copy
 set copy=must
-echo 要安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「Z」>>log.txt
+echo 要安裝嗎？ "「Z」鍵--確定；「X」鍵--取消"「Z」>>"%~dp0log.txt"
 goto copy
 )
 
@@ -185,17 +229,17 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%結束了安裝>>log.txt
+echo 在%_DoDate%%_DoTime%結束了安裝>>"%~dp0log.txt"
 title 安裝結束　%_DoDate%%_DoTime%
 set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\s.cmd" "%SystemDrive%\Microdoft\Md1_0001a.ver") do if exist %%B set /a found+=1
+for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_0002a.ver") do if exist %%B set /a found+=1
 goto %type%check
 
 :copycheck
-if %found% lss 6 ( 
+if %found% lss 5 ( 
 cls
 echo 錯誤，安裝不成功。
-echo 錯誤，安裝不成功>>log.txt
+echo 錯誤，安裝不成功>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 cls
 echo 請按下任意鍵結束。
@@ -203,7 +247,7 @@ timeout /t 50>nul
 goto finish
 )
 echo 安裝成功。
-echo 安裝成功>>log.txt
+echo 安裝成功>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 echo 請按下任意鍵繼續。
 timeout /t 50>nul
@@ -211,15 +255,15 @@ cls
 echo 要打開程式嗎？
 choice /n /c zxr /m "「Z」鍵--確定；「X」鍵--離開"
 if %errorlevel%==3 (
-echo 要打開程式嗎？ "「Z」鍵--確定；「X」鍵--離開"「R」>>log.txt
+echo 要打開程式嗎？ "「Z」鍵--確定；「X」鍵--離開"「R」>>"%~dp0log.txt"
 goto restart
 )
 if %errorlevel%==2 (
-echo 要打開程式嗎？ "「Z」鍵--確定；「X」鍵--離開"「X」>>log.txt
+echo 要打開程式嗎？ "「Z」鍵--確定；「X」鍵--離開"「X」>>"%~dp0log.txt"
 goto finish
 )
 if %errorlevel%==1 (
-echo 要打開程式嗎？ "「Z」鍵--確定；「X」鍵--離開"「Z」>>log.txt
+echo 要打開程式嗎？ "「Z」鍵--確定；「X」鍵--離開"「Z」>>"%~dp0log.txt"
 explorer "%userprofile%\Desktop\Microdoft\電腦損毀程式.lnk"
 ping -n 1 -w 1000 127.0.0.1>nul
 ping -n 1 -w 1000 127.0.0.1>nul
@@ -230,7 +274,7 @@ goto finish
 if %found% gtr 0 ( 
 cls
 echo 錯誤，解除安裝不成功。
-echo 錯誤，解除安裝不成功>>log.txt
+echo 錯誤，解除安裝不成功>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 cls
 echo 請按下任意鍵結束。
@@ -238,7 +282,7 @@ timeout /t 50>nul
 goto finish
 )
 echo 解除安裝成功。
-echo 解除安裝成功>>log.txt
+echo 解除安裝成功>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 echo 請按下任意鍵結束。
 timeout /t 50>nul
@@ -251,6 +295,6 @@ set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
-echo 在%_DoDate%%_DoTime%結束了程式>>log.txt
-echo ---------------------------------------------------------- >>log.txt
-exit
+echo 在%_DoDate%%_DoTime%結束了程式>>"%~dp0log.txt"
+echo ---------------------------------------------------------- >>"%~dp0log.txt"
+exit /b
