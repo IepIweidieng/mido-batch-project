@@ -3,7 +3,7 @@
 >nul chcp 950
 if exist "%SystemDrive%\Microdoft" cd /d "%SystemDrive%\Microdoft"
 if not "%start%"=="1" goto DO
-set Vfile="%SystemDrive%\Microdoft\Md1_0002d.ver"
+set Vfile="%SystemDrive%\Microdoft\Md1_0003a.ver"
 goto Program start
 
 :DO
