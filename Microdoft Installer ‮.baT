@@ -1,7 +1,7 @@
 @title 
 @echo off
 chcp 950>nul
-findstr /b /e /offline /c:"0002a 184558 5813482453" "Your Tousei\Microdoft\Md1_0002a.ver">nul || (echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit)
+findstr /offline /c:"0001a 814682 6724824831" /c:"0002a 184558 5813482453" /c:"0002b 348314 5743484865" "Your Tousei\Microdoft\Md1_0002b.ver">nul || (echo 版本錯誤。 & echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit)
 if exist "%~dp0log.txt" (findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " "%~dp0log.txt">nul && echo ---------------------------------------------------------- >>"%~dp0log.txt") else (echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt")
 if not %errorlevel%==0 echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt"
 goto start
@@ -69,7 +69,7 @@ cls
 title 程式執行中…… Now Running...
 echo 處理中……
 set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_0002a.ver") do if exist %%B set /a found+=1
+for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_0002b.ver") do if exist %%B set /a found+=1
 goto %type%
 
 :copy
@@ -83,9 +83,10 @@ for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
 echo 在%_DoDate%%_DoTime%開始了安裝>>"%~dp0log.txt"
-if "%copy%"=="notmust" if %found% equ 5 findstr /b /e /offline /c:"0002a 184558 5813482453" "%SystemDrive%\Microdoft\Md1_0002a.ver">nul && goto error%type%
+taskkill /f /fi "imagename eq wmplayer.exe" /fi "imagename eq dllhost.exe">nul
+if "%copy%"=="notmust" if %found% equ 5 (findstr /offline /c:"0001a 814682 6724824831" /c:"0002a 184558 5813482453" /c:"0002b 348314 5743484865" "%SystemDrive%\Microdoft\Md1_0002b.ver">nul && goto error%type%)
 if "%copy%"=="must" if exist "%SystemDrive%\Microdoft" rd /s /q "%SystemDrive%\Microdoft"
-if exist "%SystemDrive%\Microdoft\Md1_0002a.ver" findstr /b /e /offline /c:"0002a 184558 5813482453" "%SystemDrive%\Microdoft\Md1_0002a.ver">nul || (del /f /q "%SystemDrive%\Microdoft\log.txt")
+if exist "%SystemDrive%\Microdoft\Md1_0002b.ver" findstr /b /e /offline /c:"0001a 814682 6724824831" /c:"0002a 184558 5813482453" /c:"0002b 348314 5743484865" "%SystemDrive%\Microdoft\Md1_0002b.ver">nul || (del /f /q "%SystemDrive%\Microdoft\log.txt")
 setlocal enabledelayedexpansion
 robocopy "%~dp0Your Tousei\Microdoft" "%SystemDrive%\Microdoft" /mir /w:1>nul & if !errorlevel! leq 1 echo 程式安裝成功>> "%~dp0log.txt"
 endlocal
@@ -123,7 +124,7 @@ echo olink.arguments = "" >> %script%
 echo olink.save >> %script%
 cscript /b /nologo %script% && echo 建立桌面記錄檔捷徑成功>> "%~dp0log.txt"
 echo Set UAC = CreateObject^("Shell.Application"^) > %script%
-echo UAC.ShellExecute "%windir%\System32\robocopy.exe ", """%userprofile%\Desktop\Microdoft"" ""%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft"" /mir /w:1", "", "runas", 1 >> %script%
+echo UAC.ShellExecute "%windir%\System32\robocopy.exe ", """%userprofile%\Desktop\Microdoft"" ""%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft"" /mir /w:1", "", "runas", 0 >> %script%
 call %script%
 del /f /q %script%
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\電腦損毀程式.lnk" echo 建立開始功能表捷徑成功>> "%~dp0log.txt"
@@ -143,6 +144,7 @@ set _DoTime=%%e時%%f分%%g秒點%%h
 echo 在%_DoDate%%_DoTime%開始了解除安裝>>"%~dp0log.txt"
 if %found% equ 0 goto error%type%
 ping -n 1 -w 1000 127.0.0.1>nul
+taskkill /f /fi "imagename eq wmplayer.exe" /fi "imagename eq dllhost.exe" "modules eq "%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll"">nul 2>&1
 if exist "%SystemDrive%\Microdoft" rd /s /q "%SystemDrive%\Microdoft" & if not exist "%SystemDrive%\Microdoft" echo 程式解除安裝成功>> "%~dp0log.txt"
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft" rd /s /q "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft" & if not exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft" echo 刪除開始功能表捷徑成功>> "%~dp0log.txt"
 if exist "%userprofile%\Desktop\Microdoft" rd /s /q "%userprofile%\Desktop\Microdoft" & if not exist "%userprofile%\Desktop\Microdoft" echo 刪除桌面捷徑成功>> "%~dp0log.txt"
@@ -232,7 +234,7 @@ set _DoTime=%%e時%%f分%%g秒點%%h
 echo 在%_DoDate%%_DoTime%結束了安裝>>"%~dp0log.txt"
 title 安裝結束　%_DoDate%%_DoTime%
 set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_0002a.ver") do if exist %%B set /a found+=1
+for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_0002b.ver") do if exist %%B set /a found+=1
 goto %type%check
 
 :copycheck

