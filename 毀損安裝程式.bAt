@@ -1,16 +1,16 @@
 :BAT start
 @echo off & setlocal enableextensions & setlocal enabledelayedexpansion & if not "%1"=="" goto %1
 >nul chcp 950 & title 程式載入中…… Now Loading... & call:DT & >>"%~dp0log.txt" echo 在!_DT!啟動了程式
-set NverN=0003d
-set NverV=0.03d
+set NverN=0100a
+set NverV=1.00a
 if exist "%~dp0Your Tousei" (call:custom & call:expand & if "%retry%"=="no" (exit /b) else (if "%retry%"=="yes" (goto BAT start))) else (>&2 echo 資料錯誤。 & >>"%~dp0log.txt" echo 資料錯誤。 & >nul timeout /t 10 & exit /b)
 set Vfile="%temp%\Microdoft\Your Tousei\Microdoft\Md1_%NverN%.ver"
 goto Program start
 
 :Program start
-set str=0001a 814682 67248248310002a 184558 58134824530002b 348314 57434848650002c 165082 13565038210002d 896514 18641948940003a 153843 24832184650003b 168462 04560286480003c 186548 21256021650003d 192168 1568421846
+set str=0001a 814682 67248248310002a 184558 58134824530002b 348314 57434848650002c 165082 13565038210002d 896514 18641948940003a 153843 24832184650003b 168462 04560286480003c 186548 21256021650003d 192168 15684218460100a 202198 0186028427
 call:Ver
-if not !VF!==9 (>&2 echo 版本錯誤。 & >>"%~dp0log.txt" echo 版本錯誤。 & >nul timeout /t 10 & exit /b)
+if not !VF!==10 (>&2 echo 版本錯誤。 & >>"%~dp0log.txt" echo 版本錯誤。 & >nul timeout /t 10 & exit /b)
 if exist "%~dp0log.txt" (for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0log.txt") do (if "%%a"=="微哆動作紀錄 --------------------------------------------- " ((>>"%~dp0log.txt" echo ---------------------------------------------------------- ) & call:Nu & goto start) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:Nu & goto start)
 ) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- )
 call:Nu & goto start
@@ -168,15 +168,15 @@ call:dots
 if %wait% gtr %NS6% (cls & >&2 echo 程式資料登錄過久，將重試。 & >>"%~dp0log.txt" echo 程式資料登錄失敗。 & >nul timeout /t 1 & set retry=yes & goto :eof)
 set wave=Your Tousei~\
 call:LoadCheck
-if %LFound%==8 move /y "%temp%\Microdoft\Your Tousei~\Your Tousei" "%temp%\Microdoft\Your Tousei"
+if %LFound%==10 move /y "%temp%\Microdoft\Your Tousei~\Your Tousei" "%temp%\Microdoft\Your Tousei"
 set wave=
 call:LoadCheck
-if %LFound%==8 (>>"%~dp0log.txt" echo 程式資料登錄完成 & goto :eof) else (set /a wait+=1 & >nul timeout /t 0 & goto wait)
+if %LFound%==10 (>>"%~dp0log.txt" echo 程式資料登錄完成 & goto :eof) else (set /a wait+=1 & >nul timeout /t 0 & goto wait)
 goto wait
 
 :LoadCheck
 set LFound=0
-for %%d in ("%temp%\Microdoft\%wave%Your Tousei\code" "%temp%\Microdoft\%wave%Your Tousei\damage" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\DO.bat" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\系統錯誤" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\Microdoft" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\1" "%temp%\Microdoft\Your Tousei\Microdoft\Md1_%NverN%.ver" "%temp%\Microdoft\Your Tousei\Microdoft\CustomDO.cmd") do if exist %%d set /a LFound+=1
+for %%d in ("%temp%\Microdoft\%wave%Your Tousei\電腦毀損程式.lnk" "%temp%\Microdoft\%wave%Your Tousei\CustomDO.lnk" "%temp%\Microdoft\%wave%Your Tousei\code" "%temp%\Microdoft\%wave%Your Tousei\damage" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\DO.bat" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\系統錯誤" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\Microdoft" "%temp%\Microdoft\%wave%Your Tousei\Microdoft\1" "%temp%\Microdoft\Your Tousei\Microdoft\Md1_%NverN%.ver" "%temp%\Microdoft\Your Tousei\Microdoft\CustomDO.cmd") do if exist %%d set /a LFound+=1
 goto :eof
 
 :custom
@@ -247,16 +247,21 @@ title 安裝程式　%_DT%
 set MG=安裝即將開始
 echo 　%MG%。
 echo.
-set NT=「Z」鍵--開始；「X」鍵--結束
+set NT=「Z」鍵--開始；「X」鍵--結束；「C」鍵--進行設定
 echo %NT:~,9%
-choice /n /t 30 /c zxqr /d x /m "%NT:~-8%"
-if %errorlevel%==4 (
+echo %NT:~9,9%
+choice /n /t 30 /c zxcqr /d x /m "%NT:~-10%"
+if %errorlevel%==5 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
 )
-if %errorlevel%==3 (
+if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「Q」
 color 27 & goto finish
+)
+if %errorlevel%==3 (
+>>"%~dp0log.txt" echo %MG% "%NT%"「C」
+cls & color & call Custom & goto BAT start
 )
 if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「X」
@@ -328,7 +333,7 @@ call:killedset
 if "%copy%"=="notmust" if !found!==6 (
 set Vfile="%SystemDrive%\Microdoft\Md1_%NverN%.ver"
 call:Ver
-if !VF!==9 goto error%type%
+if !VF!==10 goto error%type%
 )
 if "%copy%"=="must" if not !found!==6 (
 goto errordelete
@@ -412,39 +417,10 @@ attrib +r -a +h "%SystemDrive%\Microdoft\CustomDO.cmd"
 attrib -a +h "%SystemDrive%\Microdoft\電腦毀損程式.cfg"
 if not exist "%userprofile%\Desktop\Microdoft" mkdir "%userprofile%\Desktop\Microdoft" && >>"%~dp0log.txt" echo 建立桌面資料夾成功
 if not exist "%SystemDrive%\Microdoft\log.txt" >>"%SystemDrive%\Microdoft\log.txt" echo.
+>nul 2>&1 robocopy "%temp%\Microdoft\%wave%Your Tousei" "%userprofile%\Desktop\Microdoft" "電腦毀損程式.lnk" "CustomDO.lnk" /a-:ah /w:1
+if exist "%userprofile%\Desktop\Microdoft\電腦毀損程式.lnk" >>"%~dp0log.txt" echo 建立桌面捷徑成功
+if exist "%userprofile%\Desktop\Microdoft\CustomDO.lnk" >>"%~dp0log.txt" echo 建立桌面設定程式捷徑成功
 set script="%temp%\Microdoft\%random%.vbs"
-set target="%userprofile%\Desktop\Microdoft\電腦損毀程式.lnk"
-set source="%ComSpec%"
-set icon="%SystemDrive%\Microdoft\Microdoft"
-set desc="This application may 毀損 your computer."
-set para="/c call ""%SystemDrive%\Microdoft\DO.bat"""
-> %script% echo set ows = wscript.createobject("wscript.shell")
->> %script% echo slinkfile = %target%
->> %script% echo set olink = ows.createshortcut(slinkfile)
->> %script% echo olink.targetpath = %source%
->> %script% echo olink.iconlocation = %icon%
->> %script% echo olink.windowstyle = 1
->> %script% echo olink.description = %desc%
->> %script% echo olink.hotkey = ""
->> %script% echo olink.arguments = %para%
->> %script% echo olink.save
-cscript /b /nologo %script% && >>"%~dp0log.txt" echo 建立桌面捷徑成功
-set target="%userprofile%\Desktop\Microdoft\電腦毀損程式 custom.lnk"
-set source="%ComSpec%"
-set icon="%SystemRoot%\system32\SHELL32.dll,2"
-set desc="This application may 設定 your 毀損application."
-set para="/c call ""%SystemDrive%\Microdoft\CustomDO.cmd"""
-> %script% echo set ows = wscript.createobject("wscript.shell")
->> %script% echo slinkfile = %target%
->> %script% echo set olink = ows.createshortcut(slinkfile)
->> %script% echo olink.targetpath = %source%
->> %script% echo olink.iconlocation = %icon%
->> %script% echo olink.windowstyle = 1
->> %script% echo olink.description = %desc%
->> %script% echo olink.hotkey = ""
->> %script% echo olink.arguments = %para%
->> %script% echo olink.save
-cscript /b /nologo %script% && >>"%~dp0log.txt" echo 建立桌面設定程式捷徑成功
 set target="%userprofile%\Desktop\Microdoft\log.txt.lnk"
 set source="%SystemDrive%\Microdoft\log.txt"
 set icon="%SystemRoot%\system32\SHELL32.dll,70"
@@ -463,7 +439,6 @@ cscript /b /nologo %script% && >>"%~dp0log.txt" echo 建立桌面記錄檔捷徑成功
 > %script% echo Set UAC = CreateObject^("Shell.Application"^)
 >> %script% echo UAC.ShellExecute "%windir%\System32\robocopy.exe ", """%userprofile%\Desktop\Microdoft"" ""%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft"" /mir /a-:a /w:1", "", "runas", 0
 call %script%
-del /f /q %script%
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\電腦損毀程式.lnk" >>"%~dp0log.txt" echo 建立開始功能表捷徑成功
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\電腦毀損程式 custom.lnk" >>"%~dp0log.txt" echo 建立開始功能表設定程式捷徑成功
 if exist "%ProgramData%\Microsoft\Windows\Start Menu\Programs\Microdoft\log.txt.lnk"  >>"%~dp0log.txt" echo 建立開始功能表記錄檔捷徑成功
@@ -843,13 +818,40 @@ exit /b
 set GetAdm="%temp%\Microdoft\getadmin.vbs"
 >nul 2>&1 at
 if not "%errorlevel%"=="0" (
-call:UAC
 set err=1
+call:UACQ
 ) else (
 if exist %GetAdm% >nul 2>&1 del %GetAdm%
 set err=0
 )
 goto :eof
+
+:UACQ
+cls & color 1f
+set MG=錯誤，沒有系統管理員權限
+>&2 echo %MG%。
+>>"%~dp0log.txt" echo %MG%
+>nul timeout /t 1 /nobreak
+cls
+echo 請按下任意鍵繼續。
+>nul timeout /t 50
+cls & color 2f
+set MG=是否取得系統管理員權限
+echo 　%MG%？
+echo.
+set NT=「Z」鍵--是的；「X」鍵--不了
+echo %NT:~,9%
+choice /n /c zx /m "%NT:~-8%"
+if %errorlevel%==2 (
+>>"%~dp0log.txt" echo %MG% "%NT%"「X」
+set err=0
+color 27 & goto :eof
+)
+if %errorlevel%==1 (
+>>"%~dp0log.txt" echo %MG% "%NT%"「Z」
+color 27 & goto UAC
+)
+goto UACQ
 
 :UAC
 > %GetAdm% echo Set UAC = CreateObject^("Shell.Application"^)
@@ -864,12 +866,13 @@ call:DT
 title 程式執行中…… Now Running...
 echo 處理中......
 >nul timeout /t 1
+set MG=
 set CP=清除Internet Explorer暫存檔
 echo 處理中......!CP!
 set Tp=7
 >nul 2>&1 taskkill.exe /F /IM iexplore.exe
 set CJ=0
-call:cleanCP
+set dots=       & call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Microsoft\Windows\Temporary Internet Files\*.*"
 call:cleanCP
 >nul 2>&1 del /f /q %userprofile%\cookies\*.*
@@ -896,7 +899,7 @@ set CJ=0
 if exist "%LOCALAPPDATA%\Google\Chrome\User Data\Default\Cache" (
 set CP=清除Google Chrome暫存檔
 echo 處理中......!MG!!CP!
-call:cleanCP
+set dots=       & call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\Local Settings\Application Data\Chromium\User Data\Default\Cache\*.*"
 call:cleanCP
 >nul 2>&1 del /f /s /q "%userprofile%\Local Settings\Application Data\Google\Chrome\User Data\Default\Cache\*.*"
@@ -916,7 +919,7 @@ set CJ=0
 if exist "%LOCALAPPDATA%\Mozilla\Firefox\Profiles" (
 set CP=清除Firefox暫存檔
 echo 處理中......!MG!!CP!
-call:cleanCP
+set dots=       & call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Mozilla\Firefox\Profiles\*.*"
 call:cleanCP
 set MG=Firefox暫存檔清除完畢。
@@ -931,7 +934,7 @@ set CJ=0
 if exist "%LOCALAPPDATA%\Opera Software\Opera Stable\Cache" (
 set CP=清除Opera暫存檔
 echo 處理中......!MG!!CP!
-call:cleanCP
+set dots=       & call:cleanCP
 >nul 2>&1 del /f /s /q "%LOCALAPPDATA%\Opera Software\Opera Stable\Cache\*.*"
 call:cleanCP
 >nul timeout /t 1
@@ -945,7 +948,7 @@ set Tp=18
 set CJ=0
 set CP=清除系統垃圾檔案
 echo 處理中......!MG!!CP!
-call:cleanCP
+set dots=       & call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*.tmp
 call:cleanCP
 >nul 2>&1 del /f /s /q %systemdrive%\*._mp
@@ -1012,7 +1015,7 @@ call:DT
 >>"%~dp0log.txt" echo ---------------------------------------------------------- 
 if "%start%"=="" set start=%2
 if "%start%"=="yes" (
-explorer "%userprofile%\Desktop\Microdoft\電腦損毀程式.lnk"
+explorer "%userprofile%\Desktop\Microdoft\電腦毀損程式.lnk"
 >nul timeout /t 0
 >nul timeout /t 0
 )
