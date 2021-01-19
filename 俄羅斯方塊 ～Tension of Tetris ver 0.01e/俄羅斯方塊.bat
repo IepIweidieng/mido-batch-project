@@ -4,7 +4,7 @@ if "%1" equ "para2" goto :para2
 
 ::«XÃ¹´µ¤è¶ô¹CÀ¸¡A¥Ñnetbenton½s¼g¡A¦bbathome­ºµo¡A§¹¦¨®É¶¡¡G2009¦~9¤ë25¤é ver 2.0
 ::¥Ñdom2112µù¸Ñ¨Ã­×§ï
-::¡@¡@¡@¡@¡@¡@ver 0.01a¡@¥[¤JHold¨t²Î¡]¡uC¡vÁä¡^¡B³Ì°ª¤À¼Æ¨t²Î¡B¥[¤ÀÅã¥Ü¨t²Î¡B¡uZ¡vÁä»P¡uX¡vÁä¡BÃø«×¨t²Î¡BÄòÃö¿ï³æ
+::2015/7/7¡@ver 0.01a¡@¥[¤JHold¨t²Î¡]¡uC¡vÁä¡^¡B³Ì°ª¤À¼Æ¨t²Î¡B¥[¤ÀÅã¥Ü¨t²Î¡B¡uZ¡vÁä»P¡uX¡vÁä¡BÃø«×¨t²Î¡BÄòÃö¿ï³æ
 ::¡@¡@¡@¡@§ïÅÜ­p¤À¤è¦¡¡A§ó§ï¤¶­±¡C
 ::2015/7/7¡@ver 0.01b¡@§¹¦¨Ãö¥d¨t²Î
 ::¡@¡@¡@¡@§ïÅÜ±ÛÂà¤è¦V
@@ -13,8 +13,14 @@ if "%1" equ "para2" goto :para2
 ::¡@¡@¡@¡@¼W¥[Overwhelm¼Ò¦¡
 ::¡@¡@¡@¡@¼W¥[Mark
 ::¡@¡@¡@¡@­×¥¿¤À¼Æ¨t²Î¡A¤£·|¼Ö·¥¥Í´d¡C
-::2015/10/26 ¡@ver 0.01d¡@­×¥¿³Ì°ª¤À¼Æ¨t²Î
+::2015/10/26¡@ver 0.01d¡@­×¥¿³Ì°ª¤À¼Æ¨t²Î
 ::¡@¡@¡@¡@­×¥¿¥[¤À¤£·|­«¸mªº°ÝÃD
+::2015/11/17¡@ver 0.01e¡@­×¥¿³Ì°ª¤À¼ÆÅª¨ú¨t²Î
+::¡@¡@¡@¡@¶}±ÒOverwhelm¼Ò¦¡«á·|«O«ù¥i¿ï¾Üª¬ºA¡Aª½¨ì¤U¤@¦¸¶i¤JÃø«×¿ï³æ
+::¡@¡@¡@¡@²¾°£¤w¸gµL¥Îªº¡uPress any key......¡v´£¥Ü
+::¡@¡@¡@¡@­×¥¿Ãö¥d¥Ø¼Ð¤è¶ôªº§ó·s®É¾÷
+::¡@¡@¡@¡@­×¥¿Â÷¶}µ{¦¡®É¡AÅã¥Ü°T®§ªºÅã¥Ü
+::¡@¡@¡@¡@¥[¤À¨t²Î­×§ï¤¤¡K¡K
 
 echo Microdoft "arring"...
 
@@ -57,11 +63,11 @@ if not exist "%~s0score.dat" (>"%~s0score.dat" echo 100000 200000 300000 400000 
 >"%~s0aswd.dat" echo 0 0
 set/a err=0
 for /f "tokens=1-5 usebackq" %%a in ("%~s0score.dat") do (
-        if "%%a" lss "100000" (set hiscoren0=100000) else (set hiscoren0=%%a)
-        if "%%b" lss "200000" (set hiscoren1=200000) else (set hiscoren1=%%b)
-        if "%%c" lss "300000" (set hiscoren2=300000) else (set hiscoren2=%%c)
-        if "%%d" lss "400000" (set hiscoren3=400000) else (set hiscoren3=%%d)
-        if "%%e" lss "500000" (set hiscoren4=500000) else (set hiscoren4=%%e)
+        if %%a0 lss 1000000 (set hiscoren0=100000) else (set hiscoren0=%%a)
+        if %%b0 lss 2000000 (set hiscoren1=200000) else (set hiscoren1=%%b)
+        if %%c0 lss 3000000 (set hiscoren2=300000) else (set hiscoren2=%%c)
+        if %%d0 lss 4000000 (set hiscoren3=400000) else (set hiscoren3=%%d)
+        if %%e0 lss 5000000 (set hiscoren4=500000) else (set hiscoren4=%%e)
 )
 set cr=^
 
@@ -250,19 +256,19 @@ set down3hi=1
 set tncrowd3=1
 set tncrowu1=9
 set tnchi3=20
-set downs3=0
-set downs3hi=0
+set downs3=0.5
+set downs3hi=0.25
 set guoguan3=100
 set tchi3=999
 set jiafenm3=4
 
 ::overwhelm
 set down4=1
-set down4hi=0
+set down4hi=0.5
 set tncrowd4=5
 set tncrowu4=1
 set tnchi4=24
-set downs4=0
+set downs4=0.25
 set guoguan4=100
 set tchi4=200
 set jiafenm4=9
@@ -289,17 +295,7 @@ if "!scoret!" neq "0" (goto :gamestart) else (
 )
 
 :selectdiff
-set r21.2=Pr
-set r21.3=es
-set r21.4=s 
-set r21.5=an
-set r21.6=y 
-set r21.7=ke
-set r21.8=y.
-set r21.9=..
 (%d-e:#=21%)
->"%~s0temp.dat" echo 0
-for /l %%a in (2,1,9) do set r21.%%a=¡@
 set n=10
 for /l %%a in (0,1,3) do (
         set m=1
@@ -311,6 +307,8 @@ for /l %%a in (0,1,3) do (
 )
 set diffn=1
 set diffnaddc=0
+>"%~s0temp.dat" echo 0
+>"%~s0aswd.dat" echo;!test! 0
 call :selectdiff2
 
 :selectdiffloop
@@ -331,15 +329,18 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
                         )
                 )
                   if "%%b" equ "3" (
-                        set diffnaddc=0
+                        if "!diffnaddc!" lss "10" set diffnaddc=0
                         if "!diffn!" gtr "0" (set/a diffn-=1)
                 )
                   if "%%b" equ "4" (
                         if "!diffn!" lss "3" (
                                 set/a diffn+=1
                         ) else (
-                                set/a diffnaddc+=1
-                                if "!diffnaddc!" equ "10" (set/a diffn=4)
+                                if !diffnaddc! geq 10 (
+                                        set diffn=4
+                                ) else (
+                                        set/a diffnaddc+=1
+                                )
                         )
                 )
                   if "%%b" equ "6" (
@@ -374,7 +375,7 @@ set r11.0=!diffcults:~1,1!
 set r12.0=!diffcults:~2,1!
 set r13.0=!diffcults:~3,1!
 set r14.0=!diffcults:~4,1!
-if "!diffn!" equ "4" (
+if !diffnaddc! geq 10 (
         set m=1
         for %%b in (!diff4!) do (
                 set r14.!m!=%%b
@@ -385,8 +386,10 @@ if "!diffn!" equ "4" (
 goto :eof
 
 :gamestart
-set guoguantc=!guoguan%diffn%!
+set/a guoguantc=guoguan%diffn%
+set/a guoguan=guan*guoguantc
 set tnchi=!tnchi%diffn%!
+if !guoguan! geq !tchi%diffn%! (set guoguan=!tchi%diffn%!)
 (%d-e:#=21%)
 
 set k3=tnc-=tncrowd%diffn%,k-=2,k+=mx,k"%%"=mx,k+
@@ -415,32 +418,17 @@ set r10.7=¤è
 set r10.8=¶ô
 (%d-e:#=21%)
 >nul timeout /t 0 /nobreak
-set r21.2=Pr
-set r21.3=es
-set r21.4=s 
-set r21.5=an
-set r21.6=y 
-set r21.7=ke
-set r21.8=y.
-set r21.9=..
-(%d-e:#=21%)
 ::ªì©l¤Æ§¤¼ÐªÅ¶¡20¦æ¡A10¦C
 
 :gameloading
->"%~s0temp.dat" echo 2
-for /l %%a in (2,1,9) do set r21.%%a=¡@
-(%d-e:#=21%)
 >nul timeout /t 2 /nobreak
 for /l %%a in (1,1,8) do set r10.%%a=¡@
-
+>"%~s0temp.dat" echo 2
+>"%~s0aswd.dat" echo;!test! 0
 
 ::¹CÀ¸¤¤-------------------------------------------
 
 :loop
-set/a guoguan=guan*guoguantc
-if !guoguan! geq !tchi%diffn%! (set guoguan=!tchi%diffn%!)
-(%d-e:#=21%)
-
 set/a "m=4,t=2,n=0,bti=0"
 
 set downs=!downs%diffn%!
@@ -607,9 +595,12 @@ if !nr! geq 16 (
 
 if !tc! geq !guoguan! (
         set/a "jiafen3=guoguan*jiafenm%diffn%*jiafenm%diffn%,guan+=1"
-        set jiafen3h=!jiafen3:~,-4!0
-        set/a "jiafen3%%=10000,jiafen3*=10000,jiafen2h+=!jiafen2:~,-8!0,jiafen3%%=100000000"
+        set jiafen3h=!jiafen3:~,-3!0
+        set/a "jiafen3%%=1000,jiafen3*=100000,jiafen3h+=!jiafen3:~,-8!0,jiafen3%%=100000000"
 )
+set/a guoguan=guan*guoguantc
+if !guoguan! geq !tchi%diffn%! (set guoguan=!tchi%diffn%!)
+(%d-e:#=21%)
 ::¹LÃö±o¤À
 
 set/a "scoreh+=jiafen1h+jiafen2h+jiafen3h"
@@ -754,17 +745,7 @@ goto :eof
 
 :precontinue
 >nul timeout /t 0 /nobreak
-set r21.2=Pr
-set r21.3=es
-set r21.4=s 
-set r21.5=an
-set r21.6=y 
-set r21.7=ke
-set r21.8=y.
-set r21.9=..
 (%d-e:#=21%)
->"%~s0temp.dat" echo 0
-for /l %%a in (2,1,9) do set r21.%%a=¡@
         set r11.2=¡@
         set r11.3=¡@
         set r11.6=¡@
@@ -785,6 +766,8 @@ for /l %%a in (2,1,9) do set r21.%%a=¡@
         
         set r12.4=¤£
         set r12.5=¤F
+>"%~s0temp.dat" echo 0
+>"%~s0aswd.dat" echo;!test! 0
 call :selectconti
 
 :continue
@@ -847,15 +830,16 @@ if %mode% equ 0 (echo ¡@¡@W¤W²¾ S¤U²¾ Z½T©w X¨ú®ø Q°h¥X¡@¡@¡@) else (echo A¥ª D¥
 set/a n=n"%%"100+1
 ::­p®É¾¹
 >nul choice /c adwscqzxp /n
->nul >"%~s0aswd.dat" echo;%n% %errorlevel%
+0>&1 >nul >"%~s0aswd.dat" echo;%n% %errorlevel%
 if %errorlevel% equ 6 goto :paraexit
 if %errorlevel% geq 10 goto :paraexit
 goto :p_lp
 
 :paraexit
 set/a n=n"%%"100+1
->nul >"%~s0aswd.dat" echo;%n% 6
->nul ping /n 1 127.0.0.1
+0>&1 >nul >"%~s0aswd.dat" echo;%n% 6
+>nul timeout /t 0 /nobreak
+0>&1 >nul del /f /q /a "%~s0aswd.dat"
 exit
 
 ::µ²§ô¹CÀ¸-----------------------------------------
@@ -875,8 +859,8 @@ if "!err!" neq "0" (goto :store)
 goto :eof
 
 :error
-if "%1" equ "6" echo Thank you for playing¡I GOoD ByE with you¡I
-if "%1" gtr "9" echo µo¥Í¤FÄY­«ªº¿ù»~¡Aµ{¦¡¥²¶·Ãö³¬¡C
-del /f /q /a "%~s0aswd.dat"
-del /f /q /a "%~s0temp.dat"
+if %10 equ 60 echo Thank you for playing¡I GOoD ByE with you¡I
+if %10 gtr 90 echo µo¥Í¤FÄY­«ªº¿ù»~¡Aµ{¦¡¥²¶·Ãö³¬¡C
+2>&1 >nul del /f /q /a "%~s0aswd.dat"
+2>&1 >nul del /f /q /a "%~s0temp.dat"
 >nul timeout /t 1
