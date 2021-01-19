@@ -13,7 +13,7 @@ set dev=無
 set err=0
 call:op5
 cls
-title ＡＤＢ備份與還原工具程序　Ver.1a
+title ＡＤＢ備份與還原工具程序　Ver.1b
 echo ********************************************
 echo *                                          *
 echo *         ＡＤＢ備份與還原工具程式         *
@@ -49,8 +49,8 @@ goto main
 goto start
 
 :main
-cls
-title ＡＤＢ備份與還原工具程序　Ver.1a
+cls & color 2f
+title ＡＤＢ備份與還原工具程序　Ver.1b
 echo ********************************************
 echo *                                          *
 echo *         ＡＤＢ備份與還原工具程式         *
@@ -90,13 +90,13 @@ if %errorlevel%==1 set apk=y
 choice /n /c zx /m "是否要連同記憶卡（儲存空間）資料一起備份？（Z／X）"
 if %errorlevel%==1 set stor=y
 color 27
-if %apk% ==y (
-if %stor%==y (
+if "%apk%"=="y" (
+if "%stor%"=="y" (
 adb -s %dev% backup -apk -shared -nosystem -all -f "%input%.ab"
 ) else (
 adb -s %dev% backup -apk -noshared -nosystem -all -f "%input%.ab"
 )) else (
-if %stor%==y (
+if "%stor%"=="y" (
 adb -s %dev% backup -shared -nosystem -all -f "%input%.ab"
 ) else (
 adb -s %dev% backup -noshared -nosystem -all -f "%input%.ab"
@@ -132,13 +132,13 @@ if %errorlevel%==1 set apk=y
 choice /n /c zx /m "是否要連同記憶卡（儲存空間）資料一起備份？（Z／X）"
 if %errorlevel%==1 set stor=y
 color 27
-if %apk% ==y (
-if %stor%==y (
+if "%apk%"=="y" (
+if "%stor%"=="y" (
 adb -s %dev% backup -apk -shared -system -all -f "%input%.ab"
  ) else (
 adb -s %dev% backup -apk -noshared -system -all -f "%input%.ab"
 )) else (
-if %stor%==y (
+if "%stor%"=="y" (
 adb -s %dev% backup -shared -system -all -f "%input%.ab"
 ) else (
 adb -s %dev% backup -noshared -system -all -f "%input%.ab"
@@ -157,7 +157,7 @@ echo.
 choice /n /c zx /m "是否要備份應用程式？（Z／X）"
 if %errorlevel%==1 set apk=y
 color 27
-if %apk% ==y (
+if "%apk%"=="y" (
 adb -s %dev% backup -apk %name% -f "%save%.ab"
 ) else (
 adb -s %dev% backup %name% -f "%save%.ab"
@@ -188,8 +188,8 @@ echo !tm!．　%%A　%%B
 if !tm!==0 echo 沒有可用裝置！ & >nul pause & set err=8 & goto eof:
 set /a tpg=(tm-tm%10)/10+1
 title 連線測試＆選擇手機　第%page%／%tpg%頁　目前裝置：%dev%
-choice /n /c 0123456789zx /m "輸入序號以選擇（１～９），按０返回，「Z」下一頁，「X」上一頁"
-if %errorlevel%==11 (
+choice /n /c 123456789zx0 /m "輸入序號以選擇（１～９），按０返回，「Z」下一頁，「X」上一頁"
+if %errorlevel%==10 (
 if %page% geq %tpg% (
 set page=%tpg%
 ) else (
@@ -197,7 +197,7 @@ set /a page+=1
 )
 goto op5
 )
-if %errorlevel%==12 (
+if %errorlevel%==11 (
 if %page% leq 1 (
 set page=1
 ) else (
@@ -205,17 +205,9 @@ set /a page-=1
 )
 goto op5
 )
-if %errorlevel%==2 set dev=%D1%
-if %errorlevel%==3 set dev=%D2%
-if %errorlevel%==4 set dev=%D3%
-if %errorlevel%==5 set dev=%D4%
-if %errorlevel%==6 set dev=%D5%
-if %errorlevel%==7 set dev=%D6%
-if %errorlevel%==8 set dev=%D7%
-if %errorlevel%==9 set dev=%D8%
-if %errorlevel%==10 set dev=%D9%
+if %errorlevel% leq 9 set dev=!D%errorlevel%!
 if "!dev!"=="" set dev=無
-if not "!dev!"=="無" (echo 選擇裝置成功！ & if %errorlevel%==1 goto :eof) else (
+if not "!dev!"=="無" (echo 選擇裝置成功！ & if %errorlevel%==12 goto :eof) else (
 echo 沒有正確選擇裝置！
 )
 >nul pause
