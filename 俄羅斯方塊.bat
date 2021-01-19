@@ -1,72 +1,42 @@
 @title 程式載入中…… Now Loading…&echo off&setlocal enableextensions&color 27
 >nul chcp 950
+
+:ValueInitializor
 echo Microdoft "arring (initializing)"...
+set i_Reset=
 for /f "tokens=1 delims==" %%a in ('set') do (
-        for %%b in (ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^(x86^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^(x86^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir) do if "%%a"=="%%b" goto :ValueReseterContinue
-        set %%a=
-        :ValueReseterContinue
-        <nul set/p=""
+        for %%b in (ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^(x86^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^(x86^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir) do if "%%a"=="%%b" set i_Reset=1
+        call:ValueInitializeReseter
 )
+goto :Logger
+
+:ValueInitializeReseter
+if defined i_Reset (set i_Reset=) else (set %%a=)
+goto :eof
+
+:Logger
 set nl=^^^
 
 ^
 
 
-if "%1" equ "para2" goto :para2
+if "%2" equ "para2" goto :para2
 
-set CurrectVersion=0001f
+set CurrectVersion=0001g
 if "%CurrectVersion:~,-3%"=="0%CurrectVersion:~1,-3%" (set CVer=%CurrectVersion:~1,-3%) else (set CVer=%CurrectVersion:~,-3%)
 set CVer=%CVer%.%CurrectVersion:~2%
 
 >"%~dpn0log.txt" echo;微哆動作紀錄 --------------------------------------------- 
 
-::俄羅斯方塊遊戲，由netbenton編寫，在bathome首發，完成時間：2009年9月25日 ver 2.0
-::由dom2112註解並修改
-::2015/7/7　ver 0.01a　加入Hold系統（「C」鍵）、最高分數系統、加分顯示系統、「Z」鍵與「X」鍵、難度系統、續關選單
-::　　　　改變計分方式，更改介面
-::2015/7/7　ver 0.01b　完成關卡系統
-::　　　　改變旋轉方向
-::2015/9/27 　ver 0.01c　分開了鍵盤操作用與儲存分數的檔案，不用擔心最高分數被意外歸零
-::　　　　修正Hold使用後，方塊的放置會過快的問題
-::　　　　增加Overwhelm模式
-::　　　　增加Mark
-::　　　　修正分數系統，不會樂極生悲
-::2015/10/26　ver 0.01d　修正最高分數系統
-::　　　　修正加分不會重置的問題
-::2015/11/17　ver 0.01e　修正最高分數讀取系統
-::　　　　開啟Overwhelm模式後會保持可選擇狀態，直到下一次進入難度選單
-::　　　　移除已經無用的「Press any key......」提示
-::　　　　修正關卡目標方塊的更新時機
-::　　　　修正離開程式時，顯示訊息的顯示
-::　　　　修改加分系統
-::2015/12/6　ver 0.01f　修正最高分數更新系統
-::　　　　增加消行後短暫的休息時間
-::　　　　增加消行效果
-::　　　　修正最後關卡的方塊的下落速度
-::　　　　現在同一種方塊最多連續出現兩次
-::　　　　修正當儲存分數的檔案為唯獨狀態時無法儲存分數的錯誤
-::　　　　現在啟動程式時會初始化變數，結束程式時也會還原變數
-::　　　　現在不能同時啟動兩個遊戲視窗或操作視窗
-::　　　　現在消一行只會增加一個方塊的進度
-::　　　　增加在有網路時檢查及下載更新版本的功能
-::　　　　修正方塊，並刪除不再使用的方塊種類
-::　　　　修正回到難度選單時難度的顯示沒有消失的問題
-::　　　　修正以消行結束遊戲時，被消行上方的方塊不會下降的問題
-::　　　　現在當遊戲程式沒有進行遊戲時，操作視窗被關閉就會重新開啟操作視窗
-::　　　　修正在Exciting難度中，方塊進度達到999就會判為完成遊戲的問題
-::　　　　修正開啟Overwhelm模式後仍然可以透過連打A鍵來關閉的問題
-::　　　　修正有時按下Q鍵時會發生的問題
-::　　　　修正操作視窗發生問題而退出時遊戲程式仍然判定為一般退出的問題
-
 cls&echo Microdoft "arring (setting)"...
 
 ::設定參數--------------------------------------
 :boast
-set        "d-v=for %%a in (!str!) do set/a one=0x%%a,x=one/4+n,y=one%%4+m&(for %%b in ("r!x!.!y!") do if "!%%~b!" equ "　" (set r!x!.!y!=■) else (set err=1))"
+set        "d-v=for %%A in (!str!) do set/a one=0x%%A,x=one/4+n,y=one%%4+m&(for %%B in ("r!x!.!y!") do if "!%%~B!" equ "　" (set r!x!.!y!=■) else (set err=1))"
 ::函數d-v，把str中的圖標數據，放置到總坐標空間中，如果有覆蓋，則err=1。調用方法：(%d-v%)
 ::變量使用：one  x  y
 
-set "d-e=set aec=!cr! 　　　┌──────────┐　　!ebu1!!cr!&(for /l %%a in (2,1,#) do for %%b in ("│!ebuf:@=%%a!!ebu%%a!!mark%%a!") do set aec=!aec!　　　 %%~b!cr!)&cls&echo;!aec!　　　 └──────────┘　　!ebu22!"
+set "d-e=set aec=!cr! 　　　┌──────────┐　　!ebu1!!cr!&(for /l %%A in (2,1,#) do for %%B in ("│!ebuf:@=%%A!!ebu%%A!!mark%%A!") do set aec=!aec!　　　 %%~B!cr!)&set aec=!aec!　　　 └──────────┘　　!ebu22!&cls&echo;!aec!"
 ::函數d-e，把總坐標空間顯示出來，調用方法：(%d-e:#=行數%)
 set ebu4=｜　　Ｈiscore　!hiscores!!hiscoren!
 set ebu5=｜　　　　　 !scores!!jiafenn!
@@ -105,7 +75,8 @@ for /f "tokens=1-5 usebackq" %%a in ("%~s0score.dat") do (
         if %%d0 lss 4000000 (set hiscoren3=400000) else (set hiscoren3=%%d)
         if %%e0 lss 5000000 (set hiscoren4=500000) else (set hiscoren4=%%e)
 )
-set cr=^
+
+set cr=　^
 
 
 ::各種圖標定義
@@ -269,7 +240,7 @@ echo Microdoft "arring (setting)"...
 
 set test=0
 >"%~s0temp.dat" echo 0
-start "操作視窗" "%~f0" para2
+start "操作視窗" "%~f0" /i para2
 ::起動控制窗口
 
 call :MainDoubleDetecter
@@ -290,7 +261,6 @@ for /f "tokens=1,2 usebackq" %%a in (%strFile%) do (
         if "%%a"=="%CurrectVersion%" set CVFound=1
         set NewVersion=%%a
 )
-set NewVersion=0001f
 if "%NewVersion:~,-3%"=="0%NewVersion:~1,-3%" (set NVer=%NewVersion:~1,-3%) else (set NVer=%NewVersion:~,-3%)
 set NVer=%NVer%.%NewVersion:~2%
 >nul 2>&1 del /f /q /a %strFile%
@@ -342,18 +312,19 @@ goto :UpdateDownloadWaiter
 
 :UpdaterMenu
 for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
-         if %%b geq 10 (set UMerror=%%b&goto :eof)
-         if "%%a" neq "!test!" (
-                  set test=%%a
-                  if "%%b" equ "1" (
+        if %%b geq 10 (set UMerror=%%b&goto :eof)
+        if "%%a" neq "!test!" (
+                set test=%%a
+                if "%%b" equ "1" (
                         if !UChoiceN! gtr 0 (set/a UChoiceN-=1)
-                  )
-                  if "%%b" equ "2" (
+                )
+                if "%%b" equ "2" (
                         if !UChoiceN! lss 1 (set/a UChoiceN+=1)
-                  )
-                  if "%%b" equ "6" (set UMerror=0&goto :eof)
-                  if "%%b" equ "7" (goto :eof)
-                  if "%%b" equ "8" (set UChoiceN=1&goto :eof)
+                )
+                if "%%b" equ "6" (set UMerror=0&goto :eof)
+                if "%%b" equ "7" (goto :eof)
+                if "%%b" equ "8" (set UChoiceN=1&goto :eof)
+                if "%%b" equ "9" (call :snapshot)
         call :selectUpdater
         )
 )
@@ -362,8 +333,9 @@ call :ParaDetecter %~s0
 goto :UpdaterMenu
 
 :selectUpdater
-if !UChoiceN! equ 0 (set UChoiceS=＞　) else  (set UChoiceS=　＜) 
-cls&echo;%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%　　　┌─────────────────────────%nl%　　　│遊戲程式有新版本^(%NVer%^)，要下載並安裝嗎？%nl%　　　│　　　　　　　　　　　　　　　　目前版本：%CVer%%nl%　　　│　　　　　　　　　　　是的%UChoiceS:~,1%　　%UChoiceS:~1%不了%nl%　　　╘══════════════════════════
+if !UChoiceN! equ 0 (set UChoiceS=＞　) else (set UChoiceS=　＜)
+set aec=!cr!!cr!!cr!!cr!!cr!!cr!!cr!!cr!!cr!　　　┌─────────────────────────!cr!　　　│遊戲程式有新版本^(%NVer%^)，要下載並安裝嗎？!cr!　　　│　　　　　　　　　　　　　　　　目前版本：%CVer%%nl%　　　│　　　　　　　　　　　是的%UChoiceS:~,1%　　%UChoiceS:~1%不了%nl%　　　╘══════════════════════════
+cls&echo;!aec!
 goto :eof
 
 :UpdateFinish
@@ -399,9 +371,14 @@ if !PDtn! gtr 100 (
         set para=
         for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq 操作視窗"') do (set para=1)
         for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq 程式執行中…… Now Running..."') do (set para=1)
-        if not defined para (start "操作視窗" %1 para2)
+        if not defined para (start "操作視窗" %1 /i para2)
         set PDbti=1!time:~6,2!!time:~9,2!
 )
+goto :eof
+
+:snapshot
+>"%~dpn0snapshot.txt" <nul set/p=""
+for /f "tokens=* delims=" %%A in ("!aec!") do >>"%~dpn0snapshot.txt" echo;%%A
 goto :eof
 
 ::進入遊戲---------------------------------------
@@ -447,14 +424,14 @@ call :selectdiff2
 
 :selectdiffloop
 for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
-         if %%b geq 10 (call :error %%b&exit /b)
-         if "%%a" neq "!test!" (
-                  set test=%%a
-                  if "%%b" equ "1" (
+        if %%b geq 10 (call :error %%b&exit /b)
+        if "%%a" neq "!test!" (
+                set test=%%a
+                if "%%b" equ "1" (
                         if "!diffnaddc!" lss "10" set diffnaddc=0
                         if "!diffn!" gtr "0" (set/a diffn-=1)
                 )
-                  if "%%b" equ "2" (
+                if "%%b" equ "2" (
                         if "!diffn!" lss "3" (
                                 set/a diffn+=1
                         ) else (
@@ -465,11 +442,11 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
                                 )
                         )
                 )
-                  if "%%b" equ "3" (
+                if "%%b" equ "3" (
                         if "!diffnaddc!" lss "10" set diffnaddc=0
                         if "!diffn!" gtr "0" (set/a diffn-=1)
                 )
-                  if "%%b" equ "4" (
+                if "%%b" equ "4" (
                         if "!diffn!" lss "3" (
                                 set/a diffn+=1
                         ) else (
@@ -480,15 +457,18 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
                                 )
                         )
                 )
-                  if "%%b" equ "6" (
+                if "%%b" equ "6" (
                         call :error 6&exit /b
                 )
-                  if "%%b" equ "7" (
+                if "%%b" equ "7" (
                         goto :gamestart
                 )
-                  if "%%b" equ "8" (
+                if "%%b" equ "8" (
                         call :error 6&exit /b
                 )
+                if "%%b" equ "9" (
+                        call :snapshot
+                        )
         call :selectdiff2
         )
 )
@@ -638,7 +618,7 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
                 if "%%b" equ "8" (for %%c in ("!ttr:~,2!!k!") do set str=!%%~c!&if "!k!" equ "!bk!" (set/a tnc=btnc))
                 setlocal enabledelayedexpansion
                 (%d-v%)
-                rem 調用函數把圖標點放置到總坐標空間
+                ::調用函數把圖標點放置到總坐標空間
                 if defined err (
                         endlocal
                         set/a m=bm,k=bk,tnc=btnc
@@ -646,7 +626,8 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
                         if "%%b" equ "4" (goto :jmpout)
                 ) else (
                         (%d-e:#=21%)
-                        rem 調用顯示函數
+                        ::調用顯示函數
+                        if "%%b" equ "9" (call :snapshot)
                         endlocal
                 )
         )
@@ -877,7 +858,10 @@ goto :loop
 for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
         if %%b equ 6 (call :error %%b&exit /b)
         if %%b geq 10 (call :error %%b&exit /b)
-        if %%a neq !test! set test=%%a
+        if %%a neq !test! (
+                set test=%%a
+                if "%%b" equ "9" (call :snapshot)
+        )
 )
 
 ::計時
@@ -987,6 +971,9 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
                                 set scoret=0
                                 goto :restart
                         )
+                if "%%b" equ "9" (
+                        call :snapshot
+                        )
                 )
         call :selectconti
         )
@@ -1031,6 +1018,7 @@ goto :paraexit
 set/a n=n"%%"100+1
 0>&1 >nul >"%~s0aswd.dat" echo;%n% %Para2error%
 endlocal
+title 命令提示字元
 exit
 
 :Para2DoubleDetecter
@@ -1082,3 +1070,4 @@ if %10 gtr 90 echo 發生了嚴重的錯誤，程式必須關閉。
 >>"%~dpn0log.txt" echo;---------------------------------------------------------- 
 endlocal
 >nul timeout /t 1
+title 命令提示字元
