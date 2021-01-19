@@ -1,6 +1,7 @@
 :BAT start
-@title 程式載入中...... Now Loading...&echo off&setlocal enableextensions
->nul chcp 950
+@>nul chcp 950&echo off&setlocal enableextensions
+if not "%1"=="ANSI" (cmd /a /c "%~f0" ANSI&color&endlocal&goto:eof)
+title 程式載入中...... Now Loading...
 echo;〞~～﹎○★微哆公司出品☆◆﹊～~〞
 >nul timeout /t 1
 set VIValue=VIValue ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^^^(x86^^^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^^^(x86^^^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir
@@ -30,9 +31,7 @@ if exist "%~dpn0log.txt" (
 goto:BAT start continue
 
 :BAT start continue
-set CurrectVersion=0100f
-if "%CurrectVersion:~,-3%"=="0%CurrectVersion:~1,-3%" (set CVer=%CurrectVersion:~1,-3%) else (set CVer=%CurrectVersion:~,-3%)
-set CVer=%CVer%.%CurrectVersion:~2%
+call:CVerSetter
 call:DoubleDetecter
 if defined DoubleDetect endlocal&endlocal&goto:eof 
 if defined LogNew (>"%~dpn0log.txt" echo;微哆動作紀錄 ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～ ) else (
@@ -43,11 +42,21 @@ call:DT
 >>"%~dpn0log.txt" echo;%_DT%　啟動了計分板程式
 goto:start
 
+:CVerSetter
+set CurrectVersion=0100g
+set CurrectReversion=0
+if "%CurrectVersion:~,2%"=="0%CurrectVersion:~1,1%" (set CVer=%CurrectVersion:~1,1%) else (set CVer=%CurrectVersion:~,2%)
+set CVer=%CVer%.%CurrectVersion:~2%
+if not "%CurrectReversion%"=="0" set CVer=ver. %CVer%  rev. %CurrectReversion%
+goto:eof
+
 :DoubleDetecter
 set DoubleDetect=
 title 程式執行中…… Now Running...
->nul timeout /t 0 /nobreak
-for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq osu！競賽計分板 ver. %CVer%"') do (
+for /l %%a in (0,1,2) do (
+ >nul timeout /t 0 /nobreak
+)
+for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq osu！競賽計分板 %CVer%"') do (
  set MG=錯誤：不能同時啟動兩個計分板
  call:DT
  >>"%~dpn0log.txt" echo;!_DT!　!MG!
@@ -82,6 +91,7 @@ set nl=^^^
 ^
 
 
+call:CVerSetter
 call:osu！競記.dat
 goto:DT
 
@@ -116,36 +126,38 @@ call:storesave&call:readsave 1
 goto:ready
 
 :ready
-%cls%&color 2f&title osu！競賽計分板 ver. %CVer%
+%cls%&color 2f&title osu！競賽計分板 %CVer%
 set MG=程式選單
 set NT=Ｚ鍵　進入計分板；Ｘ鍵　結束
 echo;　　　　　　　　－%MG%－%bellG%%nl%%nl%　　　　　%NT:~,8%
 choice /n /c zxqr /m "　　　　　%NT:~-5%"
-call:DT
-if %errorlevel%==4 (
- >>"%~dpn0log.txt" echo;%_DT%　%MG% "%NT%" R
- set MenuType=
- goto:restart
-)
-if %errorlevel%==3 (
- >>"%~dpn0log.txt" echo;%_DT%　%MG% "%NT%" Q
- set MenuType=
- call:storesave
- goto:set00
-)
-if %errorlevel%==2 (
- >>"%~dpn0log.txt" echo;%_DT%　%MG% "%NT%" X
- set MenuType=
- goto:set00
-)
-if %errorlevel%==1 (
- >>"%~dpn0log.txt" echo;%_DT%　%MG% "%NT%" Z
- set CP=0
- set C=1
- <nul set/p=%bellG%
- call:DoubleDetecter
- if defined DoubleDetect endlocal&endlocal&goto:eof
- goto:setdefining
+(
+ call:DT
+ if %errorlevel%==4 (
+  >>"%~dpn0log.txt" echo;!_DT!　%MG% "%NT%" R
+  set MenuType=
+  goto:restart
+ )
+ if %errorlevel%==3 (
+  >>"%~dpn0log.txt" echo;!_DT!　%MG% "%NT%" Q
+  set MenuType=
+  call:storesave
+  goto:set00
+ )
+ if %errorlevel%==2 (
+  >>"%~dpn0log.txt" echo;!_DT!　%MG% "%NT%" X
+  set MenuType=
+  goto:set00
+ )
+ if %errorlevel%==1 (
+  >>"%~dpn0log.txt" echo;!_DT!　%MG% "%NT%" Z
+  set CP=0
+  set C=1
+  <nul set/p=%bellG%
+  call:DoubleDetecter
+  if defined DoubleDetect endlocal&endlocal&goto:eof
+  goto:setdefining
+ )
 )
 goto:ready
 
@@ -153,7 +165,8 @@ goto:ready
 for /l %%a in (0,1,4) do (for /l %%b in (0,1,9) do (set SN%%a%%b=))
 set SN01=成員登記&set Ex01=進行玩家的競賽登錄
 set SN02=開場挑釁&set Ex02=進入自我介紹檢核表
-set SN03=玩家出主題&set Ex03=進入歌曲主題的檢核表
+set SN031=玩家出主題&set Ex031=進入歌曲主題的檢核表
+set SN032=選歌權轉移&set Ex032=進入房主交接的檢核表
 set SN04=玩家選歌&set Ex04=進入選擇歌曲的檢核表
 set SN05=計時室&set Ex05=進入計時室，並開始這個歌曲回合
 set SN06=下一回合&set Ex06=進入下一回合
@@ -161,14 +174,14 @@ set SN07=忍術翻轉&set Ex07=進入翻轉回合
 set SN08=治罪之地&set Ex08=開啟秩序懲罰選單
 set SN09=設定與說明&set Ex09=進入設定和說明選單
 set SN00=退出&set Ex00=退出計分板程式
-set SN11=主題失效&set Ex11o=@宣布了沒有適當搜尋關鍵字的主題的原房主#處罰
-set SN12=Ｎ多主題&set Ex12o=@宣布了一個以上主題的原房主#處罰
-set SN13=公佈歌曲名稱&set Ex13o=@以歌曲名稱作為主題的原房主#處罰
+set SN111=主題失效&set Ex111o=@宣布了沒有適當搜尋關鍵字的主題的原房主#處罰
+set SN121=Ｎ多主題&set Ex121o=@宣布了一個以上主題的原房主#處罰
+set SN131=公佈歌曲名稱&set Ex131o=@以歌曲名稱作為主題的原房主#處罰
 set SN15=給錯房主&set Ex15o=@將房主資格給錯玩家的原房主#處罰
 set SN10=離開&set Ex10=離開主題宣布檢核表
 set SN21=歌曲重複&set Ex21o=@選擇了競賽中已被選過的歌曲的房主#處罰
 set SN23=過烈警告&set Ex23=切換目前房主有無提示過難的狀況
-set SN25=選曲審判&set Ex25=進行對房主所選的歌曲是否符合主題的表決
+set SN251=選曲審判&set Ex251=進行對房主所選的歌曲是否符合主題的表決
 set SN20=離開&set Ex20=離開歌曲選擇檢核表
 set SN31=結束回合&set Ex31=停止計時，進行回合結帳
 set SN30=離開&set Ex30=離開歌曲選擇檢核表
@@ -181,13 +194,16 @@ set SN52=操作音效&set Ex52=開關操作時的音效
 set OP2L=2&set OP2V1=開啟&set OP2V2=關閉&set OP2DV=1
 set SN53=捲動行數&set Ex53=調整競賽說明的一次捲動行數
 set OP3L=5&set OP3V1=1&set OP3V2=2&set OP3V3=3&set OP3V4=4&set OP3V5=5&set OP3DV=3
+set SN54=主題模式&set Ex54=開關競賽的宣布主題相關規則
+set OP4L=2&set OP4V1=開啟&set OP4V2=關閉&set OP4DV=1
+if not defined OP4V (set OP4V=%OP4DV%)
 set SN59=放棄治療&set Ex59=將所有設定還原為預設值
 set SN50=離開&set Ex50=離開設定與說明選單
 goto:set-1
 
 :set-1
 mode con cols=80 lines=30
-title osu！競賽計分板 ver. %CVer%
+title osu！競賽計分板 %CVer%
 set BMG=
 set MG=ｏｓｕ！競賽計分板
 set BHp=
@@ -202,8 +218,17 @@ set Hpdiag=
 set Mopdiag=
 if not defined SN%CP%%C% goto:ScoreMenuS
 for /l %%a in (0,1,9) do set Sl%%a= 
-set SN=!SN%CP%%C%!&set Ex=!Ex%CP%%C%!&set Sl%C%=》 
+set Sl%C%=》 
 for /l %%a in (1,1,9) do (
+ set ScoreMenuOP4V=0
+ if not "%CP%,%%a"=="0,3" if not "%CP%,%%a"=="1,1" if not "%CP%,%%a"=="1,2" if not "%CP%,%%a"=="1,3" if not "%CP%,%%a"=="2,5" set ScoreMenuOP4V=
+ if defined ScoreMenuOP4V if defined SN%CP%%%a%OP4V% (
+  set SN%CP%%%a=!SN%CP%%%a%OP4V%!
+  set Ex%CP%%%a=!Ex%CP%%%a%OP4V%!
+ ) else (
+  set SN%CP%%%a=
+  set Ex%CP%%%a=
+ )
  set Ml%%a=!Sl%%a!&set M%%a=!SN%CP%%%a!
  if defined SN%CP%%%a (
   if !F%CP%%%aR0!==1 set Mop%%a=[完成]
@@ -211,11 +236,12 @@ for /l %%a in (1,1,9) do (
   if !F%CP%%%aR%R%!==1 set Mop%%a=[完成]
   if !F%CP%%%aR%R%!==2 set Mop%%a=[計時中...]
   if !F%CP%%%aR%R%!==3 set Mop%%a=[未審判]
-  if "%CP%""%EnUDTurn%"=="0""1"  set Mop7=[可翻轉]
-  if "%CP%""%UDTurn%"=="0""1"  set Mop7=[已翻轉]
+  if "%CP%""%EnUDTurn%"=="0""1" set Mop7=[可翻轉]
+  if "%CP%""%UDTurn%"=="0""1" set Mop7=[已翻轉]
   if %CP%==0 if not defined Mop%%a set Mop%%a=...
  ) else (set Mop%%a=)
 )
+set SN=!SN%CP%%C%!&set Ex=!Ex%CP%%C%!
 set Ml10=%Sl0%&set M10=!SN%CP%0!&set Mop10=...
 if %CP%==4 (
  set NT=上/下鍵 上下選擇　Ｚ鍵 確定　Ｘ鍵 離開
@@ -284,6 +310,7 @@ for /l %%a in (1,1,9) do (
     if %%b==!OP%%aV! (set OP%%aSl%%b=[]) else (set OP%%aSl%%b=  )
     set Mop%%a=!OP%%aSl%%b:~,1!!OP%%aV%%b!!OP%%aSl%%b:~1! !Mop%%a!
    )
+   if %%a==4 if defined F03R%R% set Mop%%a=!Mop%%a! ^<已鎖定^>
   ) else (set Mop%%a=...)
  )
 )
@@ -327,10 +354,12 @@ if %errorlevel% geq 5 (
  goto:OptionMenu
 )
 if %errorlevel% geq 3 (
+ if %C%==4 if defined F03R%R% goto:OptionMenu
  if defined OP%C%L if !OP%C%V! geq !OP%C%L! (set OP%C%V=!OP%C%L!) else (set/a OP%C%V+=1)
  goto:OptionMenu
 )
 if %errorlevel% geq 1 (
+ if %C%==4 if defined F03R%R% goto:OptionMenu
  if defined OP%C%L if !OP%C%V! leq 1 (set OP%C%V=1) else (set/a OP%C%V-=1)
  goto:OptionMenu
 )
@@ -629,7 +658,11 @@ for /l %%a in (1,1,10) do (
  )
  echo;　!Ml%%a:~1!　　　　　　　　!Mop%%a!
 )
-echo;%nl%　　　　回合:%R%　比數%PlSn%%nl%　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!%nl%%ESp%%Ex%%nl%
+if %OP4V%==1 (
+ echo;%nl%　　　　回合:%R%　比數%PlSn%%nl%　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!%nl%%ESp%%Ex%%nl%
+) else (
+ echo;%nl%　　　　回合:%R%　比數%PlSn%%nl%　　原房主:!Pl%ownerB%!　房主:!Pl%ownerA%!%nl%%ESp%%Ex%%nl%
+)
 goto:eof
 
 :CheckMenu
@@ -858,9 +891,9 @@ for /l %%a in (1,1,16) do (
 set PlSn=
 for /l %%a in (1,1,16) do (
  if defined Pl%%a (
-  set/a "Pl%%aS-=(!Pl%%aC!/3)*20,Pl%%aC%%=3"
-  set PlSn=!PlSn!:!Pl%%aS!
-  for /l %%b in (1,1,!Pl%%aC!) do set PlSn=!PlSn!X
+  set/a "Pl%%aSn=Pl%%aS-(!Pl%%aC!/3)*20,Pl%%aCn=Pl%%aC%%3"
+  set PlSn=!PlSn!:!Pl%%aSn!
+  for /l %%b in (1,1,!Pl%%aCn!) do set PlSn=!PlSn!X
  )
 )
 goto:eof
@@ -890,12 +923,12 @@ if %Vd%==1 (
    )
    if not defined PlDataN set/a "PlDataN=PlDataFN+1"
    set "PlData_!PlDataN!="!Pl%%a!""
+   set "PlData_!PlDataN!S=!Pl%%aS!"&set "Pl%%aS="
+   set "PlData_!PlDataN!C=!Pl%%aC!"&set "Pl%%aC="
    for /l %%b in (0,1,%R%) do (
     for /l %%c in (0,1,5) do (
      for /l %%d in (1,1,9) do (
-      set "PlData_!PlDataN!S=!Pl%%aS!"&set "Pl%%aS="
       set "PlData_!PlDataN!S%%c%%dR%%b=!Pl%%aS%%c%%dR%%b!"&set "Pl%%aS%%c%%dR%%b="
-      set "PlData_!PlDataN!C=!Pl%%aC!"&set "Pl%%aC="
       set "PlData_!PlDataN!C%%c%%dR%%b=!Pl%%aC%%c%%dR%%b!"&set "Pl%%aC%%c%%dR%%b="
       set "PlData_!PlDataN!M%%c%%dR%%b=!Pl%%aM%%c%%dR%%b!"&set "Pl%%aM%%c%%dR%%b="
      )
@@ -915,12 +948,12 @@ if %Vd%==1 (
    for /f "tokens=1,2 delims=_=" %%b in ('set') do (if "%%b"=="PlData" if !%%b_%%c!=="!Pl%%a!" set "found=%%c")
    if defined found (
     set/a ownerO+=1
+    call set "Pl%%aS=%%PlData_!found!S%%"
+    call set "Pl%%aC=%%PlData_!found!C%%"
     for /l %%b in (0,1,%R%) do (
      for /l %%c in (0,1,5) do (
       for /l %%d in (1,1,9) do (
-       call set "Pl%%aS=%%PlData_!found!S%%"
        call set "Pl%%aS%%c%%dR%%b=%%PlData_!found!S%%c%%dR%%b%%"
-       call set "Pl%%aC=%%PlData_!found!C%%"
        call set "Pl%%aC%%c%%dR%%b=%%PlData_!found!C%%c%%dR%%b%%"
        call set "Pl%%aM%%c%%dR%%b=%%PlData_!found!M%%c%%dR%%b%%"
       )
@@ -1025,12 +1058,22 @@ set C=1
 for /l %%a in (1,1,16) do set Mop%%a=
 for /l %%a in (1,1,8) do (
  if defined Pl%ownerB%C1%%aR%R% (
-  set Ex1%%a=!Ex1%%ao:@=撤除!
-  set Ex1%%a=!Ex1%%a:#=的!
+  if defined Ex1%%a%OP4V%o (
+   set Ex1%%a%OP4V%=!Ex1%%a%OP4V%o:@=撤除!
+   set Ex1%%a%OP4V%=!Ex1%%a%OP4V%:#=的!
+  ) else (
+   set Ex1%%a=!Ex1%%ao:@=撤除!
+   set Ex1%%a=!Ex1%%a:#=的!
+  )
   set Mop%%a=[已處罰]
  ) else (
-  set Ex1%%a=!Ex1%%ao:@=對!
-  set Ex1%%a=!Ex1%%a:#=進行!
+  if defined Ex1%%a%OP4V%o (
+   set Ex1%%a%OP4V%=!Ex1%%a%OP4V%o:@=對!
+   set Ex1%%a%OP4V%=!Ex1%%a%OP4V%:#=進行!
+  ) else (
+   set Ex1%%a=!Ex1%%ao:@=對!
+   set Ex1%%a=!Ex1%%a:#=進行!
+  )
  )
 )
 goto:ScoreMenu
@@ -1042,15 +1085,25 @@ goto:ScoreMenu
 if defined Pl%ownerB%C1%C%R%R% (
  set Pl%ownerB%S1%C%R%R%=
  set Pl%ownerB%C1%C%R%R%=
- set Ex1%C%=!Ex1%C%o:@=對!
- set Ex1%C%=!Ex1%C%:#=進行!
+ if defined Ex1%%a%OP4V%o (
+  set Ex1%C%%OP4V%=!Ex1%C%%OP4V%o:@=對!
+  set Ex1%C%%OP4V%=!Ex1%C%%OP4V%:#=進行!
+ ) else (
+  set Ex1%C%=!Ex1%C%o:@=對!
+  set Ex1%C%=!Ex1%C%:#=進行!
+ )
  set Mop%C%=
  set "MGEx=已撤除原房主!Pl%ownerB%!的%SN%處罰"
  call:mgdiag
 ) else (
  set/a "Pl%ownerB%S1%C%R%R%=-5,Pl%ownerB%C1%C%R%R%=1"
- set Ex1%C%=!Ex1%C%o:@=撤除!
- set Ex1%C%=!Ex1%C%:#=的!
+ if defined Ex1%%a%OP4V%o (
+  set Ex1%C%%OP4V%=!Ex1%C%%OP4V%o:@=撤除!
+  set Ex1%C%%OP4V%=!Ex1%C%%OP4V%:#=的!
+ ) else (
+  set Ex1%C%=!Ex1%C%o:@=撤除!
+  set Ex1%C%=!Ex1%C%:#=的!
+ )
  set Mop%C%=[已處罰]
  set "MGEx=原房主!Pl%ownerB%!受到%SN%處罰"
  call:mgdiag
@@ -1203,8 +1256,12 @@ if %Vd%==1 (
 goto:set04
 
 :set20
-if !F25R%R%!==1 (set F04R%R%=1) else (set F04R%R%=3)
-if "!F04R%R%!!F05R%R%!"=="11" (
+if %OP4V%==1 (
+ if !F25R%R%!==1 (set F04R%R%=1) else (set F04R%R%=3)
+) else (
+ set F04R%R%=1
+)
+if "!F04R%R%!,!F05R%R%!"=="1,1" (
  set C=6
 ) else (
  if !F05R%R%!==1 (set C=4) else (set C=5)
@@ -1372,14 +1429,18 @@ if %Vd%==1 (
  )
  set F31R%R%=1
  set F05R%R%=1
- if !F25R%R%!==1 (set C=6) else (set C=4)
+ if %OP4V%==1 (
+  if !F25R%R%!==1 (set C=6) else (set C=4)
+ ) else (
+  set C=6
+ )
 ) else (
  set C=5
 )
 goto:set-1
 
 :set30
-if "!F04R%R%!!F05R%R%!"=="11" (
+if "!F04R%R%!,!F05R%R%!"=="1,1" (
  set C=6
 ) else (
  if !F05R%R%!==1 (set C=4) else (set C=5)
@@ -1387,7 +1448,7 @@ if "!F04R%R%!!F05R%R%!"=="11" (
 goto:set-1
 
 :set06
-if not "!F04R%R%!!F05R%R%!"=="11" (set MGEx=錯誤：回合尚未完成&call:mgdiag&goto:ScoreMenu)
+if not "!F04R%R%!,!F05R%R%!"=="1,1" (set MGEx=錯誤：回合尚未完成&call:mgdiag&goto:ScoreMenu)
 if "!UDTurn!"=="1" (set MGEx=錯誤：翻轉回合已結束；競賽結束&call:mgdiag&goto:ScoreMenu)
 set/a "ownerAt%%=ownerL,ownerAt+=1"
 if !ownerAt!==!ownerL! (set EnUDTurn=1) else (set EnUDTurn=)
@@ -1416,7 +1477,7 @@ for /l %%a in (1,1,16) do set Mop%%a=
 goto:ScoreMenu
 
 :set07
-if not "!F04R%R%!!F05R%R%!"=="11" (set MGEx=錯誤：回合尚未完成&call:mgdiag&goto:ScoreMenu)
+if not "!F04R%R%!,!F05R%R%!"=="1,1" (set MGEx=錯誤：回合尚未完成&call:mgdiag&goto:ScoreMenu)
 if not defined EnUDTurn (set MGEx=錯誤：此輪尚未完結&call:mgdiag&goto:ScoreMenu)
 if "!UDTurn!"=="1" (set MGEx=錯誤：翻轉回合已結束；競賽結束&call:mgdiag&goto:ScoreMenu)
 set UDTurn=1
@@ -1555,7 +1616,13 @@ set BVCM=-1
 goto:ManualMenu
 
 :set59
-for /l %%a in (1,1,10) do set OP%%aV=
+for /l %%a in (1,1,10) do (
+ if %%a==4 (
+  if not defined F03R%R% set OP%%aV=
+ ) else (
+ set OP%%aV=
+ )
+)
 goto:OptionMenu
 
 :set50
@@ -1580,12 +1647,12 @@ set Manual5=　　＃規則說明　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set Manual6=　○開場挑釁　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set Manual7=無介紹　－５＋黃　　　　　　　　　　　　　　　　　　　　　　　　　　
 set Manual8=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-set Manual9=　○玩家出主題　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual9=　○玩家出主題（有主題時）　and　選歌權轉移 　　　　　　　　　　　　
 set Manual10=　　．主題失效　or　Ｎ多主題　or　公佈歌曲名稱　or　給錯房主　　　　
 set Manual11=原房主　－５＋黃　　　　　　　　　　　　　　　　　　　　　　　　　　
 set Manual12=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set Manual13=　○玩家選歌　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-set Manual14=　　．歌曲重複　　　　　　　　　　　　．認同玩家　　　　　　　　　　
+set Manual14=　　．歌曲重複　　　　　　　　　　　　．認同玩家（有主題時）　　　　
 set Manual15=房主　－５＋黃　　　　　　　　　　一半　　＝主題相關　＋５　　　　　
 set Manual16=　　　　　　　　　　　　　　　　　不到一半＝稍微無關　＋０　　　　　
 set Manual17=　　　　　　　　　　　　　　　　　沒有　　＝完全無關　－５＋黃　　　
