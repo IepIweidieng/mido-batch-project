@@ -1,7 +1,12 @@
 :BAT start
 @title 程式載入中...... Now Loading...&echo off&setlocal enableextensions
 >nul chcp 950
-for /f "tokens=1 delims==" %%a in ('set') do if not "%%a"=="temp" set %%a=
+for /f "tokens=1 delims==" %%a in ('set') do (
+        for %%b in (ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^(x86^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^(x86^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir) do if "%%a"=="%%b" goto :ValueReseterContinue
+        set %%a=
+        :ValueReseterContinue
+        <nul set/p=""
+)
 set LogNew=
 if exist "%~dpn0log.txt" (
  for /f "tokens=* usebackq" %%a in ("%~dpn0log.txt") do (
