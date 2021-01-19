@@ -1,10 +1,9 @@
 :BAT start
-@title 程式載入中…… Now Loading…&echo off&setlocal enableextensions&if not "%1"=="" goto %1
+@title 程式載入中…… Now Loading…&echo off&setlocal enableextensions
 >nul chcp 950
 if exist "%~dpn0log.txt" (
  for /f "tokens=* usebackq" %%a in ("%~dpn0log.txt") do (
   if "%%a"=="微哆動作紀錄 --------------------------------------------- " (
-   >>"%~dpn0log.txt" echo;---------------------------------------------------------- 
    goto BAT start continue
   ) else (
    >"%~dpn0log.txt" echo;微哆動作紀錄 --------------------------------------------- 
@@ -16,11 +15,30 @@ if exist "%~dpn0log.txt" (
 goto BAT start continue
 
 :BAT start continue
+setlocal enabledelayedexpansion
+call:DoubleDetecter
+>>"%~dpn0log.txt" echo;---------------------------------------------------------- 
 call:DT
 >>"%~dpn0log.txt" echo;%_DT%　啟動了記分板程式
 echo;Microdoft "arring"
-setlocal enabledelayedexpansion
 goto start
+
+:DoubleDetecter
+for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq osu！競賽記分*"') do (
+ set MG=錯誤：不能同時啟動兩個記分板
+ call:DT
+ >>"%~dpn0log.txt" echo;!_DT!　!MG!
+ >"%temp%\%~n0temp.vbs" echo;a=msgbox^("微哆動作紀錄 --------------------------------------------- "^&vbcrlf^&"!MG:~3!"^&vbcrlf^&"---------------------------------------------------------- " ,16,"log"^)
+ >"%temp%\%~n0tmp.vbs" echo;set b=createobject^("wscript.shell"^)
+ >>"%temp%\%~n0tmp.vbs" echo;b.run """%temp%\%~n0temp.vbs""","0"
+ >nul 2>&1 "%temp%\%~n0tmp.vbs"
+ >nul 2>&1 del /f /q /a "%temp%\%~n0tmp.vbs"
+ >nul timeout /t 0 /nobreak
+ >nul 2>&1 del /f /q /a "%temp%\%~n0temp.vbs"
+ endlocal
+ exit
+)
+goto :eof
 
 :readsave
 if exist "%~dpn0存檔.dat" for /f "tokens=* usebackq" %%a in ("%~dpn0存檔.dat") do %%a
@@ -28,13 +46,17 @@ set prompt=$G
 set cls=cls
 if not defined OP2V set bellG=
 if "%OP2V%"=="2" (set bellG=) else (set bellG=)
+set nlt=^
+
+
+set nl=^^^%nlt%%nlt%^%nlt%%nlt%
 call:osu！競記.dat
 goto :eof
 
 :storesave
 if defined MenuType (
  call:%MenuType%
- set/p="Ｎｏｗ　Ｌｏａｄｉｎｇ..."<nul
+ <nul set/p=Ｎｏｗ　Ｌｏａｄｉｎｇ...
 )
 >nul 2>&1 del /f /q /a "%~dpn0存檔temp.dat"
 for /f "tokens=1 delims==" %%a in ('set') do (>>"%~dpn0存檔temp.dat" echo;set %%a=!%%a!)
@@ -74,10 +96,8 @@ goto ready
 %cls%&color 2f
 title osu！競賽記分板
 set MG=請按下選項
-echo;　　　　　　　%MG%%bellG%
-echo.
 set NT=Ｚ鍵　進入記分板；Ｘ鍵　結束
-echo;　　%NT:~,8%
+echo;　　　　　　　%MG%%bellG%%nl%%nl%　　%NT:~,8%
 choice /n /c zxqr /m "　　%NT:~-5%"
 call:DT
 if %errorlevel%==4 (
@@ -100,7 +120,10 @@ if %errorlevel%==1 (
  >>"%~dpn0log.txt" echo;%_DT%　%MG% "%NT%" Z
  set CP=0
  set C=1
- set/p="%bellG%"<nul&goto setdefining
+ <nul set/p=%bellG%
+ title 程式執行中…… Now Running...
+ >nul timeout /t 0 /nobreak
+ call:DoubleDetecter&goto setdefining
 )
 goto ready
 
@@ -151,7 +174,7 @@ goto set-1
 
 :set-1
 mode con cols=80 lines=30
-title osu！競賽記分板 ver. 1.00b
+title osu！競賽記分板 ver. 1.00c
 set MG=選擇記分板項目
 set Hp=
 set CP=0
@@ -177,7 +200,6 @@ for /l %%a in (1,1,9) do (
  if %CP%==0 if defined SN%CP%%%a (if not defined Mop%%a set Mop%%a=......) else (set Mop%%a=)
 )
 set Ml10=%Sl0%&set M10=!SN%CP%0!&set Mop10=......
-if not %CP%==3 call:PlsScore
 call:Menu
 if %CP%==4 (
  set NT=上/下鍵 上下選擇　Ｚ鍵 確定　Ｘ鍵 離開
@@ -205,14 +227,14 @@ if %errorlevel%==7 (
 )
 if %errorlevel%==6 (
  if %C%==0 (
- set Vd=2&set/p="%bellG%"<nul&goto setdiag
+ set Vd=2&<nul set/p=%bellG%&goto setdiag
  ) else (
   set C=0&goto ScoreMenu
  )
 )
 if %errorlevel%==5 (
  if "%CP%""!F05R%R%!"=="3""2" call:set05Timer
- set Vd=2&set/p="%bellG%"<nul&goto setdiag
+ set Vd=2&<nul set/p=%bellG%&goto setdiag
 )
 if %errorlevel% geq 3 (
  :ScoreMenuW
@@ -265,10 +287,10 @@ if %errorlevel%==11 (
  goto set00
 )
 if %errorlevel%==10 (
- set Vd=2&set/p="%bellG%"<nul&goto set50
+ set Vd=2&<nul set/p=%bellG%&goto set50
 )
 if %errorlevel%==9 (
- if not defined OP%C%L set/p="%bellG%"<nul&goto set%CP%%C%
+ if not defined OP%C%L <nul set/p=%bellG%&goto set%CP%%C%
  goto OptionMenu
 )
 if %errorlevel% geq 7 (
@@ -328,7 +350,7 @@ if %errorlevel%==11 (
 )
 if %errorlevel%==10 (
  if %VCM%==0 (
- set Vd=3&set/p="%bellG%"<nul&goto savediag
+ set Vd=3&<nul set/p=%bellG%&goto savediag
  ) else (
   set VCM=0
  )
@@ -343,7 +365,7 @@ if %errorlevel%==9 (
   )
   goto CheckScoreMenu
  )
- set Vd=3&set/p="%bellG%"<nul&goto savediag
+ set Vd=3&<nul set/p=%bellG%&goto savediag
  goto CheckScoreMenu
 )
 if %errorlevel% geq 7 (
@@ -401,7 +423,7 @@ if %errorlevel%==11 (
 )
 if %errorlevel%==10 (
  if %VCM%==0 (
- set Vd=3&set/p="%bellG%"<nul&goto savediag
+ set Vd=3&<nul set/p=%bellG%&goto savediag
  ) else (
   set VCM=0
  )
@@ -416,7 +438,7 @@ if %errorlevel%==9 (
   )
   goto PunishScoreMenu
  )
- set Vd=3&set/p="%bellG%"<nul&goto savediag
+ set Vd=3&<nul set/p=%bellG%&goto savediag
  goto PunishScoreMenu
 )
 if %errorlevel% geq 7 (
@@ -459,7 +481,7 @@ set NT=上/下鍵 上下選擇　Ｚ鍵 輸入　Ｘ鍵 離開
 choice /n /c s2w8zx /m "%NT%"
 if %errorlevel%==6 (
  if %VCM%==0 (
- set Vd=3&set/p="%bellG%"<nul&goto savediag
+ set Vd=3&<nul set/p=%bellG%&goto savediag
  ) else (
   set VCM=0
  )
@@ -477,7 +499,7 @@ if %errorlevel%==5 (
   )
   goto EnterNameMenu
  )
- set Vd=3&set/p="%bellG%"<nul&goto savediag
+ set Vd=3&<nul set/p=%bellG%&goto savediag
  goto EnterNameMenu
 )
 if %errorlevel% geq 3 (
@@ -502,7 +524,7 @@ if %errorlevel%==7 (
  goto ManualMenu
 )
 if %errorlevel%==6 (call:set08Menu&goto ManualMenu)
-if %errorlevel%==5 (set/p="%bellG%"<nul&goto set09)
+if %errorlevel%==5 (<nul set/p=%bellG%&goto set09)
 if %errorlevel% geq 3 (
  set ManualMenu=0
  :ManualMenuW
@@ -527,8 +549,7 @@ goto ManualMenu
 set EMG=
 for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG= !EMG!
 %cls%&color 2f
-if %CP%==3 (echo;%EMG%－%MG%－ !Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!) else (echo;%EMG%－%MG%－)
-echo.
+if %CP%==3 (echo;%EMG%－%MG%－ !Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!%nl%) else (echo;%EMG%－%MG%－%nl%)
 set EHpdiag=
 set EMopdiag=                
 for /l %%a in (1,1,6) do if "!M6:~,%%a!"=="!M6!" set EHpdiag=　!EHpdiag!
@@ -544,49 +565,36 @@ for /l %%a in (1,1,10) do (
  )
  echo;　!Ml%%a:~1!　　　　　　　　!Mop%%a!
 )
-echo.
-echo;　　　　回合:%R%　比數%PlSn%
-echo;　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!
 set ESp=
 for /l %%a in (0,1,38) do if "!Ex:~,%%a!"=="!Ex!" set ESp=　!ESp!
-echo;%ESp%%Ex%
-echo.
+echo;%nl%　　　　回合:%R%　比數%PlSn%%nl%　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!%nl%%ESp%%Ex%%nl%
 goto :eof
 
 :CheckMenu
 set EMG=
 for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG= !EMG!
-%cls%&color 2f
-echo;%EMG%－%MG%－
 set ESp=
 for /l %%a in (0,1,39) do if "!Hp:~,%%a!"=="!Hp!" set ESp= !ESp!
-echo;%ESp%%Hp%
-echo.
+%cls%&color 2f
+echo;%EMG%－%MG%－%nl%%ESp%%Hp%%nl%
 set EHpdiag=
 set EMopdiag=                
-for /l %%a in (3,3,18) do if "!Pl10:~,%%a!"=="!Pl10!" set EHpdiag= !EHpdiag!
-if not defined Pl10 set EHpdiag=       !EHpdiag!
-for /l %%a in (3,3,6) do if "!Mop10:~,%%a!"=="!Mop10!" set EHpdiag= !EHpdiag!
-if not defined Mop10 set EHpdiag=     !EHpdiag!
-for /l %%a in (4,4,28) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EMopdiag= !EMopdiag!
-for /l %%a in (3,3,18) do if "!Pl12:~,%%a!"=="!Pl12!" set EMopdiag=  !EMopdiag!
-if not defined Pl12 set EMopdiag=       !EMopdiag!
-for /l %%a in (3,3,6) do if "!Mop12:~,%%a!"=="!Mop12!" set EMopdiag= !EMopdiag!
-if not defined Mop12 set EMopdiag=   !EMopdiag!
+for /l %%a in (2,2,18) do if "!Pl10:~,%%a!"=="!Pl10!" set EHpdiag= !EHpdiag!
+if not defined Pl10 set EHpdiag=          !EHpdiag!
+for /l %%a in (2,2,6) do if "!Mop10:~,%%a!"=="!Mop10!" set EHpdiag= !EHpdiag!
+if not defined Mop10 set EHpdiag=    !EHpdiag!
+for /l %%a in (3,3,27) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EHpdiag=!EHpdiag:~,-1!&set EMopdiag= !EMopdiag!
+for /l %%a in (2,2,18) do if "!Pl12:~,%%a!"=="!Pl12!" set EMopdiag=  !EMopdiag!
+if not defined Pl12 set EMopdiag=          !EMopdiag!
+for /l %%a in (2,2,6) do if "!Mop12:~,%%a!"=="!Mop12!" set EMopdiag= !EMopdiag!
+if not defined Mop12 set EMopdiag=    !EMopdiag!
 for /l %%a in (1,1,28) do if not "!Mopdiag:~,%%a!"=="!Mopdiag!" set EMopdiag=!EMopdiag:~,-1!
 for /l %%a in (1,1,16) do (
- if %%a==10 (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a! !EHpdiag!!Hpdiag!) else (
-  if %%a==12 (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a! !EMopdiag!!Mopdiag!) else (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a!)
+ if %%a==10 (echo;　!CMl%%a!　　!Pl%%a!　!Mop%%a! !EHpdiag!!Hpdiag!) else (
+  if %%a==12 (echo;　!CMl%%a!　　!Pl%%a!　!Mop%%a! !EMopdiag!!Mopdiag!) else (echo;　!CMl%%a!　　!Pl%%a!　!Mop%%a!)
  )
 )
-echo.
-echo;　%CMl17%　　　%CM17%　　%Mop17%
-echo;　%CMl18%　　　離開　　　　%Mop18%
-echo.
-echo;　　　　回合:%R%　比數%PlSn%
-echo;　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!
-echo.
-echo.
+echo;%nl%　%CMl17%　　　%CM17%　　%Mop17%%nl%　%CMl18%　　　離開　　　　%Mop18%%nl%%nl%　　　　回合:%R%　比數%PlSn%%nl%　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!%nl%%nl%
 goto :eof
 
 :Manual
@@ -603,22 +611,16 @@ if %VCM% lss %ePoManual% (set ManualRoll=!ManualRoll:~,-3!S) else (set ManualRol
 set EMG=
 for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG= !EMG!
 %cls%&color 2f
-echo;%EMG%－%MG%－
-echo.
-echo; 0╭------------------------------------------------------------------------╮!ManualRoll:~,1!
+echo;%EMG%－%MG%－%nl%%nl% 0╭------------------------------------------------------------------------╮!ManualRoll:~,1!
 for /l %%a in (1,1,19) do (
  set/a ManualSkip=VCM+%%a
  call:readmanual
  if !ManualSkip! lss 10 set ManualSkip= !ManualSkip!
  echo;!ManualSkip!^|!ManualLine!^|!ManualRoll:~%%a,1!
 )
-echo;%eoManualn%╰------------------------------------------------------------------------╯!ManualRoll:~-1!
 set EMopdiag=                
 for /l %%a in (4,4,28) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EMopdiag= !EMopdiag!
-echo;　　　　回合:%R%　比數%PlSn%
-echo;　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!
-echo;　　　　　　　　　　　　　　　!EMopdiag!!Mopdiag!
-echo.
+echo;%eoManualn%╰------------------------------------------------------------------------╯!ManualRoll:~-1!%nl%　　　　回合:%R%　比數%PlSn%　　　　　!Hpdiag!%nl%　　宣布主題:!Pl%ownerB%!　房主:!Pl%ownerA%!%nl%　　　　　　　　　　　　　　　!EMopdiag!!Mopdiag!%nl%
 goto :eof
 
 :readmanual
@@ -649,7 +651,7 @@ if "%MenuType%"=="Menu" (
   set Mopdiag=是的%VAr1%　　%VAl1%不了%VAr2%　　%VAl2%還不要
  )
 )
-call:PlsScore
+
 call:%MenuType%
 set NT=左/右鍵 左右選擇　Ｚ鍵 確定　Ｘ鍵 關閉
 choice /n /c a4d6zx /m "%NT%"
@@ -664,8 +666,9 @@ if %errorlevel%==6 (
  )
 )
 if %errorlevel%==5 (
+ call:PlsScore
  if %Vd%==3 (
-  set/p="%bellG%"<nul&if %CP%%C%==01 (goto EnterNameMenu)
+  <nul set/p=%bellG%&if %CP%%C%==01 (goto EnterNameMenu)
   if %CP%%C%==02 (goto PunishScoreMenu)
   if %CP%==04 (goto PunishScoreMenu)
   goto CheckScoreMenu
@@ -677,7 +680,7 @@ if %errorlevel%==5 (
     call:storesave
     goto set%CP%%C%
    )
-   set/p="%bellG%"<nul&goto ScoreMenu
+   <nul set/p=%bellG%&goto ScoreMenu
   ) else (
    if "%VCM%"=="-1" (
     if %CP%%C%==01 (
@@ -726,9 +729,10 @@ goto savediag
 :mgdiag
 set Hpdiag=%MGEx%%bellG%
 call:DT&>>"%~dpn0log.txt" set/p="!_DT! "<nul 
-if defined R >>"%~dpn0log.txt" set/p="回合%R% "<nul
+if defined R >>"%~dpn0log.txt" set/p="回合%R% "<nul 
 >>"%~dpn0log.txt" echo;選項%CP%%C%　%MGEx%
 set Mopdiag=＞確定
+call:PlsScore
 call:%MenuType%
 set NT=Ｚ鍵 確定　Ｘ鍵 關閉
 choice /n /c zx /m "%NT%"
@@ -1098,7 +1102,7 @@ if not defined F03R%R% (set MGEx=錯誤：還未進行主題宣布檢核&call:mgdiag&goto Sco
   set CP=3
   set C=1
   for /l %%a in (1,1,16) do set Mop%%a=
-  call:set05Timer
+  if !F05R%R%!==2 call:set05Timer
   if defined F05R%R% goto ScoreMenu
   for /f "tokens=1-3 delims=/ " %%a in ("%date%") do set/a Set05DateStart=%%a%%b%%c
   for /f "tokens=1-4 delims=:. " %%a in ("%time%") do (
@@ -1150,7 +1154,9 @@ goto CheckScoreMenu
 if %Vd%==1 (
  set MGEx=回合時間：!Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!
  call:mgdiag
- set PlShigh=%Pl!owner1!S%
+ for /l %%a in (1,1,16) do set Pl%%aS31R%R%=
+ call:PlsScore
+ set PlShigh=!Pl%owner1%S!
  for /l %%a in (2,1,16) do (if defined Pl%%a if !Pl%%aS! gtr !PlShigh! set PlShigh=!Pl%%aS!)
  for /l %%a in (1,1,16) do (
   set high%%a=
@@ -1166,9 +1172,9 @@ if %Vd%==1 (
     set/a "QuitRP+=1,Pl%%aS31R%R%=-5"
    )
    if defined UDTurn if "!Mop%ownerA%!"=="1" (
-    if %%a==%ownerA% set Pl%%aS31R%R%*=5
+    if %%a==%ownerA% set/a Pl%%aS31R%R%*=5
    ) else (
-    if not %%a==%ownerA% set Pl%%aS31R%R%*=5
+    if not %%a==%ownerA% if not "!high%%a!"=="1" set/a Pl%%aS31R%R%*=5
    )
    if "!Mop%%a!"=="1" (
     set/a Pl%%aS31R%R%+=4
