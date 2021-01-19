@@ -44,10 +44,14 @@ goto:start
 
 :CVerSetter
 set CurrectVersion=0100g
-set CurrectReversion=0
-if "%CurrectVersion:~,2%"=="0%CurrectVersion:~1,1%" (set CVer=%CurrectVersion:~1,1%) else (set CVer=%CurrectVersion:~,2%)
-set CVer=%CVer%.%CurrectVersion:~2%
-if not "%CurrectReversion%"=="0" set CVer=ver. %CVer%  rev. %CurrectReversion%
+set CurrectReversion=1
+if "%CurrectVersion:~,1%%CurrectVersion:~-1%"=="""" (
+ set "CVer=%CurrectVersion:~1,-1%"
+) else (
+ if "%CurrectVersion:~,2%"=="0%CurrectVersion:~1,1%" (set CVer=%CurrectVersion:~1,1%) else (set CVer=%CurrectVersion:~,2%)
+ set CVer=!CVer!.%CurrectVersion:~2%
+)
+if not "%CurrectReversion%"=="0" set "CVer=ver. %CVer% rev.%CurrectReversion%"
 goto:eof
 
 :DoubleDetecter
