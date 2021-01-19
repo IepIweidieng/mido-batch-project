@@ -384,7 +384,7 @@ color 27 & goto restart
 )
 if %errorlevel%==5 (
 >>"%~dp0log.txt" echo %MG% "%NT%"¡@%SN%¡uQ¡v
-set V9=1 & goto set0
+set enter=0 & goto exit
 )
 if %errorlevel%==4 (
 if %C%==0 (set V9=1 & goto set0r) else (
