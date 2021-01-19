@@ -3,7 +3,7 @@ title 程式載入中…… Now Loading…
 if "%2" equ "para2" goto:Logger
 
 :ValueInitializor
-echo Microdoft "arring (initializing)"...
+echo;Microdoft "arring (initializing)"...
 set i_Reset=
 for /f "tokens=1 delims==" %%a in ('set') do (
   for %%b in (ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^(x86^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^(x86^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir) do if "%%a"=="%%b" set i_Reset=1
@@ -24,14 +24,17 @@ set nl=^^^
 if "%2" equ "para2" goto:para2
 
 set CurrectVersion=0001h
-set CurrectReversion=0
-if "%CurrectVersion:~,2%"=="0%CurrectVersion:~1,1%" (set CVer=%CurrectVersion:~1,1%) else (set CVer=%CurrectVersion:~,2%)
-set CVer=%CVer%.%CurrectVersion:~2%
-if not "%CurrectReversion%"=="0" set CVer=%CVer% rev.%CurrectReversion%
+set CurrectReversion=1
+if "%CurrectVersion:~,1%%CurrectVersion:~-1%"=="""" (
+ set "CVer=ver.%CurrectVersion:~1,-1%"
+) else (
+ if "%CurrectVersion:~,2%"=="0%CurrectVersion:~1,1%" (set CVer=ver.%CurrectVersion:~1,1%.%CurrectVersion:~2%) else (set CVer=ver.%CurrectVersion:~,2%.%CurrectVersion:~2%)
+)
+if not "%CurrectReversion%"=="0" set "CVer=%CVer% rev.%CurrectReversion%"
 
 >"%~dpn0log.txt" echo;微哆動作紀錄 ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～ 
 
-cls&echo Microdoft "arring (setting)"...
+cls&echo;Microdoft "arring (setting)"...
 
 ::設定參數--------------------------------------
 :boast
@@ -68,8 +71,8 @@ set scoret=0
 set tc=0
 set tcn=0
 
-if not exist "%~n0score.dat" (>"%~n0score.dat" echo 100000 200000 300000 400000 500000)
->"%~n0aswd.dat" echo 0 0
+if not exist "%~n0score.dat" (>"%~n0score.dat" echo;100000 200000 300000 400000 500000)
+>"%~n0aswd.dat" echo;0 0
 set/a err=0
 for /f "tokens=1-5 usebackq" %%a in ("%~n0score.dat") do (
   if %%a0 lss 1000000 (set hiscoren0=100000) else (set hiscoren0=%%a)
@@ -239,10 +242,10 @@ set jiafenm4=9
 set break4=80
 
 mode con: cols=66 lines=25
-echo Microdoft "arring (setting)"...
+echo;Microdoft "arring (setting)"...
 
 set test=0
->"%~n0temp.dat" echo 0
+>"%~n0temp.dat" echo;0
 start "操作視窗" "%~f0" /i para2
 ::起動控制窗口
 
@@ -251,7 +254,7 @@ if defined DoubleDetect endlocal&goto:eof
 title 程式載入中…… Now Loading…
 
 2>&1 >nul ping /a /n 1 docs.google.com||goto:UpdateFinish
-cls&echo Microdoft "arring (checking for newer Ver.)"...
+cls&echo;Microdoft "arring (checking for newer Ver.)"...
 
 :Updater
 set strUrl="https://docs.google.com/uc?authuser=0&id=0B1GI2ZfUddzgWG5WWVpPbTlvNWc&export=download"
@@ -268,14 +271,17 @@ for /f "tokens=1,2 usebackq delims=" %%A in (%strFile%) do (
     set UpdateName=%%B
   )
 )
-if "%NewVersion:~,2%"=="0%NewVersion:~1,1%" (set NVer=%NewVersion:~1,1%) else (set NVer=%NewVersion:~,2%)
-set NVer=%NVer%.%NewVersion:~2%
-if not "%NewReversion%"=="0" set NVer=%NVer% rev.%NewReversion%
+if "%NewVersion:~,1%%NewVersion:~-1%"=="""" (
+ set "NVer=ver.%NewVersion:~1,-1%"
+) else (
+ if "%NewVersion:~,2%"=="0%NewVersion:~1,1%" (set NVer=ver.%NewVersion:~1,1%.%NewVersion:~2%) else (set NVer=ver.%NewVersion:~,2%.%NewVersion:~2%)
+)
+if not "%NewReversion%"=="0" set "NVer=%NVer% rev.%NewReversion%"
 >nul 2>&1 del /f /q /a %strFile%
 if defined strUrl (
   set UChoiceN=0
   set UMerror=
-  >"%~n0temp.dat" echo 0
+  >"%~n0temp.dat" echo;0
   >"%~n0aswd.dat" echo;!test! 0
   call:selectUpdater
   <nul set/p=""&color 2f
@@ -283,7 +289,7 @@ if defined strUrl (
   color 27
   if defined UMerror cls&call:error !UMerror!&exit /b
   if !UChoiceN! equ 0 (
-    cls&echo Microdoft "arring (downloading newest Ver.)"...
+    cls&echo;Microdoft "arring (downloading newest Ver.)"...
     set strFile="%~dp0%UpdateName%.tmp"
     call:UpdateDownloader
     if exist "%~dp0%UpdateName%.exe" >nul 2>&1 del /f /q /a "%~dp0%UpdateName%.exe"
@@ -349,7 +355,7 @@ cls&echo;!aec!
 goto:eof
 
 :UpdateFinish
-cls&echo Microdoft "arring (entering game)"...
+cls&echo;Microdoft "arring (entering game)"...
 >nul timeout /t 0 /nobreak
 color 2f
 goto:restart
@@ -362,8 +368,10 @@ for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windo
   set MG=錯誤：不能同時啟動兩個遊戲程式
   >>"%~dpn0log.txt" echo;!MG!
   >"%temp%\%~n0temp.vbs" echo;a=msgbox^("微哆動作紀錄 ~~~~~~~~~~~~~~~~~~~~~~~~~ "^&vbcrlf^&"!MG:~3!"^&vbcrlf^&"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  " ,16,"log"^)
-  >"%temp%\%~n0tmp.vbs" echo;set b=createobject^("wscript.shell"^)
-  >>"%temp%\%~n0tmp.vbs" echo;b.run """%temp%\%~n0temp.vbs""","0"
+  >"%temp%\%~n0tmp.vbs" (
+   echo;set b=createobject^("wscript.shell"^)
+   echo;b.run """%temp%\%~n0temp.vbs""","0"
+  )
   >nul 2>&1 "%temp%\%~n0tmp.vbs"
   >nul 2>&1 del /f /q /a "%temp%\%~n0tmp.vbs"
   >nul timeout /t 0 /nobreak
@@ -381,7 +389,7 @@ if !PDtn! gtr 100 (
   set para=
   for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq 操作視窗"') do (set para=1)
   for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq 程式執行中…… Now Running..."') do (set para=1)
-  if not defined para (start "操作視窗" %1 /i para2)
+  if not defined para (start "操作視窗" "%~f0" /i para2)
   set PDbti=1!time:~6,2!!time:~9,2!
 )
 goto:eof
@@ -428,7 +436,7 @@ for /l %%a in (0,1,3) do (
 )
 set diffn=1
 set diffnaddc=0
->"%~n0temp.dat" echo 0
+>"%~n0temp.dat" echo;0
 >"%~n0aswd.dat" echo;!test! 0
 call:selectdiff2
 
@@ -535,6 +543,7 @@ for /l %%a in (9,1,17) do (if "%%a" neq "13" (set ebu%%a=｜　　　　｜))
 set holdt=
 set ttr=
 set _ttr=
+setlocal
 set r10.1=~
 set r10.2=Th
 set r10.3=e  
@@ -544,13 +553,13 @@ set r10.6=斯
 set r10.7=方
 set r10.8=塊
 (%d-e:#=21%)
+endlocal
 >nul timeout /t 0 /nobreak
 ::初始化坐標空間20行，10列
 
 :gameloading
 >nul timeout /t 2 /nobreak
-for /l %%a in (1,1,8) do set r10.%%a=　
->"%~n0temp.dat" echo 2
+>"%~n0temp.dat" echo;2
 >"%~n0aswd.dat" echo;!test! 0
 
 ::遊戲中-------------------------------------------
@@ -804,6 +813,7 @@ if !n! leq 1 (
   for /l %%a in (0,1,13) do (if "!scoren:~-%%a!" equ "!scoren!" (set scores= !scores!))
   call:highscoring
   call:store
+  setlocal
   set r11.2=您
   set r11.3=已
   set r11.4=經
@@ -811,7 +821,7 @@ if !n! leq 1 (
   set r11.6=了
   set r11.7=。
   (%d-e:#=21%)
-  
+  endlocal
   >nul timeout /t 2
   set contin=0
   goto:precontinue
@@ -821,6 +831,7 @@ if !n! leq 1 (
 if !tc! geq !tchi%diffn%! (
   call:highscoring
   call:store
+  setlocal
   set r11.1=Co
   set r11.2=ng
   set r11.3=ra
@@ -831,18 +842,9 @@ if !tc! geq !tchi%diffn%! (
   set r11.8=s！
   set r11.9= 
   (%d-e:#=21%)
-  
+  endlocal
   >nul timeout /t 2
-  set r11.1=　
-  set r11.2=　
-  set r11.3=　
-  set r11.4=　
-  set r11.5=　
-  set r11.6=　
-  set r11.7=　
-  set r11.8=　
-  set r11.9=　
-
+  setlocal
   set r9.1=Ｙ
   set r9.2=ｏ
   set r9.3=ｕ
@@ -853,6 +855,7 @@ if !tc! geq !tchi%diffn%! (
   set r9.8=！
   set r9.9=！
   (%d-e:#=21%)
+  endlocal
   >nul timeout /t 1
   set scoren=0
   set scoret=0
@@ -930,11 +933,7 @@ goto:eof
 :precontinue
 >nul timeout /t 0 /nobreak
 (%d-e:#=21%)
-  set r11.2=　
-  set r11.3=　
-  set r11.6=　
-  set r11.7=　
-  
+  setlocal
   set r9.1=Ｃ
   set r9.2=ｏ
   set r9.3=ｎ
@@ -950,7 +949,7 @@ goto:eof
   
   set r12.4=不
   set r12.5=了
->"%~n0temp.dat" echo 0
+>"%~n0temp.dat" echo;0
 >"%~n0aswd.dat" echo;!test! 0
 call:selectconti
 
@@ -965,25 +964,28 @@ for /f "tokens=1,2 usebackq" %%a in ("%~n0aswd.dat") do (
       if "!contin!" lss "1" (set/a contin+=1)
     )
     if "%%b" equ "6" (
+      endlocal
       set scoren=0
       set scoret=0
       goto:restart
     )
     if "%%b" equ "7" (
       if "!contin!" equ "0" (
+        endlocal
         set/a scoret=score"%%"10
         if !scoret! lss 9 (set/a scoret+=1)
         set score=!scoret!
         set scoren=!scoret!
         goto:restart
       ) else (
+        endlocal
         set scoren=0
         set scoret=0
         goto:restart
       )
-      if "%%b" equ "9" (
+    )
+    if "%%b" equ "9" (
       call:snapshot
-      )
     )
   call:selectconti
   )
@@ -992,11 +994,10 @@ call:ParaDetecter %~f0
 goto:continue
 
 :selectconti
-if "!contin!" equ "0" set contis=＞　
-if "!contin!" equ "1" set contis=　＞
-set r11.3=!contis:~,1!
-set r12.3=!contis:~1,1!
+setlocal
+if !contin! equ 0 (set r11.3=＞) else (set r12.3=＞)
 (%d-e:#=21%)
+endlocal
 goto:eof
 
 ::操作視窗----------------------------------------
@@ -1015,7 +1016,7 @@ set tn=0
 set mode=
 for /f "tokens=1 usebackq" %%a in ("%~n0temp.dat") do set mode=%%a
 if not defined mode goto:paraexit
-if %mode% equ 0 (echo 　　W上移 S下移 Z確定 X取消 Q退出　　　) else (echo A左 D右 W/Z逆轉 X順轉 S加速 C保留 Q退出)
+if %mode% equ 0 (echo;　　W上移 S下移 Z確定 X取消 Q退出　　　) else (echo;A左 D右 W/Z逆轉 X順轉 S加速 C保留 Q退出)
 set/a n=n"%%"100+1
 ::計時器
 >nul choice /c adwscqzxp /n
@@ -1040,8 +1041,10 @@ for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windo
   setlocal EnableDelayedExpansion
   >>"%~dpn0log.txt" echo;!MG!
   >"%temp%\%~n0Para2temp.vbs" echo;a=msgbox^("微哆動作紀錄 ~~~~~~~~~~~~~~~~~~~~~~~~~ "^&vbcrlf^&"!MG:~3!"^&vbcrlf^&"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  " ,16,"log"^)
-  >"%temp%\%~n0Para2tmp.vbs" echo;set b=createobject^("wscript.shell"^)
-  >>"%temp%\%~n0Para2tmp.vbs" echo;b.run """%temp%\%~n0Para2temp.vbs""","0"
+  >"%temp%\%~n0Para2tmp.vbs" (
+    echo;set b=createobject^("wscript.shell"^)
+    echo;b.run """%temp%\%~n0Para2temp.vbs""","0"
+  )
   >nul 2>&1 "%temp%\%~n0Para2tmp.vbs"
   >nul 2>&1 del /f /q /a "%temp%\%~n0Para2tmp.vbs"
   >nul timeout /t 0 /nobreak
@@ -1073,8 +1076,8 @@ attrib +r -a "%~n0score.dat"
 goto:eof
 
 :error
-if %10 equ 60 echo Thank you for playing！ GOoD ByE with you！
-if %10 gtr 90 echo 發生了嚴重的錯誤，程式必須關閉。
+if %10 equ 60 echo;Thank you for playing！ GOoD ByE with you！
+if %10 gtr 90 echo;發生了嚴重的錯誤，程式必須關閉。
 2>&1 >nul del /f /q /a "%~n0aswd.dat"
 2>&1 >nul del /f /q /a "%~n0temp.dat"
 >>"%~dpn0log.txt" echo;~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
