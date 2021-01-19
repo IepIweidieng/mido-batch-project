@@ -1,18 +1,22 @@
 :BAT start
-@echo off & setlocal enableextensions & setlocal enabledelayedexpansion & if not "%1"=="" goto %1
->nul chcp 950 & title 程式載入中…… Now Loading... & call:DT & >>"%~dp0log.txt" echo 在!_DT!啟動了程式
-set NverN=0100a
-set NverV=1.00a
+@echo off & >nul chcp 950 & setlocal enableextensions & setlocal enabledelayedexpansion & if not "%1"=="" goto %1
+if exist "%~dp0log.txt" (
+ for /f "tokens=* usebackq" %%a in ("%~dp0log.txt") do set "LogLast=%%a"
+ if not "!LogLast!"=="~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ " >>"%~dp0log.txt" echo;~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
+) else (
+ >"%~dp0log.txt" echo;微哆動作紀錄 ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～ 
+)
+title 程式載入中…… Now Loading... & call:DT & >>"%~dp0log.txt" echo 在!_DT!啟動了程式
+set NverN=0100b
+set NverV=1.00b
 if exist "%~dp0Your Tousei" (call:custom & call:expand & if "%retry%"=="no" (exit /b) else (if "%retry%"=="yes" (goto BAT start))) else (>&2 echo 資料錯誤。 & >>"%~dp0log.txt" echo 資料錯誤。 & >nul timeout /t 10 & exit /b)
 set Vfile="%temp%\Microdoft\Your Tousei\Microdoft\Md1_%NverN%.ver"
 goto Program start
 
 :Program start
-set str=0001a 814682 67248248310002a 184558 58134824530002b 348314 57434848650002c 165082 13565038210002d 896514 18641948940003a 153843 24832184650003b 168462 04560286480003c 186548 21256021650003d 192168 15684218460100a 202198 0186028427
+set str=0001a 814682 67248248310002a 184558 58134824530002b 348314 57434848650002c 165082 13565038210002d 896514 18641948940003a 153843 24832184650003b 168462 04560286480003c 186548 21256021650003d 192168 15684218460100a 202198 01860284270100b 215354 2018648213
 call:Ver
-if not !VF!==10 (>&2 echo 版本錯誤。 & >>"%~dp0log.txt" echo 版本錯誤。 & >nul timeout /t 10 & exit /b)
-if exist "%~dp0log.txt" (for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0log.txt") do (if "%%a"=="微哆動作紀錄 --------------------------------------------- " ((>>"%~dp0log.txt" echo ---------------------------------------------------------- ) & call:Nu & goto start) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:Nu & goto start)
-) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- )
+if not !VF!==11 (>&2 echo 版本錯誤。 & >>"%~dp0log.txt" echo 版本錯誤。 & >nul timeout /t 10 & exit /b)
 call:Nu & goto start
 
 :Ver
@@ -28,6 +32,9 @@ goto :eof
 for /f "tokens=1-4 delims=/ " %%a in ("%date%") do set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do set _DoTime=%%e時%%f分%%g秒點%%h
 set _DT=%_DoDate%%_DoTime%
+set nl=^
+
+
 goto :eof
 
 :Nu
@@ -245,12 +252,9 @@ cls & color 2f
 call:DT
 title 安裝程式　%_DT%
 set MG=安裝即將開始
-echo 　%MG%。
-echo.
+echo 　%MG%。!nl!
 set NT=「Z」鍵--開始；「X」鍵--結束；「C」鍵--進行設定
-echo %NT:~,9%
-echo %NT:~9,9%
-choice /n /t 30 /c zxcqr /d x /m "%NT:~-10%"
+choice /n /t 30 /c zxcqr /d x /m "%NT:~,9%!nl!%NT:~9,9%!nl!%NT:~-10%"
 if %errorlevel%==5 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
@@ -280,12 +284,9 @@ cls & color 2f
 call:DT
 title 安裝程式　%_DT%
 set MG=選擇安裝選項
-echo 　%MG%。
-echo.
+echo 　%MG%。!nl!
 set NT=「Z」鍵--安裝；「X」鍵--修復；「C」鍵--解除安裝
-echo %NT:~,9%
-echo %NT:~9,9%
-choice /n /c zxcqr /m "%NT:~-10%"
+choice /n /c zxcqr /m "%NT:~,9%!nl!%NT:~9,9%!nl!%NT:~-10%"
 if %errorlevel%==5 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart)
@@ -333,7 +334,7 @@ call:killedset
 if "%copy%"=="notmust" if !found!==6 (
 set Vfile="%SystemDrive%\Microdoft\Md1_%NverN%.ver"
 call:Ver
-if !VF!==10 goto error%type%
+if !VF!==11 goto error%type%
 )
 if "%copy%"=="must" if not !found!==6 (
 goto errordelete
@@ -344,10 +345,9 @@ goto copy-log
 if exist "%SystemDrive%\Microdoft\log.txt" (
 cls & color 2f
 set MG=是否清除紀錄檔
-echo 　!MG!？ & echo.
+echo 　!MG!？!nl!
 set NT=「Z」鍵--是的；「X」鍵--不了
-echo !NT:~,9!
-choice /n /t 15 /c zx /d x /m "!NT:~-8!"
+choice /n /t 15 /c zx /d x /m "!NT:~,9!!nl!!NT:~-8!"
 if !errorlevel!==2 (
 >>"%~dp0log.txt" echo !MG! "!NT!"「X」
 ) else (
@@ -391,10 +391,9 @@ goto copy-damage
 :copy-damage
 cls & color 2f
 set MG=是否安裝毀損機能
-echo 　!MG!？ & echo.
+echo 　!MG!？!nl!
 set NT=「Z」鍵--是的；「X」鍵--不了
-echo !NT:~,9!
-choice /n /t 15 /c zx /d z /m "!NT:~-8!"
+choice /n /t 15 /c zx /d z /m "!NT:~,9!!nl!!NT:~-8!"
 if !errorlevel!==2 (
 >>"%~dp0log.txt" echo !MG! "!NT!"「X」
 attrib -r -h "%SystemDrive%\Microdoft\DO.bat"
@@ -453,12 +452,12 @@ goto :eof
 if %count%==0 (
 set RC=%~f0
 set G="%SystemDrive%\Microdoft\DO.bat"
-set line=9
+set line=15
 set tGline=3
 set end= 
 )
 if %count%==1 (
-set line=13
+set line=19
 set tGline=0
 set end=:Ver
 set code=%temp%\Microdoft\Your Tousei\code
@@ -467,15 +466,15 @@ set skipline=
 call:typeC
 )
 if %count%==2 (
-set line=17
+set line=21
 set tGline=4
 set end= 
 >>%G% echo.
 )
 if %count%==3 (
-set line=26
-set tGline=0
-set end=:Nu
+set line=30
+set tGline=5
+set end=
 set Gline=2
 set skipline=skip=1
 call:typeC
@@ -484,13 +483,18 @@ call:typeC
 >>%G% echo.
 )
 if %count%==4 (
-set line=32
+set line=39
 set tGline=1
 set end= 
->>%G% echo.
+>>%G% (
+  echo.
+  echo.
+  echo;goto :eof
+  echo.
+)
 )
 if %count%==5 (
-set line=37
+set line=44
 set tGline=0
 set end=:restart
 set Gline=2
@@ -500,40 +504,45 @@ call:typeC
 >>%G% echo.
 )
 if %count%==6 (
-set line=45
+set line=52
 set end=:boom
 >>%G% echo.
 )
 if %count%==7 (
-set line=54
+set line=61
 set end=:dots
 >>%G% echo.
 )
 if %count%==8 (
-set line=64
+set line=71
 set end=:expand
 >>%G% echo.
 )
 if %count%==9 (
-set line=7
+set line=13
 set RC=%~dp0Custom.cMd
 set G="%SystemDrive%\Microdoft\CustomDO.cmd"
 set end=:DT
 >>%G% echo.
 )
 if %count%==10 (
-set line=12
-set end=:Nu
+set line=16
+set tGline=5
+set end=
 >>%G% echo.
 )
 if %count%==11 (
-set line=18
+set line=25
 set tGline=1
-set end= 
->>%G% echo.
+>>%G% (
+  echo.
+  echo.
+  echo;goto :eof
+  echo.
+)
 )
 if %count%==12 (
-set line=23
+set line=30
 set tGline=0
 set end=:restart
 set Gline=2
@@ -543,51 +552,85 @@ call:typeC
 >>%G% echo.
 )
 if %count%==13 (
-set line=31
+set line=38
 set end=:boom
 >>%G% echo.
 )
 if %count%==14 (
-set line=44
-set end=:Menu
+set line=51
+set tGline=5
+set end=
 >>%G% echo.
 )
 if %count%==15 (
-set line=116
-set end=:set-1
->>%G% echo.
+set line=59
+set tGline=0
+set end=:Menu
+set Gline=1
+set skipline=skip=5
+call:typeC
+>>%G% echo set NT=「Z」鍵--進入設定；「X」鍵--結束 
+set Gline=1
+set skipline=skip=6
+call:typeC
 )
 if %count%==16 (
-set line=149
-set end=:set0
+set line=103
+set tGline=9
+set end=
 >>%G% echo.
 )
 if %count%==17 (
-set line=170
-set end=:set0r
->>%G% echo.
+set line=113
+set tGline=0
+set end=:set-1
+set Gline=1
+set skipline=skip=7
+call:typeC
 )
 if %count%==18 (
-set line=191
-set end=:set1
->>%G% echo.
+set line=125
 )
-if %count%==19 (
-set line=214
-set end=:exit
+if %count% geq 18 if %count% leq 20 (
+set/a line+=10
+set tGline=9
+set end=
 >>%G% echo.
-)
-if %count%==20 (
-set line=246
-set end=:dots
->>%G% echo.
+call:type
+set/a line+=10
+set tGline=0
+if %count%==18 set end=:set0
+if %count%==19 set end=:set0r
+if %count%==20 set end=:set1
+set Gline=1
+set skipline=skip=7
+call:typeC
 )
 if %count%==21 (
-set line=265
-set end=:custom
+set line=197
+set tGline=16
+set end=
 >>%G% echo.
 )
 if %count%==22 (
+set line=214
+set tGline=0
+set end=:exit
+set Gline=1
+set skipline=skip=7
+call:typeC
+)
+if %count%==23 (
+set line=228
+set end=:dots
+>>%G% echo.
+)
+if %count%==24 (
+set line=247
+set end=:custom
+>>%G% echo.
+)
+if %count%==25 (
 goto :eof
 )
 set /a count+=1
@@ -642,11 +685,9 @@ goto errorcopied
 :errorcopied
 set MG=是否重新安裝
 color 2f
-echo 　%MG%？
-echo.
+echo 　%MG%？!nl!
 set NT=「Z」鍵--確定；「X」鍵--取消
-echo %NT:~,9%
-choice /n /c zxqr /m "%NT:~-8%"
+choice /n /c zxqr /m "%NT:~,9%!nl!%NT:~-8%"
 if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
@@ -681,11 +722,9 @@ goto errordeleted
 :errordeleted
 set MG=是否安裝
 color 2f
-echo %MG%？
-echo.
+echo %MG%？!nl!
 set NT=「Z」鍵--確定；「X」鍵--取消
-echo %NT:~,9%
-choice /n /c zxqr /m "%NT:~-8%"
+choice /n /c zxqr /m "%NT:~,9%!nl!%NT:~-8%"
 if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
@@ -738,11 +777,9 @@ goto copychecked
 :copychecked
 cls
 set MG=是否打開程式
-echo 　%MG%？
-echo.
+echo 　%MG%？!nl!
 set NT=「Z」鍵--確定；「X」鍵--不了
-echo %NT:~,9%
-choice /n /c zxqr /m "%NT:~-8%"
+choice /n /c zxqr /m "%NT:~,9%!nl!%NT:~-8%"
 if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
@@ -785,12 +822,12 @@ goto finish
 
 :finish
 cls & color 2f
+call:DT
+title 系統垃圾清除　%_DT%
 set MG=是否清除系統垃圾
-echo 　%MG%？
-echo.
+echo 　%MG%？!nl!
 set NT=「Z」鍵--確定；「X」鍵--不了
-echo %NT:~,9%
-choice /n /c zxqr /m "%NT:~-8%"
+choice /n /c zxqr /m "%NT:~,9%!nl!%NT:~-8%"
 if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
@@ -828,6 +865,9 @@ goto :eof
 
 :UACQ
 cls & color 1f
+call:DT
+>>"%~dp0log.txt" echo 在%_DT%發生了錯誤
+title 錯誤發生　%_DT%
 set MG=錯誤，沒有系統管理員權限
 >&2 echo %MG%。
 >>"%~dp0log.txt" echo %MG%
@@ -837,11 +877,9 @@ echo 請按下任意鍵繼續。
 >nul timeout /t 50
 cls & color 2f
 set MG=是否取得系統管理員權限
-echo 　%MG%？
-echo.
+echo 　%MG%？!nl!
 set NT=「Z」鍵--是的；「X」鍵--不了
-echo %NT:~,9%
-choice /n /c zx /m "%NT:~-8%"
+choice /n /c zx /m "%NT:~,9%!nl!%NT:~-8%"
 if %errorlevel%==2 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「X」
 set err=0
@@ -1012,12 +1050,12 @@ goto :eof
 :exit
 call:DT
 >>"%~dp0log.txt" echo 在%_DT%結束了程式
->>"%~dp0log.txt" echo ---------------------------------------------------------- 
 if "%start%"=="" set start=%2
 if "%start%"=="yes" (
-explorer "%userprofile%\Desktop\Microdoft\電腦毀損程式.lnk"
+"%userprofile%\Desktop\Microdoft\電腦毀損程式.lnk"
 >nul timeout /t 0
 >nul timeout /t 0
 )
 >nul 2>&1 rd /s /q "%temp%\Microdoft" & if not exist "%temp%\Microdoft" >>"%~dp0log.txt" echo 程式資料解除登錄完成
+>>"%~dp0log.txt" echo ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
 goto :eof

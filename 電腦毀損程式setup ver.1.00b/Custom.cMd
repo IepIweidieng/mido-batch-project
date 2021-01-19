@@ -1,19 +1,26 @@
 :BAT start
-@echo off & setlocal enableextensions & setlocal enabledelayedexpansion & call:DT
->nul chcp 950 & title 程式載入中…… & >>"%~dp0log.txt" echo 在%_DT%啟動了設定程式
+@echo off & >nul chcp 950 & setlocal enableextensions & setlocal enabledelayedexpansion & call:DT
+if exist "%~dp0log.txt" (
+  for /f "tokens=* usebackq" %%a in ("%~dp0log.txt") do set "LogLast=%%a"
+  if not "!LogLast!"=="~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ " >>"%~dp0log.txt" echo;~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
+) else (
+  >"%~dp0log.txt" echo;微哆動作紀錄 ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～ 
+)
+title 程式載入中…… & >>"%~dp0log.txt" echo 在%_DT%啟動了設定程式
 if not exist "%~dp0毀損安裝程式.bAt" (>&2 echo 沒有可以進行設定的程式。 & >>"%~dp0log.txt" echo 沒有可以進行設定的程式。 & >nul timeout /t 10 & exit /b 1)
 call:custom & set Bdots=Microdoft "arring", please wait & set Adots= 
 call:dots & goto ProgramStart
 
 :ProgramStart
-if exist "%~dp0log.txt" (for /f "eol=; tokens=* delims= usebackq" %%a in ("%~dp0log.txt") do (if "%%a"=="微哆動作紀錄 --------------------------------------------- " ((>>"%~dp0log.txt" echo ---------------------------------------------------------- ) & call:Nu & goto start) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- ) & call:Nu & goto start)
-) else (>"%~dp0log.txt" echo 微哆動作紀錄 --------------------------------------------- )
 call:Nu & goto start
 
 :DT
 for /f "tokens=1-4 delims=/ " %%a in ("%date%") do set _DoDate=%%a年%%b月%%c日（%%d）
 for /f "tokens=1-4 delims=:. " %%e in ("%time%") do set _DoTime=%%e時%%f分%%g秒點%%h
 set _DT=%_DoDate%%_DoTime%
+set nl=^
+
+
 goto :eof
 
 :Nu
@@ -47,11 +54,9 @@ cls & color 2f
 call:DT
 title 設定程式　%_DT%
 set MG=請選擇選項
-echo 　%MG%。
-echo.
-set NT=「Z」鍵--進入設定；「X」鍵--結束
-echo %NT:~,11%
-choice /n /t 30 /c zxqr /d x /m "%NT:~-8%"
+echo 　%MG%。!nl!
+set NT=「Z」鍵--進入設定；「X」鍵--結束 
+choice /n /t 30 /c zxqr /d x /m "%NT:~,11%!nl!%NT:~-9%"
 if %errorlevel%==4 (
 >>"%~dp0log.txt" echo %MG% "%NT%"「R」
 color 27 & goto restart
@@ -74,43 +79,25 @@ color 27 & echo  & goto CustomSet
 goto ready
 
 :Menu
-echo 　　　%MG%
-echo.
-echo.
-echo 　%Ml1%　 %M1%
-echo 　　　　　　　　　　　　　 %Mop1%
-if %MI% geq 2 (
-echo 　%Ml2%　　%M2%
-echo 　　　　　　　　　　　　　　%Mop2%
-) else (echo. & echo.)
-if %MI% geq 3 (
-echo 　%Ml3%　　 %M3%
-echo 　　　　　　　　　　　　　　 %Mop3%
-) else (echo. & echo.)
-if %MI% geq 4 (
-echo 　%Ml4%　　%M4%
-echo 　　　　　　　　　　　　　　%Mop4%
-) else (echo. & echo.)
-if %MI% geq 5 (
-echo 　%Ml5%　 %M5%
-echo 　　　　　　　　　　　　　 %Mop5%
-) else (echo. & echo.)
-if %MI% geq 6 (
-echo 　%Ml6%　　%M6%
-echo 　　　　　　　　　　　　　　%Mop6%
-) else (echo. & echo.)
-if %MI% geq 7 (
-echo 　%Ml7%　　　 %M7%
-echo 　　　　　　　　　　　　　　　 %Mop7%
-) else (echo. & echo.)
-if %MI% geq 8 (
-echo 　%Ml8%　　　%M8%
-echo 　　　　　　　　　　　　　　　%Mop8%
-) else (echo. & echo.)
-if %MI% geq 9 (
-echo 　%Ml9%　　 %M9%
-echo 　　　　　　　　　　　　　　%Mop9%
-) else (echo. & echo.)
+echo 　　　%MG%!nl!!nl!!nl!^
+ 　%Ml1%　 %M1%!nl!^
+ 　　　　　　　　　　　　　 %Mop1%!nl!^
+ 　%Ml2%　%M2%!nl!^
+ 　　　　　　　　　　　　　%Mop2%!nl!^
+ 　%Ml3%　 %M3%!nl!^
+ 　　　　　　　　　　　　　 %Mop3%!nl!^
+ 　%Ml4%　　%M4%!nl!^
+ 　　　　　　　　　　　　　　%Mop4%!nl!^
+ 　%Ml5%　 %M5%!nl!^
+ 　　　　　　　　　　　　　 %Mop5%!nl!^
+ 　%Ml6%%M6%!nl!^
+ 　　　　　　　　　　　　%Mop6%!nl!^
+ 　%Ml7%　%M7%!nl!^
+ 　　　　　　　　　　　　　%Mop7%!nl!^
+ 　%Ml8%　　%M8%!nl!^
+ 　　　　　　　　　　　　　　%Mop8%!nl!^
+ 　%Ml9%　　 %M9%!nl!^
+ 　　　　　　　　　　　　　　%Mop9%
 if not "%Hp%"=="" (echo 　　　　%Hp%) else (echo 　　　　　　　　　　　　　　　　　　　　　%ESp%%Ex%)
 goto :eof
 
@@ -122,9 +109,8 @@ set MG=選擇選項
 set Hp=　　　　　　　　　　　　　　　　　　　　　　　　確認是否清除記錄檔。
 set Mop7= 是的%VAr%　　%VAl%不了
 call:Menu
-echo.
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (goto CustomSet)
 if %errorlevel%==3 (
 if %V7%==1 (
@@ -155,9 +141,8 @@ set MG=選擇選項
 set Hp=　　　　　　　　　　　　　　　　　　　　　　　確認是否回復預設設定。
 set Mop8= 是的%VAr%　　%VAl%不了
 call:Menu
-echo.
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (goto CustomSet)
 if %errorlevel%==3 (
 if %V8%==1 (call:reset)
@@ -176,9 +161,8 @@ set MG=選擇選項
 set Hp=　　　　　　　　　　　　　　　　　　　　　　　確認是否離開設定程式。
 set Mop9= 是的%VAr%　　%VAl%不了
 call:Menu
-echo.
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (goto CustomSet)
 if %errorlevel%==3 (
 if %V9%==1 (set V9=1 & goto set0r)
@@ -197,9 +181,8 @@ set MG=選擇選項
 set Hp=　　　　　　　　　　　　　　　　　　　　　　　　　確認是否儲存設定。
 set Mop9= 是的%VAr%　　%VAl%不了
 call:Menu
-echo.
 set NT=「D」鍵--右選；「A」鍵--左選；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (goto CustomSet)
 if %errorlevel%==3 (
 >>"%~dp0log.txt" echo 儲存設定 "%NT%"　%VL%「Z」
@@ -227,9 +210,8 @@ set MG=設定%Ex%
 set Hp=　　　　　　　　　　　　　　　　　　值愈大，炸彈炸得愈久；否則愈短。
 set Mop1=%VS1%%VAl%%VSp1%%V1%%VAr%%VS1%　　（以爆炸次數為單位，範圍為1～100）
 call:Menu
-echo.
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
 set V1=%S1%
 goto CustomSet
@@ -248,19 +230,19 @@ goto set1
 call:DT
 title 設定結束　%_DT%
 if "%enter%"=="" (
-if "%err%"=="0" (
-set Mop9=設定儲存成功！
->>"%~dp0log.txt" echo 設定成功
-) else (
-set Mop9=設定儲存失敗！
->>"%~dp0log.txt" echo 設定失敗
+  if "%err%"=="0" (
+    set Mop9=設定儲存成功！
+    >>"%~dp0log.txt" echo 設定成功
+  ) else (
+    set Mop9=設定儲存失敗！
+    >>"%~dp0log.txt" echo 設定失敗
+  )
+  cls
+  call:Menu
 )
-cls
-call:Menu
 >>"%~dp0log.txt" echo 在%_DT%結束了設定程式
->>"%~dp0log.txt" echo ---------------------------------------------------------- 
->nul timeout /t 5
-)
+>>"%~dp0log.txt" echo ~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~～~ 
+if "%enter%"=="" >nul timeout /t 5
 exit /b %err%
 
 :dots
@@ -375,9 +357,8 @@ set Ml7=%Sl-2% &  set M7=%SN-2% & set Mop7=......
 set Ml8=%Sl-1% &  set M8=%SN-1% & set Mop8=......
 set Ml9=%Sl0% &  set M9=%SN0% & set Mop9=......
 call:Menu
-echo.
 set NT=「W」鍵--上選；「S」鍵--下選；「Z」鍵--設定；「X」鍵--離開
-choice /n /c swzxqr /m "%NT%"
+choice /n /c swzxqr /m "!nl!%NT%"
 if %errorlevel%==6 (
 >>"%~dp0log.txt" echo %MG% "%NT%"　%SN%「R」
 color 27 & goto restart
@@ -447,9 +428,8 @@ set MG=設定%Ex%
 set Hp=　值愈大，最長登錄時間愈久；否則愈短，且可能發生沒有可用目錄的錯誤。
 set Mop3= %VS3%%VAl%%VSp3%%V3%%VAr%%VS3%　（以檢查的上限次數為單位，範圍為1～5）
 call:Menu
-echo.
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
 set V3=%S3%
 goto CustomSet
@@ -472,9 +452,8 @@ set MG=設定%Ex%
 set Hp=值愈大，最長登錄時間愈久；否則愈短，且可能發生找不到可用目錄的錯誤。
 set Mop4= %VS4%%VAl%%VSp4%%V4%%VAr%%VS4%　（以重新檢查的上限次數為單位，範圍為0～4）
 call:Menu
-echo.
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
 set V4=%S4%
 goto CustomSet
@@ -497,9 +476,8 @@ set MG=設定%Ex%
 set Hp=　　　值愈大，最長登錄時間愈久；否則愈短，且可能發生登錄失敗的錯誤。
 set Mop5= %VS5%%VAl%%VSp5%%V5%%VAr%%VS5%　（以重新登錄的上限次數為單位，範圍為0～4）
 call:Menu
-echo.
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
 set V5=%S5%
 goto CustomSet
@@ -527,11 +505,10 @@ if %V6% geq 100 (set VAr=　) else (set VAr=＞)
 if %V6% leq 1 (set VAl=　) else (set VAl=＜)
 set MG=設定%Ex%
 set Hp=值愈大，最長等待登錄時間愈久；否則愈短，且可能發生來不及登錄的錯誤。
-set Mop6= %VS6%%VAl%%VSp6%%V6%%VAr%%VS6%　（以等待10次的上限次數為單位，範圍為1～100）
+set Mop6= %VS6%%VAl%%VSp6%%V6%%VAr%%VS6% （以等待10次的上限次數為單位，範圍為1～100）
 call:Menu
-echo.
 set NT=「D」鍵--增加；「A」鍵--減少；「Z」鍵--設定；「X」鍵--取消
-choice /n /c adzx /m "%NT%"
+choice /n /c adzx /m "!nl!%NT%"
 if %errorlevel%==4 (
 set V6=%S6%
 goto CustomSet
