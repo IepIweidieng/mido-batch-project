@@ -1,12 +1,19 @@
 :BAT start
 @title 程式載入中...... Now Loading...&echo off&setlocal enableextensions
 >nul chcp 950
+set VIValue=VIValue ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^^^(x86^^^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^^^(x86^^^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir
+setlocal enabledelayedexpansion
+goto ValueReseter
+
+:ValueReseter
+set i_Reset=
 for /f "tokens=1 delims==" %%a in ('set') do (
-        for %%b in (ALLUSERSPROFILE ANDROID_SDK_HOME APPDATA CommonProgramFiles CommonProgramFiles^(x86^) CommonProgramW6432 COMPUTERNAME ComSpec configsetroot FP_NO_HOST_CHECK HOMEDRIVE HOMEPATH LOCALAPPDATA LOGONSERVER NUMBER_OF_PROCESSORS OS Path PATHEXT PROCESSOR_ARCHITECTURE PROCESSOR_IDENTIFIER PROCESSOR_LEVEL PROCESSOR_REVISION ProgramData ProgramFiles ProgramFiles^(x86^) ProgramW6432 PROMPT PSModulePath PUBLIC SESSIONNAME SystemDrive SystemRoot TEMP TMP USERDOMAIN USERNAME USERPROFILE windir) do if "%%a"=="%%b" goto :ValueReseterContinue
-        set %%a=
-        :ValueReseterContinue
-        <nul set/p=""
+ for %%b in (%VIValue%) do if "%%a"=="%%b" set i_Reset=1
+ if defined i_Reset (set i_Reset=) else (set %%a=)
 )
+goto Logger
+
+:Logger
 set LogNew=
 if exist "%~dpn0log.txt" (
  for /f "tokens=* usebackq" %%a in ("%~dpn0log.txt") do (
@@ -19,7 +26,7 @@ if exist "%~dpn0log.txt" (
 goto BAT start continue
 
 :BAT start continue
-setlocal enabledelayedexpansion
+
 call:DoubleDetecter
 if defined DoubleDetect endlocal&endlocal&goto :eof 
 if defined LogNew (>"%~dpn0log.txt" echo;微哆動作紀錄 --------------------------------------------- ) else (
@@ -33,6 +40,7 @@ goto start
 
 :DoubleDetecter
 set DoubleDetect=
+title 程式執行中…… Now Running...
 for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windowtitle eq osu！競賽計分板 ver. 1.00e"') do (
  set MG=錯誤：不能同時啟動兩個計分板
  call:DT
@@ -50,7 +58,13 @@ for /f "skip=2 tokens=*" %%a in ('tasklist /fi "imagename eq cmd.exe" /fi "windo
 goto :eof
 
 :readsave
-if exist "%~dpn0存檔.dat" for /f "tokens=* usebackq" %%a in ("%~dpn0存檔.dat") do %%a
+if exist "%~dpn0存檔.dat" (
+ set i_Read=
+ for /f "tokens=1-2,3* usebackq delims== " %%a in ("%~dpn0存檔.dat") do (
+  for %%d in (%VIValue%) do if "%%b"=="%%d" set i_Read=1
+  if defined i_Read (set i_Read=) else (%%a "%%b=%%c")
+ )
+)
 set prompt=$G
 set cls=cls
 ::set cls=^<nul set/p=""
@@ -69,12 +83,15 @@ if defined MenuType (
  call:%MenuType%
  <nul set/p=Ｎｏｗ　Ｌｏａｄｉｎｇ...
 )
->nul 2>&1 del /f /q /a "%~dpn0存檔temp.dat"
-for /f "tokens=1 delims==" %%a in ('set') do (>>"%~dpn0存檔temp.dat" echo;set %%a=!%%a!)
->nul 2>&1 del /f /q /a "%~dpn0存檔.dat"
->nul 2>&1 copy /y "%~dpn0存檔temp.dat" "%~dpn0存檔.dat"
->nul 2>&1 del /f /q /a "%~dpn0存檔temp.dat"
-attrib +r -a "%~dpn0存檔.dat"
+2>&1 >nul attrib -r -h "%~dpn0存檔.dat"
+>"%~dpn0存檔.dat" <nul set/p=""
+attrib +h "%~dpn0存檔.dat"
+set i_Store=
+for /f "tokens=1 delims==" %%a in ('set') do (
+ for %%b in (%VIValue%) do if "%%a"=="%%b" set i_Store=1
+ if defined i_Store (set i_Store=) else (>>"%~dpn0存檔.dat" echo;set %%a=!%%a!)
+)
+attrib +r -a -h "%~dpn0存檔.dat"
 goto :eof
 
 :DT
@@ -130,8 +147,6 @@ if %errorlevel%==1 (
  set CP=0
  set C=1
  <nul set/p=%bellG%
- title 程式執行中…… Now Running...
- >nul timeout /t 0 /nobreak
  call:DoubleDetecter
  if defined DoubleDetect endlocal&endlocal&goto :eof
  goto setdefining
@@ -179,7 +194,7 @@ set SN52=操作音效&set Ex52=開關操作時的音效
 set OP2L=2&set OP2V1=開啟&set OP2V2=關閉&set OP2DV=1
 set SN53=捲動行數&set Ex53=調整競賽說明的一次捲動行數
 set OP3L=5&set OP3V1=1&set OP3V2=2&set OP3V3=3&set OP3V4=4&set OP3V5=5&set OP3DV=3
-set SN59=放棄治療&set Ex50=將所有設定還原為預設值
+set SN59=放棄治療&set Ex59=將所有設定還原為預設值
 set SN50=離開&set Ex50=離開設定與說明選單
 goto set-1
 
@@ -747,7 +762,11 @@ set Mopdiag=＞確定
 call:PlsScore
 call:%MenuType%
 set NT=Ｚ鍵 確定　Ｘ鍵 關閉
-choice /n /c zx /m "%NT%"
+choice /n /c zxp /m "%NT%"
+if %errorlevel%==3 (
+ <nul set/p="%MGEx%"|clip
+ goto mgdiag
+)
 if %errorlevel%==2 (
  goto :eof
 )
