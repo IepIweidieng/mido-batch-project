@@ -1,7 +1,7 @@
 @title 
 @echo off
 >nul chcp 950
-if not "%1"=="閃" start 閃光 閃 & exit
+if not "%1"=="閃" start 閃光 & exit
 setlocal enabledelayedexpansion
 set 表=abcdef0123456789
 :顏色
