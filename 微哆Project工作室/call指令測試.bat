@@ -1,5 +1,5 @@
-@title 程式載入中…… Now Loading... & echo off
->nul chcp 950
+@echo off & >nul chcp 950
+title 程式載入中…… Now Loading...
 goto start
 
 :start

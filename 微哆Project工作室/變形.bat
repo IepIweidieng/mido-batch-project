@@ -1,6 +1,6 @@
 :BAT start
-@echo off&title 程式載入中......Now Loading...&echo Microdoft "arring"...
->nul chcp 950
+@echo off&>nul chcp 950
+title 程式載入中......Now Loading...&echo Microdoft "arring"...
 goto start
 
 :start
