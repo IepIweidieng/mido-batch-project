@@ -1,10 +1,19 @@
 @title 程式載入中…… Now Loading…&echo off&color 27
 >nul chcp 950
-::俄羅斯方塊遊戲，由netbenton編寫，在bathome首發，完成時間：2009年9月25日 ver 2.0
-::由dom2112註解並修改，修改時間2015年7月7日 ver 0.01b
-::加入Hold系統（「C」鍵）、最高分數系統、加分顯示系統、「Z」鍵與「X」鍵、難度系統、續關選單，改變計分方式，更改介面。(0.01a)
-::完成關卡系統、改變旋轉方向(0.01b)
 if "%1" equ "para2" goto :para2
+
+::俄羅斯方塊遊戲，由netbenton編寫，在bathome首發，完成時間：2009年9月25日 ver 2.0
+::由dom2112註解並修改
+::　　　　　　ver 0.01a　加入Hold系統（「C」鍵）、最高分數系統、加分顯示系統、「Z」鍵與「X」鍵、難度系統、續關選單
+::　　　　改變計分方式，更改介面。
+::2015/7/7　ver 0.01b　完成關卡系統
+::　　　　改變旋轉方向
+::2015/9/27 　ver 0.01c　分開了鍵盤操作用與儲存分數的檔案，不用擔心最高分數被意外歸零
+::　　　　修正Hold使用後，方塊的放置會過快的問題
+::　　　　增加Overwhelm模式
+::　　　　增加Mark
+::　　　　修正分數系統，不會樂極生悲。
+
 echo Microdoft "arring"...
 
 ::初始化--------------------------------------
@@ -13,40 +22,46 @@ set        "d-v=for %%a in (!str!) do set/a one=0x%%a,x=one/4+n,y=one%%4+m&(for 
 ::函數d-v，把str中的圖標數據，放置到總坐標空間中，如果有覆蓋，則err=1。調用方法：(%d-v%)
 ::變量使用：one  x  y
 
-set "d-e=set aec=!cr! 　　　┌──────────┐　　!ebu1!!cr!&(for /l %%a in (2,1,#) do for %%b in ("│!ebuf:@=%%a!│　　!ebu%%a!") do set aec=!aec!　　　 %%~b!cr!)&cls&echo;!aec!　　　 └──────────┘　　!ebu22!"
+set "d-e=set aec=!cr! 　　　┌──────────┐　　!ebu1!!cr!&(for /l %%a in (2,1,#) do for %%b in ("│!ebuf:@=%%a!!ebu%%a!!mark%%a!") do set aec=!aec!　　　 %%~b!cr!)&cls&echo;!aec!　　　 └──────────┘　　!ebu22!"
 ::函數d-e，把總坐標空間顯示出來，調用方法：(%d-e:#=行數%)
-set ebu4= Ｈiscore　!hiscores!!hiscore!
-set ebu5=　　　　　　 !jiafenn!
-set ebu6= Ｓcore　　!scores!!score!
-set ebu8=╭─next─╮
+set ebu4=｜　　Ｈiscore　!hiscores!!hiscoren!
+set ebu5=｜　　　　　 !scores!!jiafenn!
+set ebu6=｜　　Ｓcore　　!scores!!scoren!
+set ebu8=├─next─╮
 set ebu13=├─hold★┤
-set ebu18=╰────╯
-set ebu19=　　!cbn!
-set ebu20=　　!tcnn!
+set ebu18=├────╯
+set ebu19=｜　!cbn!
+set ebu20=｜　!tcnn!
+set mark8=　｜╯○
+set mark9=　╯什一─╮
+set mark10=　｜｜戈　│　○
+set mark11=　　　╰─┴一一
+set mark12=　╭比口　　╯丁
+set mark13=　│ㄠ仕
+set mark14=　╰小仕 Tension
+set mark15=　of　　╭─╮,
+set mark16=　　　　│一十田
+set mark17=　　甘厂╰一一儿●
+set mark18=　　廾丌▼ Tetris
 set guan=1
 set guoguan=0
-set hiscore=0
-set score=0
+set hiscoren=0
+set scoren=0
 set scoret=0
 set tc=0
 set tcn=0
-cls&echo Microdoft "arring"...取得最高成績......
-if not exist "%~s0score.dat" (>"%~s0score.dat" echo 0 0 0 100000 200000 450000 1000000)
+
+if not exist "%~s0score.dat" (>"%~s0score.dat" echo 100000 200000 300000 400000 500000)
+>"%~s0aswd.dat" echo 0 0
 set/a err=0
-for /f "tokens=1-7 usebackq" %%a in ("%~s0score.dat") do (
-        set/a hiscore0=%%d||set/a err+=1
-        set/a hiscore1=%%e||set/a err+=2
-        set/a hiscore2=%%f||set/a err+=4
-        set/a hiscore3=%%g||set/a err+=8
+for /f "tokens=1-5 usebackq" %%a in ("%~s0score.dat") do (
+        if "%%a" lss "100000" (set hiscoren0=100000) else (set hiscoren0=%%a)
+        if "%%b" lss "200000" (set hiscoren1=200000) else (set hiscoren1=%%b)
+        if "%%c" lss "300000" (set hiscoren2=300000) else (set hiscoren2=%%c)
+        if "%%d" lss "400000" (set hiscoren3=400000) else (set hiscoren3=%%d)
+        if "%%e" lss "500000" (set hiscoren4=500000) else (set hiscoren4=%%e)
 )
-if %err% geq 8 (set hiscore3=1000000)
-set/a err"%%"=8
-if %err% geq 4 (set hiscore2=450000)
-set/a err"%%"=4
-if %err% geq 2 (set hiscore1=200000)
-set/a err"%%"=2
-if %err% geq 1 (set hiscore0=100000)
-set err=
+
 set cr=^
 
 
@@ -55,72 +70,91 @@ set diff0=Ｅ ａ ｓ ｙ
 set diff1=Ｎ ｏ ｒ ｍ ａ ｌ
 set diff2=Ｈ ａ ｒ ｄ
 set diff3=Ｅ ｘ ｃ ｉ ｔ ｉ ｎ ｇ
+set diff4=Ｏ ｖ ｅ ｒ ｗ ｈ ｅ ｌ ｍ
 
 ::難度定義
 ::easy
 set down0=60
-set down0hi=30
+set down0hi=40
 ::下降速度
-set tncrow0=4
-::方塊固定時間改變幅度
+set tncrowd0=2
+::方塊固定時間延長幅度
+set tncrowu0=1
+::方塊固定時間縮短幅度
 set tnchi0=2
 ::固定時間
-set downs0=8
-set downs0hi=4
+set downs0=7
+set downs0hi=5
 ::加速時下降速度
 
 set guoguan0=30
 ::每關卡方塊數
-set tchi0=299
+set tchi0=300
 ::遊戲總方塊
 set jiafenm0=1
 ::消行加分乘方率
 
 ::normal
 set down1=40
-set down1hi=20
-set tncrow1=3
+set down1hi=25
+set tncrowd1=2
+set tncrowu1=1
 set tnchi1=2
 set downs1=5
 set downs1hi=3
 set guoguan1=50
-set tchi1=499
+set tchi1=500
 set jiafenm1=2
 
 ::hard
 set down2=10
-set down2hi=8
-set tncrow2=2
+set down2hi=6
+set tncrowd2=2
+set tncrowu2=3
 set tnchi2=8
 set downs2=2
 set downs2hi=1
 set guoguan2=80
-set tchi2=799
+set tchi2=800
 set jiafenm2=3
 
 ::exciting
 set down3=2
 set down3hi=1
-set tncrow3=1
-set tnchi3=40
+set tncrowd3=1
+set tncrowu1=9
+set tnchi3=20
 set downs3=0
 set downs3hi=0
 set guoguan3=100
 set tchi3=999
 set jiafenm3=4
 
-::各種圖標定義
-set ga1=0 1 5 6
-set ga2=1 4 5 8
-::■■□□　　□■□□
-::□■■□　　■■□□
-::□□□□　　■□□□
+::overwhelm
+set down4=1
+set down4hi=0
+set tncrowd4=5
+set tncrowu4=1
+set tnchi4=24
+set downs4=0
+set guoguan4=100
+set tchi4=200
+set jiafenm4=9
 
-set gb1=1 2 4 5
-set gb2=0 4 5 9
-::□■■□　　■□□□
-::■■□□　　■■□□
+::各種圖標定義
+set ga1=4 5 9 a
+set ga2=6 9 a d
+::□□□□　　□□□□
+::■■□□　　□□■□
+::□■■□　　□■■□
 ::□□□□　　□■□□
+
+set gb1=5 6 8 9
+set gb2=5 9 a e
+::□□□□　　□□□□
+::□■■□　　□■□□
+::■■□□　　□■■□
+::□□□□　　□□■□
 
 set za1=4 5 6 7
 set za2=2 6 a e
@@ -146,18 +180,19 @@ set qb4=6 8 9 a
 ::■□□□　　■□□□　　□■□□　　□□■□
 ::■■□□　　□□□□　　□■□□　　■■■□
 
-set ta1=0 1 4 5
-::■■□□
-::■■□□
+set ta1=5 6 9 a
+::□□□□
+::□■■□
+::□■■□
 
 
-set sa1=4 5 6 9
-set sa2=1 4 5 9
-set sa3=1 4 5 6
-set sa4=1 5 6 9
-::□□□□　　□■□□　　□■□□　　□■□□
-::■■■□　　■■□□　　■■■□　　□■■□
-::□■□□　　□■□□　　□□□□　　□■□□
+set sa1=1 4 5 6
+set sa2=1 5 6 9
+set sa3=4 5 6 9
+set sa4=1 4 5 9
+::□■□□　　□■□□　　□□□□　　□■□□　　
+::■■■□　　□■■□　　■■■□　　■■□□　　
+::□□□□　　□■□□　　□■□□　　□■□□　　
 
 set tw1=0 1
 set tw2=0 4
@@ -204,15 +239,8 @@ set tt4=2 4 5 6 a
 
 setlocal enabledelayedexpansion
 set test=0
-call :store 0
-start "aswd" %0 para2
+start " " %0 para2
 ::起動控制窗口
-
-cls&echo Microdoft "arring"...等待操作視窗中......
-
-:aswdloop
-for /f "tokens=4-7 usebackq" %%a in ("%~s0score.dat") do (goto :aswdloop)
-::等待操作視窗開始作用
 
 cls&echo Microdoft "arring"...
 
@@ -235,17 +263,28 @@ cls
 color 2f
 mode con: cols=66 lines=25
 
+for /l %%a in (2,1,21) do if "!ebu%%a!"=="" set ebu%%a=｜
+
 ::進入遊戲---------------------------------------
 
 :restart
-title 俄羅斯方塊 ver. 0.01b
+set tcnn=
+set jiafenn=
+set scoreh=0
+
+title 俄羅斯方塊 ver. 0.01c
 for /l %%a in (0,1,21) do (for /l %%b in (0,1,9) do set r%%a.%%b=　)
-for /l %%a in (9,1,17) do (if "%%a" neq "13" (set ebu%%a=│　　　　│))
+for /l %%a in (9,1,17) do (if "%%a" neq "13" (set ebu%%a=｜　　　　｜))
 set hiscores=
-for /l %%a in (0,1,13) do (if "!hiscore:~-%%a!" equ "!hiscore!" (set hiscores= !hiscores!))
+for /l %%a in (0,1,13) do (if "!hiscoren:~-%%a!" equ "!hiscoren!" (set hiscores= !hiscores!))
 set scores=
-for /l %%a in (0,1,13) do (if "!score:~-%%a!" equ "!score!" (set scores= !scores!))
-if "!scoret!" neq "0" (goto :gamestart)
+for /l %%a in (0,1,13) do (if "!scoren:~-%%a!" equ "!scoren!" (set scores= !scores!))
+if "!scoret!" neq "0" (goto :gamestart) else (
+        set score=0
+        set tc=0
+        set tcn=0
+        set guan=1
+)
 
 :selectdiff
 set r21.2=Pr
@@ -257,13 +296,11 @@ set r21.7=ke
 set r21.8=y.
 set r21.9=..
 (%d-e:#=21%)
-for /f "tokens=1 usebackq" %%a in ("%~s0score.dat") do (>"%~s0score.dat" echo %%a 0 1)
->nul ping /n 1 127.0.0.1
-for /f "tokens=3 usebackq" %%a in ("%~s0score.dat") do (if "%%a" neq "0" goto :selectdiff)
+>"%~s0temp.dat" echo 0
 for /l %%a in (2,1,9) do set r21.%%a=　
 set n=10
 for /l %%a in (0,1,3) do (
-        set m=2
+        set m=1
         for %%b in (!diff%%a!) do (
                 set r!n!.!m!=%%b
                 set/a m+=1
@@ -271,24 +308,37 @@ for /l %%a in (0,1,3) do (
         set/a n+=1
 )
 set diffn=1
+set diffnaddc=0
 call :selectdiff2
 
 :selectdiffloop
-for /f "tokens=1,2 usebackq" %%a in ("%~s0score.dat") do (
-         if "%%b" geq "9" (call :error %%b&exit /b)
+for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
+         if %%b geq 10 (call :error %%b&exit /b)
          if "%%a" neq "!test!" (
                   set test=%%a
                   if "%%b" equ "1" (
+                        set diffnaddc=0
                         if "!diffn!" gtr "0" (set/a diffn-=1)
                 )
                   if "%%b" equ "2" (
-                        if "!diffn!" lss "3" (set/a diffn+=1)
+                        if "!diffn!" lss "3" (
+                                set/a diffn+=1
+                        ) else (
+                                set/a diffnaddc+=1
+                                if "!diffnaddc!" equ "10" (set/a diffn=4)
+                        )
                 )
                   if "%%b" equ "3" (
+                        set diffnaddc=0
                         if "!diffn!" gtr "0" (set/a diffn-=1)
                 )
                   if "%%b" equ "4" (
-                        if "!diffn!" lss "3" (set/a diffn+=1)
+                        if "!diffn!" lss "3" (
+                                set/a diffn+=1
+                        ) else (
+                                set/a diffnaddc+=1
+                                if "!diffnaddc!" equ "10" (set/a diffn=4)
+                        )
                 )
                   if "%%b" equ "6" (
                         call :error 6&exit /b
@@ -306,49 +356,50 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0score.dat") do (
 goto :selectdiffloop
 
 :selectdiff2
-set hiscore= !hiscore%diffn%!
+set hiscoren= !hiscoren%diffn%!
 set hiscores=
-for /l %%a in (0,1,13) do (if "!hiscore:~-%%a!" equ "!hiscore!" (set hiscores= !hiscores!))
+for /l %%a in (0,1,13) do (if "!hiscoren:~-%%a!" equ "!hiscoren!" (set hiscores= !hiscores!))
 set diffcult=!diff%diffn%: =!
 set diffcultsp=
-for /l %%a in (1,2,7) do (if "!diffcult:~-%%a!" equ "!diffcult!" (set diffcultsp=　!diffcultsp!))
-if "!diffn!" equ "0" set diffcults=＞　　　
-if "!diffn!" equ "1" set diffcults=　＞　　
-if "!diffn!" equ "2" set diffcults=　　＞　
-if "!diffn!" equ "3" set diffcults=　　　＞
-set r10.1=!diffcults:~,1!
-set r11.1=!diffcults:~1,1!
-set r12.1=!diffcults:~2,1!
-set r13.1=!diffcults:~3,1!
+for /l %%a in (1,2,8) do (if "!diffcult:~-%%a!" equ "!diffcult!" (set diffcultsp=　!diffcultsp!))
+if "!diffn!" equ "0" set diffcults=＞　　　　
+if "!diffn!" equ "1" set diffcults=　＞　　　
+if "!diffn!" equ "2" set diffcults=　　＞　　
+if "!diffn!" equ "3" set diffcults=　　　＞　
+if "!diffn!" equ "4" set diffcults=　　　　＞
+set r10.0=!diffcults:~,1!
+set r11.0=!diffcults:~1,1!
+set r12.0=!diffcults:~2,1!
+set r13.0=!diffcults:~3,1!
+set r14.0=!diffcults:~4,1!
+if "!diffn!" equ "4" (
+        set m=1
+        for %%b in (!diff4!) do (
+                set r14.!m!=%%b
+                set/a m+=1
+        )
+) else (for /l %%a in (1,1,9) do set r14.%%a=　)
 (%d-e:#=21%)
 goto :eof
 
 :gamestart
 set guoguantc=!guoguan%diffn%!
-set/a guoguan=guan*guoguantc
-if !guan! geq 10 (set guoguan=!tchi%diffn%!)
 set tnchi=!tnchi%diffn%!
+(%d-e:#=21%)
 
-set downs=!downs%diffn%!
-if !guan! geq 6 (set/a "downs=((downs%diffn%*(9-guan))>>2)+((downs%diffn%hi*(guan-5))>>2)")
-
-set down=!down%diffn%!
-if !guan! geq 6 (set/a "down=((down%diffn%*(9-guan))>>2)+((down%diffn%hi*(guan-5))>>2)")
-if !guan! equ 10 (set down=!downs%diffn%!)
-
-set k3=tnc-=tncrow%diffn%,k-=2,k+=mx,k"%%"=mx,k+
-set k7=tnc-=tncrow%diffn%,k-=2,k+=mx,k"%%"=mx,k+
-set k8=tnc-=tncrow%diffn%,k"%%"=mx,k+
-set k4=tnc+=tncrow%diffn%,down=downs,t
-set k1=tnc-=tncrow%diffn%,m-
-set k2=tnc-=tncrow%diffn%,m+
-set k5=hold
+set k3=tnc-=tncrowd%diffn%,k-=2,k+=mx,k"%%"=mx,k+
+set k7=tnc-=tncrowd%diffn%,k-=2,k+=mx,k"%%"=mx,k+
+set k8=tnc-=tncrowd%diffn%,k"%%"=mx,k+
+set k4=tnc+=tncrowu%diffn%,down=downs,t
+set k1=tnc-=tncrowd%diffn%,m-
+set k2=tnc-=tncrowd%diffn%,m+
+set k5=tnc=0,hold
 ::按鍵定義
 
-set ebu2=　　!diffcultsp!!diffcult!
+set ebu2=｜　　　　!diffcultsp!!diffcult!
 set tcnn=!tcn!/!guoguan!
 for /l %%a in (0,1,21) do (for /l %%b in (0,1,9) do set r%%a.%%b=　)
-for /l %%a in (9,1,17) do (if "%%a" neq "13" (set ebu%%a=│　　　　│))
+for /l %%a in (9,1,17) do (if "%%a" neq "13" (set ebu%%a=｜　　　　｜))
 set holdt=
 set ttr=
 set _ttr=
@@ -374,9 +425,7 @@ set r21.9=..
 ::初始化坐標空間20行，10列
 
 :gameloading
-for /f "tokens=1 usebackq" %%a in ("%~s0score.dat") do (>"%~s0score.dat" echo %%a 0 1)
->nul ping /n 1 127.0.0.1
-for /f "tokens=3 usebackq" %%a in ("%~s0score.dat") do (if "%%a" neq "2" goto :gameloading)
+>"%~s0temp.dat" echo 2
 for /l %%a in (2,1,9) do set r21.%%a=　
 (%d-e:#=21%)
 >nul timeout /t 2 /nobreak
@@ -386,19 +435,26 @@ for /l %%a in (1,1,8) do set r10.%%a=　
 ::遊戲中-------------------------------------------
 
 :loop
+set/a guoguan=guan*guoguantc
+if !guoguan! geq !tchi%diffn%! (set guoguan=!tchi%diffn%!)
+(%d-e:#=21%)
+
 set/a "m=4,t=2,n=0,bti=0"
 
 set downs=!downs%diffn%!
 if !guan! geq 6 (set/a "downs=((downs%diffn%*(9-guan))>>2)+((downs%diffn%hi*(guan-5))>>2)")
+if !guan! geq 10 (set/a "downs=((downs%diffn%*(-2))>>2)+((downs%diffn%hi*4)>>2)")
 
 set down=!down%diffn%!
 if !guan! geq 6 (set/a "down=((down%diffn%*(9-guan))>>2)+((down%diffn%hi*(guan-5))>>2)")
-if !guan! equ 10 (set down=!downs%diffn%!)
+if !guan! geq 10 (set/a "down=((down%diffn%*(-2))>>2)+((down%diffn%hi*4)>>2)")
+if !diffn! equ 4 (if !guan! geq 2 (set down=!down4hi!))
 
 set/a r=!random!%%nx+1
 set err=
 
 if "!hold!" equ "1" (
+        set tnc=0
         if defined hstr (
                 set temt=!ttr!
                 set ttr=!holdt!
@@ -434,15 +490,15 @@ for %%a in (!hstr!) do set/a one=0x%%a,x=one/4+14,y=one%%4&set kk!x!.!y!=■
 for /l %%a in (14,1,17) do for /l %%b in (0,1,3) do (
         if defined kk%%a.%%b (set kk%%a=!kk%%a!!kk%%a.%%b!) else (set kk%%a=!kk%%a!　)
 )
-endlocal&set ebu9=│%kk9%│&set ebu10=│%kk10%│&set ebu11=│%kk11%│&set ebu12=│%kk12%│&set ebu14=│%kk14%│&set ebu15=│%kk15%│&set ebu16=│%kk16%│&set ebu17=│%kk17%│
+endlocal&set ebu9=｜%kk9%｜&set ebu10=｜%kk10%｜&set ebu11=｜%kk11%｜&set ebu12=｜%kk12%｜&set ebu14=｜%kk14%｜&set ebu15=｜%kk15%｜&set ebu16=｜%kk16%｜&set ebu17=｜%kk17%｜
 ::對預備圖標的處理
 
 ::遊戲操作-------------------------------------
 
 :cont
-for /f "tokens=1,2 usebackq" %%a in ("%~s0score.dat") do (
+for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
         if %%b equ 6 (call :error %%b&exit /b)
-        if %%b geq 9 (call :error %%b&exit /b)
+        if %%b geq 10 (call :error %%b&exit /b)
         if %%a neq !test! (
                 set test=%%a
                 set bs=!str!&set/a bm=m,bk=k,btnc=tnc
@@ -490,6 +546,7 @@ if !tn! gtr !down! (
         ) else (
                 (%d-e:#=21%)
                 endlocal
+                set tnc=0
         )
 )
 
@@ -498,7 +555,6 @@ goto :cont
 ::消行、得分、放置方塊---------------------------
 
 :jmpout
-set bscore=!score!
 set hold=
 set ebu13=├─hold★┤
 set/a n-=1
@@ -513,26 +569,96 @@ if !m! neq 1 (
         for /l %%a in (21,-1,2) do (
                 for /l %%b in (0,1,9) do set r%%a.%%b=!e%%a:~%%b,1!
         )
-        set/a "jiafen+=((m-1)<<jiafenm%diffn%)*((m-1)<<jiafenm%diffn%)*((cb+1)<<jiafenm%diffn%)*((cb+1)<<jiafenm%diffn%)*10,cb+=1,tc+=(m-1)*10,tc-=1"
+        set/a "jiafen1=(m-1)*(cb+1)*jiafenm%diffn%"
+        set/a "jiafen1h=!jiafen1:~,-2!0,jiafen1%%=100,jiafen1*=100"
+
+        set/a "jiafen1t=2*jiafen1h*jiafen1,jiafen1h*=jiafen1h/10,jiafen1*=jiafen1"
+        set jiafen1ht=!jiafen1t:~,-5!0
+        set/a "jiafen1t%%=100000,jiafen1t*=1000,jiafen1+=jiafen1t,jiafen1h+=jiafen1ht"
+
+        set/a "jiafen1h+=!jiafen1:~,-8!0,jiafen1%%=100000000"
+
+        set/a "cb+=1,tc+=(m-1)*10,tc-=1"
         if !cb! gtr 1 (set cbn=!cb! Ｃombo！)
 ) else (
         set/a cb=0
         set cbn=
 )
+::消行得分
 
-set/a tc+=1,tcn=tc,guoguan=guan*guoguantc,tct=tc+guoguantc-guoguan,jiafen+=10*(22-n)*(cb+1)*tct*guan*guan
-if !guan! geq 10 (set guoguan=!tchi%diffn%!)
-if !tc! geq !guoguan! (set/a jiafen+=guan*guoguan*100000,guan+=1)
-set/a score+=jiafen
+set/a tc+=1,tcn=tc,guoguan=guan*guoguantc,nr=22-n
+set/a "jiafen2=(cb+1)*tc"
+if !nr! geq 16 (
+        set jiafen2h=!jiafen2:~,-4!0
+        set/a "jiafen2%%=10000,jiafen2*=10000"
+        set/a "jiafen2h+=!jiafen2:~,-8!0,jiafen2%%=100000000"
+) else (
+        set jiafen2h=!jiafen2:~,-4!0
+        set/a "jiafen2%%=10000"
+
+        set/a "jiafen2h*=nr*62,jiafen2*=nr*62"
+        set/a "jiafen2+=jiafen2h%%10000*1000,jiafen2h=!jiafen2h:~,-4!0"
+
+        set/a "jiafen2h+=!jiafen2:~,-7!0,jiafen2%%=10000000,jiafen2*=10"
+)
+::放置得分
+
+if !tc! geq !guoguan! (
+        set/a "jiafen3=guoguan*jiafenm%diffn%*jiafenm%diffn%,guan+=1"
+        set jiafen3h=!jiafen3:~,-4!0
+        set/a "jiafen3%%=10000,jiafen3*=10000,jiafen2h+=!jiafen2:~,-8!0,jiafen3%%=100000000"
+)
+::過關得分
+
+set/a "scoreh+=jiafen1h+jiafen2h+jiafen3h"
+set/a "jiafen=jiafen1+jiafen2+jiafen3,score+=jiafen"
+set/a "scoreh+=!score:~,-8!0,score%%=100000000"
+::加上分數
+
+
+set scorez=
+if !scoreh! neq 0 (for /l %%a in (1,1,7) do (if "!score:~-%%a!" equ "!score!" (set scorez=0!scorez!)))
+
+set scoren=!scoreh:~,-1!!scorez!!score!
+
+if !scoreh! geq 1000 (
+set scoren=A!scoreh:~2,-1!!scorez!!score!
+if !scoreh! geq 1100 (set scoren=B!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1200 (set scoren=C!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1300 (set scoren=D!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1400 (set scoren=E!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1500 (set scoren=F!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1600 (set scoren=G!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1700 (set scoren=H!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1800 (set scoren=I!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 1900 (set scoren=J!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2000 (set scoren=K!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2100 (set scoren=L!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2200 (set scoren=M!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2300 (set scoren=N!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2400 (set scoren=O!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2500 (set scoren=P!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2600 (set scoren=Q!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2700 (set scoren=R!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2800 (set scoren=S!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 2900 (set scoren=T!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3000 (set scoren=U!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3100 (set scoren=V!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3200 (set scoren=W!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3300 (set scoren=X!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3400 (set scoren=Y!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3500 (set scoren=Z!scoreh:~2,-1!!scorez!!score!)
+if !scoreh! geq 3600 (set scoren=Ω Max Score^!^!)
+)
+if !score! lss 0 (set scoren= Ω Max Score^!^!)
+
 call :highscoring
-(%d-e:#=21%)
-set jiafen=0
 
 if !n! leq 1 (
-        set score=!bscore!
         set scores=
-        for /l %%a in (0,1,13) do (if "!score:~-%%a!" equ "!score!" (set scores= !scores!))
-        set jiafenn=
+        for /l %%a in (0,1,13) do (if "!scoren:~-%%a!" equ "!scoren!" (set scores= !scores!))
+        call :highscoring
+        call :store
         set r11.2=您
         set r11.3=已
         set r11.4=經
@@ -545,8 +671,11 @@ if !n! leq 1 (
         set contin=0
         goto :precontinue
 )
+::遊戲失敗
 
 if !tc! geq !tchi%diffn%! (
+        call :highscoring
+        call :store
         set r11.1=Co
         set r11.2=ng
         set r11.3=ra
@@ -580,21 +709,29 @@ if !tc! geq !tchi%diffn%! (
         set r9.9=！
         (%d-e:#=21%)
         >nul timeout /t 1
-        call :error 6&exit /b
+        set scoren=0
+        set scoret=0
+        goto :restart
 )
+::遊戲成功
 
+(%d-e:#=21%)
+set jiafen=0
 goto :loop
 
 :highscoring
-set scores=
-for /l %%a in (0,1,13) do (if "!score:~-%%a!" equ "!score!" (set scores= !scores!))
-set hiscores=
-for /l %%a in (0,1,13) do (if "!hiscore:~-%%a!" equ "!hiscore!" (set hiscores= !hiscores!))
-if !score! geq !hiscore! (
-        set hiscore=!score!
+set hiscoreh=!hiscoren:~,-8!0
+set/a "hiscore=hiscoren%%100000000"
+if !scoreh! geq !hiscoreh! (
+        if !score! geq !hiscore! (
+                set hiscoren=!scoren!
+        )
 )
+set scores=
+for /l %%a in (0,1,13) do (if "!scoren:~-%%a!" equ "!scoren!" (set scores= !scores!))
+set hiscores=
+for /l %%a in (0,1,13) do (if "!hiscoren:~-%%a!" equ "!hiscoren!" (set hiscores= !hiscores!))
 endlocal
-set hiscore%diffn%=!hiscore!
 set tcnn=!tcn!/!guoguan!
 set jiafenn=+!jiafen!
 setlocal enabledelayedexpansion
@@ -611,9 +748,7 @@ set r21.7=ke
 set r21.8=y.
 set r21.9=..
 (%d-e:#=21%)
-for /f "tokens=1 usebackq" %%a in ("%~s0score.dat") do (>"%~s0score.dat" echo %%a 0 1)
->nul ping /n 1 127.0.0.1
-for /f "tokens=3 usebackq" %%a in ("%~s0score.dat") do (if "%%a" neq "0" goto :precontinue)
+>"%~s0temp.dat" echo 0
 for /l %%a in (2,1,9) do set r21.%%a=　
         set r11.2=　
         set r11.3=　
@@ -638,7 +773,7 @@ for /l %%a in (2,1,9) do set r21.%%a=　
 call :selectconti
 
 :continue
-for /f "tokens=1,2 usebackq" %%a in ("%~s0score.dat") do (
+for /f "tokens=1,2 usebackq" %%a in ("%~s0aswd.dat") do (
         if "%%a" neq "!test!" (
                 set test=%%a
                 if "%%b" equ "3" (
@@ -648,16 +783,21 @@ for /f "tokens=1,2 usebackq" %%a in ("%~s0score.dat") do (
                         if "!contin!" lss "1" (set/a contin+=1)
                 )
                 if "%%b" equ "6" (
-                        call :error 6&exit /b
+                        set scoren=0
+                        set scoret=0
+                        goto :restart
                 )
                 if "%%b" equ "7" (
                         if "!contin!" equ "0" (
                                 set/a scoret=score"%%"10
                                 if !scoret! lss 9 (set/a scoret+=1)
                                 set score=!scoret!
+                                set scoren=!scoret!
                                 goto :restart
                         ) else (
-                                call :error 6&exit /b
+                                set scoren=0
+                                set scoret=0
+                                goto :restart
                         )
                 )
         call :selectconti
@@ -680,69 +820,48 @@ mode con: cols=40 lines=2
 mode con: rate=62 delay=0
 title 操作視窗
 color 2f
-
-:para2loop
-set m=0
-for /f "tokens=4-7 usebackq" %%a in ("%~s0score.dat") do (
-        0>&1 >nul >"%~s0score.dat" echo;0 0 0
-        set m=1
-)
-if %m% equ 0 goto :para2loop
 set mode=0
 set tn=0
-::回應主視窗
 
 :p_lp
-for /f "tokens=1-3 usebackq" %%a in ("%~s0score.dat") do (if %%c equ 1 (set/a m=%%a,tn=0,mode+=2,mode"%%"=4)
+for /f "tokens=1 usebackq" %%a in ("%~s0temp.dat") do set mode=%%a
 if %%b equ 6 goto :paraexit
-if %%b geq 9 goto :paraexit
+if %%b geq 10 goto :paraexit
 )
 if %mode% equ 0 (echo 　　W上移 S下移 Z確定 X取消 Q退出　　　) else (echo A左 D右 W/Z逆轉 X順轉 S加速 C保留 Q退出)
-for /f "tokens=4-7 usebackq" %%a in ("%~s0score.dat") do (goto :paraexit)
 set/a n=n"%%"100+1
 ::計時器
-if %m% neq 1 (>nul choice /c adwscqzx /n) else (>nul ping /n 1 127.0.0.1&if %tn% gtr 4 (set m=%mode%) else (set/a tn+=1))
->nul >"%~s0score.dat" echo;%n% %errorlevel% %mode%
+>nul choice /c adwscqzxp /n
+>nul >"%~s0aswd.dat" echo;%n% %errorlevel%
 if %errorlevel% equ 6 goto :paraexit
-if %errorlevel% geq 9 goto :paraexit
+if %errorlevel% geq 10 goto :paraexit
 goto :p_lp
 
 :paraexit
-for /f "tokens=3 usebackq" %%a in ("%~s0score.dat") do (if %%a equ 1 (set/a mode+=2,mode"%%"=4))
 set/a n=n"%%"100+1
->nul >"%~s0score.dat" echo;%n% 6 %mode%
+>nul >"%~s0aswd.dat" echo;%n% 6
 >nul ping /n 1 127.0.0.1
-for /f "tokens=4-7 usebackq" %%a in ("%~s0score.dat") do (>nul >"%~s0score.dat" echo;%n% 6 %mode% %%a %%b %%c %%d &exit)
-goto :errorstore
-::等待主視窗儲存分數
+exit
 
 ::結束遊戲-----------------------------------------
 
-:error
-if "%1" equ "6" echo Thank you for playing！ GOoD ByE with you！
-if "%1" gtr "8" echo 發生了嚴重的錯誤，程式必須關閉。
-
-:errorstore
-call :store %1
->nul ping /n 1 127.0.0.1
-for /f "tokens=4-7 usebackq" %%a in ("%~s0score.dat") do (
-call :store %1
-echo 分數已儲存。
->nul timeout /t 0 /nobreak
->nul timeout /t 1
-goto :eof
-)
-goto :errorstore
-::儲存分數並等待操作視窗關閉
-
 :store
-0>&1 >nul >"%~s0score.dat" echo;!test! %1 0 !hiscore0! !hiscore1! !hiscore2! !hiscore3!
+set hiscoren%diffn%=!hiscoren!
+0>&1 >nul >"%~s0score.dat" echo;!hiscoren0! !hiscoren1! !hiscoren2! !hiscoren3! !hiscoren4!
 set err=0
-for /f "tokens=4-7 usebackq" %%a in ("%~s0score.dat") do (
-        if "%%a" neq "!hiscore0!" set/a err+=1
-        if "%%b" neq "!hiscore1!" set/a err+=1
-        if "%%c" neq "!hiscore2!" set/a err+=1
-        if "%%d" neq "!hiscore3!" set/a err+=1
+for /f "tokens=1-5 usebackq" %%a in ("%~s0score.dat") do (
+        if %%a0 neq !hiscoren0!0 set/a err+=1
+        if %%b0 neq !hiscoren1!0 set/a err+=1
+        if %%c0 neq !hiscoren2!0 set/a err+=1
+        if %%d0 neq !hiscoren3!0 set/a err+=1
+        if %%e0 neq !hiscoren4!0 set/a err+=1
 )
 if "!err!" neq "0" (goto :store)
 goto :eof
+
+:error
+if "%1" equ "6" echo Thank you for playing！ GOoD ByE with you！
+if "%1" gtr "9" echo 發生了嚴重的錯誤，程式必須關閉。
+del /f /q /a "%~s0aswd.dat"
+del /f /q /a "%~s0temp.dat"
+>nul timeout /t 1
