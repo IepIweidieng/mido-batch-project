@@ -3,12 +3,12 @@
 >nul chcp 950 & >>"%~dp0log.txt" echo ¦b%_DT%±Ò°Ê¤F³]©wµ{¦¡
 if not exist "%~dp0·´·l¦w¸Ëµ{¦¡.bAt" (>&2 echo ¨S¦³¥i¥H¶i¦æ³]©wªºµ{¦¡¡C & >>"%~dp0log.txt" echo ¨S¦³¥i¥H¶i¦æ³]©wªºµ{¦¡¡C & >nul timeout /t 10 & exit /b 1)
 call:custom & set Bdots=Microdoft "arring", please wait & set Adots= 
-cls & echo %Bdots% & goto ProgramStart
+call:dots & goto ProgramStart
 
 :ProgramStart
-if exist "%~dp0log.txt" (>nul findstr /b /e /offline /c:"·LÎG°Ê§@¬ö¿ý --------------------------------------------- " "%~dp0log.txt" && >>"%~dp0log.txt" echo ---------------------------------------------------------- ) else (>"%~dp0log.txt" echo ·LÎG°Ê§@¬ö¿ý --------------------------------------------- )
-if not %errorlevel%==0 >"%~dp0log.txt" echo ·LÎG°Ê§@¬ö¿ý --------------------------------------------- 
-goto start
+if exist "%~dp0log.txt" (>nul findstr /b /e /offline /c:"·LÎG°Ê§@¬ö¿ý --------------------------------------------- " "%~dp0log.txt" && >>"%~dp0log.txt" echo ---------------------------------------------------------- ) else (>"%~dp0log.txt" echo ·LÎG°Ê§@¬ö¿ý --------------------------------------------- ) & call:dots
+if not %errorlevel%==0 (>"%~dp0log.txt" echo ·LÎG°Ê§@¬ö¿ý --------------------------------------------- ) & call:dots
+call:Nu & goto start
 
 :DT
 for /f "tokens=1-4 delims=/ " %%a in ("%date%") do set _DoDate=%%a¦~%%b¤ë%%c¤é¡]%%d¡^
@@ -16,8 +16,13 @@ for /f "tokens=1-4 delims=:. " %%e in ("%time%") do set _DoTime=%%e®É%%f¤À%%g¬íÂ
 set _DT=%_DoDate%%_DoTime%
 goto :eof
 
+:Nu
+for /L %%A in (1,1,255) do (set Do_Nu=«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã«ã!Do_Nu!) & call:dots
+for /L %%B in (1,1,127) do (set Nu=«ã!Nu!) & call:dots
+goto :eof
+
 :start
-title µ{¦¡¶}©l¤¤¡K¡K Now Loading...
+cls & title µ{¦¡¶}©l¤¤¡K¡K Now Loading...
 cls & echo Microdoft "arring"
 call:DT
 >>"%~dp0log.txt" echo ¦b%_DT%¶}©l¤F³]©wµ{¦¡
@@ -54,7 +59,7 @@ color 27 & goto restart
 if %errorlevel%==3 (
 >>"%~dp0log.txt" echo %MG% "%NT%"¡uQ¡v
 set enter=0
-color 27 & goto finish
+color 27 & goto exit
 )
 if %errorlevel%==2 (
 call:boom
@@ -197,8 +202,8 @@ set NT=¡uD¡vÁä--¥k¿ï¡F¡uA¡vÁä--¥ª¿ï¡F¡uZ¡vÁä--³]©w¡F¡uX¡vÁä--¨ú®ø
 choice /n /c adzx /m "%NT%"
 if %errorlevel%==4 (goto CustomSet)
 if %errorlevel%==3 (
-if %V9%==2 (set enter=0)
 >>"%~dp0log.txt" echo Àx¦s³]©w "%NT%"¡@%VL%¡uZ¡v
+if %V9%==2 (set enter=0 & goto exit)
 echo  & goto end
 )
 if %errorlevel%==2 (
@@ -262,7 +267,6 @@ exit /b %err%
 set dots=.%dots%
 if "%dotsN%"=="2" (
 if "%dots:~,7%"=="......." set dots=      
-cls & echo %Bdots%%dots:~,6%%Adots%
 ) else (
 if "%dots:~,4%"=="...." set dots=   
 cls & echo %Bdots%%dots:~,3%%Adots%
@@ -543,26 +547,49 @@ if %V6% leq 1 (set V6=1) else (set /a V6-=1))
 goto set6
 
 :end
-if not "enter"=="0" set Mop9=³B²z¤¤......
-cls
-call:Menu
+set Bdots=³B²z¤¤ & set dotsN=2 & set dots=       & call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 call:CustomCheck
 >"%~dp0·´·l¦w¸Ëµ{¦¡.cfg" echo set1=%S1%
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >>"%~dp0·´·l¦w¸Ëµ{¦¡.cfg"  echo set2=%S2%
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >>"%~dp0·´·l¦w¸Ëµ{¦¡.cfg"  echo set3=%S3%
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >>"%~dp0·´·l¦w¸Ëµ{¦¡.cfg"  echo set4=%S4%
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >>"%~dp0·´·l¦w¸Ëµ{¦¡.cfg"  echo set5=%S5%
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >>"%~dp0·´·l¦w¸Ëµ{¦¡.cfg"  echo set6=%S6%
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 goto finish
 
 :finish
 set F=0
 >nul 2>&1 findstr /b /e /offline /c:"set1=%S1%" "%~dp0·´·l¦w¸Ëµ{¦¡.cfg" && set /a F+=1
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >nul 2>&1 findstr /b /e /offline /c:"set2=%S2%" "%~dp0·´·l¦w¸Ëµ{¦¡.cfg" && set /a F+=1
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >nul 2>&1 findstr /b /e /offline /c:"set3=%S3%" "%~dp0·´·l¦w¸Ëµ{¦¡.cfg" && set /a F+=1
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >nul 2>&1 findstr /b /e /offline /c:"set4=%S4%" "%~dp0·´·l¦w¸Ëµ{¦¡.cfg" && set /a F+=1
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >nul 2>&1 findstr /b /e /offline /c:"set5=%S5%" "%~dp0·´·l¦w¸Ëµ{¦¡.cfg" && set /a F+=1
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 >nul 2>&1 findstr /b /e /offline /c:"set6=%S6%" "%~dp0·´·l¦w¸Ëµ{¦¡.cfg" && set /a F+=1
+call:dots
+set Mop9=%Bdots%%dots:~,6%%Adots% & cls & call:Menu
 if %F%==6 (
 set err=0
 ) else (
