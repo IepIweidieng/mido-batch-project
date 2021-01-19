@@ -1,6 +1,6 @@
 :BAT start
-@title 程式載入中…… Now Loading... & echo off & setlocal enableextensions & setlocal enabledelayedexpansion & if not "%1"=="" goto %1
->nul chcp 950 & call:DT & >>"%~dp0log.txt" echo 在!_DT!啟動了程式
+@echo off & setlocal enableextensions & setlocal enabledelayedexpansion & if not "%1"=="" goto %1
+>nul chcp 950 & title 程式載入中…… Now Loading... & call:DT & >>"%~dp0log.txt" echo 在!_DT!啟動了程式
 set NverN=0003d
 set NverV=0.03d
 if exist "%~dp0Your Tousei" (call:custom & call:expand & if "%retry%"=="no" (exit /b) else (if "%retry%"=="yes" (goto BAT start))) else (>&2 echo 資料錯誤。 & >>"%~dp0log.txt" echo 資料錯誤。 & >nul timeout /t 10 & exit /b)
@@ -54,10 +54,10 @@ color 27 & goto ready
 
 :boom
 cls & color c0
-title %Nu%
+title %Nu% & echo 
 for /L %%C in (1,1,%S1%) do (
 cls
-echo %Do_Nu%
+echo %Do_Nu%
 >nul timeout /t 0
 )
 color 27 & goto :eof
