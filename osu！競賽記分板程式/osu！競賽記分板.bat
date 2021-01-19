@@ -1,6 +1,7 @@
 :BAT start
 @title µ{¦¡¸ü¤J¤¤¡K¡K Now Loading¡K&echo off&setlocal enableextensions&if not "%1"=="" goto %1
->nul chcp 950&call:DT
+>nul chcp 950
+mode con: cols=80 lines=30
 if exist "%~dpn0log.txt" (
  for /f "tokens=* usebackq" %%a in ("%~dpn0log.txt") do (
   if "%%a"=="·LÎG°Ê§@¬ö¿ý --------------------------------------------- " (
@@ -16,7 +17,7 @@ if exist "%~dpn0log.txt" (
 goto BAT start continue
 
 :BAT start continue
->>"%~dpn0log.txt" echo;%_DT%¡@±Ò°Ê¤F°O¤ÀªOµ{¦¡
+call:DT&>>"%~dpn0log.txt" echo;!_DT!¡@±Ò°Ê¤F°O¤ÀªOµ{¦¡
 echo;Microdoft "arring"...
 setlocal enabledelayedexpansion
 goto start
@@ -68,7 +69,7 @@ color 27&goto ready
 
 :ready
 %cls%&color 2f
-title °O¤ÀªO
+title osu¡IÄvÁÉ°O¤ÀªO
 set MG=½Ð«ö¤U¿ï¶µ
 echo;¡@¡@%MG%%bellG%¡C
 echo.
@@ -145,7 +146,7 @@ set SN50=Â÷¶}¡@¡@¡@¡@&set Ex50=Â÷¶}³]©w»P»¡©ú¿ï³æ
 goto set-1
 
 :set-1
-title °O¤ÀªO¿ï³æ
+title osu¡IÄvÁÉ°O¤ÀªO ver. 1.00a
 set MG=¿ï¾Ü°O¤ÀªO¶µ¥Ø
 set Hp=
 set CP=0
@@ -166,6 +167,7 @@ for /l %%a in (1,1,9) do (
  if "!F%CP%%%aR%R%!"=="1" set Mop%%a=[¤w§¹¦¨]
  if "!F%CP%%%aR%R%!"=="2" set Mop%%a=[­p®É¤¤......]
  if "!F%CP%%%aR%R%!"=="3" set Mop%%a=[©|¥¼§ë²¼]
+ if "%CP%""%EnUDTurn%"=="0""1"  set Mop7=[¥i¶i¤JÂ½Âà¦^¦X]
  if "%CP%""%UDTurn%"=="0""1"  set Mop7=[¤w¶i¤JÂ½Âà¦^¦X]
  if %CP%==0 if defined SN%CP%%%a (if not defined Mop%%a set Mop%%a=......) else (set Mop%%a=)
 )
@@ -282,10 +284,12 @@ if %errorlevel%==1 (
 goto OptionMenu
 
 :CheckScoreMenu
+if "%CP%%C%"=="25" set Mop%ownerA%=-©Ð¥DµLªk§ë²¼-
 set MenuType=CheckMenu
 set Hpdiag=
 set Mopdiag=
 if %VCM% gtr 0 if not defined Pl%VCM% goto CheckScoreMenuS
+if !Mop%VCM%!==-©Ð¥DµLªk§ë²¼- goto CheckScoreMenuS
 for /l %%a in (-1,1,16) do set Sl%%a= 
 set Sl%VCM%=¡n
 for /l %%a in (1,1,16) do set CMl%%a=!Sl%%a!
@@ -333,12 +337,14 @@ if %errorlevel%==4 (
  :CheckScoreMenuW
  if !VCM! leq -1 (set VCM=16) else (set/a VCM-=1)
  if !VCM! gtr 0 if not defined Pl!VCM! goto CheckScoreMenuW
+ if !Mop%VCM%!==-©Ð¥DµLªk§ë²¼- goto CheckScoreMenuW
  goto CheckScoreMenu
 )
 if %errorlevel%==3 (
  :CheckScoreMenuS
  if !VCM! geq 16 (set VCM=-1) else (set/a VCM+=1)
  if !VCM! gtr 0 if not defined Pl!VCM! goto CheckScoreMenuS
+ if !Mop%VCM%!==-©Ð¥DµLªk§ë²¼- goto CheckScoreMenuS
  goto CheckScoreMenu
 )
 if %errorlevel%==2 (
@@ -507,14 +513,21 @@ for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG= !EMG!
 %cls%&color 2f
 if %CP%==3 (echo;%EMG%¡Ð%MG%¡Ð !Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!) else (echo;%EMG%¡Ð%MG%¡Ð)
 echo.
+set EHpdiag=
+set EMopdiag=                
+for /l %%a in (0,1,6) do if "!M6:~,%%a!"=="!M6!" set EHpdiag=¡@!EHpdiag!
+if not defined M6 set EHpdiag=¡@¡@¡@¡@¡@¡@!EHpdiag!
+for /l %%a in (10,1,32) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EMopdiag= !EMopdiag!
+for /l %%a in (0,1,6) do if "!M7:~,%%a!"=="!M7!" set EMopdiag=¡@!EMopdiag!
+if not defined M7 set EMopdiag=¡@¡@¡@¡@¡@¡@!EMopdiag!
 for /l %%a in (1,1,10) do (
- if %%a==6 (echo;¡@!Ml%%a:~,1!¡@¡@¡@!M%%a!¡@¡@¡@¡@!Hpdiag!) else (
-  if %%a==7 (echo;¡@!Ml%%a:~,1!¡@¡@¡@!M%%a!¡@¡@¡@¡@¡@¡@¡@¡@!Mopdiag!) else (echo;¡@!Ml%%a:~,1!¡@¡@¡@!M%%a!)
+ if %%a==6 (echo;¡@!Ml%%a:~,1!¡@¡@¡@!M%%a! !EHpdiag!!Hpdiag!) else (
+  if %%a==7 (echo;¡@!Ml%%a:~,1!¡@¡@¡@!M%%a! !EMopdiag!!Mopdiag!) else (echo;¡@!Ml%%a:~,1!¡@¡@¡@!M%%a!)
  )
  echo;¡@!Ml%%a:~1!¡@¡@¡@¡@¡@¡@¡@¡@¡@!Mop%%a!
 )
 echo.
-echo;¡@¡@¡@¡@¦^¦X:%R%¡@¤ñ¼Æ:%PlSn:~1%¡@
+echo;¡@¡@¡@¡@¦^¦X:%R%¡@¤ñ¼Æ%PlSn%
 echo;¡@¡@«Å¥¬¥DÃD:!Pl%ownerB%!¡@©Ð¥D:!Pl%ownerA%!
 set ESp=
 for /l %%a in (0,1,38) do if "!Ex:~,%%a!"=="!Ex!" set ESp=¡@!ESp!
@@ -531,23 +544,29 @@ set ESp=
 for /l %%a in (0,1,38) do if "!Hp:~,%%a!"=="!Hp!" set ESp= !ESp!
 echo;%ESp%%Hp%
 echo.
+set EHpdiag=
+set EMopdiag=                
+for /l %%a in (0,1,6) do if "!Mop10:~,%%a!"=="!Mop10!" set EHpdiag=¡@!EHpdiag!
+for /l %%a in (10,1,32) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EMopdiag= !EMopdiag!
+for /l %%a in (0,1,6) do if "!Mop12:~,%%a!"=="!Mop12!" set EMopdiag=¡@!EMopdiag!
+for /l %%a in (0,1,32) do if not "!Mopdiag:~,%%a!"=="!Mopdiag!" set EMopdiag=!EMopdiag:~,-1!
 for /l %%a in (1,1,16) do (
- if %%a==10 (echo;¡@!CMl%%a!¡@¡@¡@!Pl%%a!¡@¡@!Mop%%a!¡@¡@¡@¡@!Hpdiag!) else (
-  if %%a==12 (echo;¡@!CMl%%a!¡@¡@¡@!Pl%%a!¡@¡@!Mop%%a!¡@¡@¡@¡@¡@¡@¡@!Mopdiag!) else (echo;¡@!CMl%%a!¡@¡@¡@!Pl%%a!¡@¡@!Mop%%a!)
+ if %%a==10 (echo;¡@!CMl%%a!¡@¡@¡@!Pl%%a!¡@¡@!Mop%%a! !EHpdiag!!Hpdiag!) else (
+  if %%a==12 (echo;¡@!CMl%%a!¡@¡@¡@!Pl%%a!¡@¡@!Mop%%a! !EMopdiag!!Mopdiag!) else (echo;¡@!CMl%%a!¡@¡@¡@!Pl%%a!¡@¡@!Mop%%a!)
  )
 )
 echo.
 echo;¡@%CMl17%¡@¡@¡@%CM17%¡@¡@%Mop17%
 echo;¡@%CMl18%¡@¡@¡@Â÷¶}¡@¡@¡@¡@%Mop18%
 echo.
-echo;¡@¡@¡@¡@¦^¦X:%R%¡@¤ñ¼Æ:%PlSn:~1%
+echo;¡@¡@¡@¡@¦^¦X:%R%¡@¤ñ¼Æ%PlSn%
 echo;¡@¡@«Å¥¬¥DÃD:!Pl%ownerB%!¡@©Ð¥D:!Pl%ownerA%!
 echo.
 echo.
 goto :eof
 
 :Manual
-set/a "ManualPage=VCM/5"
+set/a "ManualPage=VCM/(eoManual/19),eoManualn=eoManual+1,ePoManual=eoManual-19"
 if %VCM% gtr 0 (set ManualRoll=W) else (set ManualRoll= )
 for /l %%a in (0,1,18) do (
  if %ManualPage%==%%a (
@@ -556,7 +575,7 @@ for /l %%a in (0,1,18) do (
  set ManualRoll=!ManualRoll! 
  )
 )
-if %VCM% lss 76 (set ManualRoll=!ManualRoll:~,-3!S) else (set ManualRoll=!ManualRoll:~,-3! )
+if %VCM% lss %ePoManual% (set ManualRoll=!ManualRoll:~,-3!S) else (set ManualRoll=!ManualRoll:~,-3! )
 set EMG=
 for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG= !EMG!
 %cls%&color 2f
@@ -569,10 +588,12 @@ for /l %%a in (1,1,19) do (
  if !ManualSkip! lss 10 set ManualSkip= !ManualSkip!
  echo;!ManualSkip!^|!ManualLine!^|!ManualRoll:~%%a,1!
 )
-echo;96¢¢------------------------------------------------------------------------¢£!ManualRoll:~-1!
-echo;¡@¡@¡@¡@¦^¦X:%R%¡@¤ñ¼Æ:%PlSn:~1%¡@¡@¡@¡@!Hpdiag!
+echo;%eoManualn%¢¢------------------------------------------------------------------------¢£!ManualRoll:~-1!
+set EMopdiag=                
+for /l %%a in (10,1,32) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EMopdiag= !EMopdiag!
+echo;¡@¡@¡@¡@¦^¦X:%R%¡@¤ñ¼Æ%PlSn%
 echo;¡@¡@«Å¥¬¥DÃD:!Pl%ownerB%!¡@©Ð¥D:!Pl%ownerA%!
-echo;¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@!Mopdiag!
+echo;¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@!EMopdiag!!Mopdiag!
 echo.
 goto :eof
 
@@ -721,6 +742,7 @@ for /l %%a in (1,1,16) do (
 goto :eof
 
 :set01
+if "!UDTurn!"=="1" (set MGEx=¿ù»~¡GÂ½Âà¦^¦X¤£¥iµn¿ýª±®a&call:mgdiag&goto ScoreMenu)
 if defined F03R%R% (set MGEx=¿ù»~¡G¦¹¦^¦X¤w¶i¦æ&call:mgdiag&goto ScoreMenu)
 set MG=µn¿ýª±®a
 set Hp=¨Ì·Óª±®a¦b¦h¤H¹CÀ¸©Ð¤¤ªº¦ì¸mµn¿ýª±®a¦WºÙ
@@ -814,6 +836,7 @@ goto :eof
 
 :OwnerACheck
 set/a "ownerAt-=1,ownerAt%%=ownerL,ownerAt+=1"
+if !ownerAt! geq !ownerL! (set EnUDTurn=1) else (set EnUDTurn=)
 if defined Pl!owner%ownerAt%!Skip (
  set Pl!owner%ownerAt%!Skip=
  set/a "ownerAt+=1"
@@ -825,6 +848,7 @@ call:mgdiag
 goto :eof
 
 :set02
+if "!UDTurn!"=="1" (set MGEx=¿ù»~¡GÂ½Âà¦^¦X¤£¥i¶i¦æ¦Û§Ú¤¶²Ð&call:mgdiag&goto ScoreMenu)
 if defined F03R%R% (set MGEx=¿ù»~¡G¦¹¦^¦X¤w¶i¦æ&call:mgdiag&goto ScoreMenu)
 if not defined F01R0 (set MGEx=¿ù»~¡GÁÙ¥¼¶i¦æª±®aµn¿ý&call:mgdiag&goto ScoreMenu) else (
  set MG=¦Û§Ú¤¶²ÐÀË®Öªí
@@ -996,7 +1020,6 @@ set MG=¯«¸tªº¼f§P¤§©Ò
 set Hp=±N»{¬°¦¹ºq¦±»P¥DÃD¬ÛÃöªºª±®a¼Ð°O¡u0¡v¡A»{¬°¤£¬ÛÃöªºª±®a¼Ð°O¨ä¥¦¼Æ¦r
 set CEx=§¹¦¨ªí¨M
 for /l %%a in (1,1,16) do set Mop%%a=!Pl%%aM25R%R%!
-set Mop%ownerA%=-©Ð¥DµLªk§ë²¼-
 goto CheckScoreMenu
 
 :save25
@@ -1369,7 +1392,7 @@ goto set-1
 
 :set00
 title °O¤Àµ²§ô
-call:storesave&call:DT
+call:DT
 >>"%~dpn0log.txt" echo;%_DT%¡@µ²§ô¤F°O¤ÀªOµ{¦¡
 >>"%~dpn0log.txt" echo;---------------------------------------------------------- 
 >nul timeout /t 1
@@ -1387,7 +1410,7 @@ set Manual7=¡@¡@¡³µL¦Û§Ú¤¶²ÐÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
 set Manual8=µL¤¶²Ð¡@¦©¤­¤À¡B¶ÀµP¤@±i¡]¡Ð¢´¡AX¡Ï¢°¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
 set Manual9=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
 set Manual10=¡@¦Û§Ú¤¶²Ð§¹¦¨«á¡A¦¹®É¦h¤H¹CÀ¸©Ð¤¤ªº³Ì¤W¦ìª±®a¬°²Ä¤@¦ì©Ð¥D¡A¶·­n«Å¥¬¤@­Ó¥D
-set Manual11=ÃD¡A¨Ã¥B¿ï»P¥DÃD¦³Ãöªººq¡Cª±®a¥i©ó¦^¦Xµ²§ô«e¹ïºq¦±»P¥DÃD¬O§_¬ÛÃö¶i¦æªí¨M¡C
+set Manual11=ÃD¡A¿ï»P¥DÃD¦³Ãöªººq¡C¨ä¥¦ª±®a¥i©ó¦^¦Xµ²§ô«e¹ïºq¦±»P¥DÃD¬O§_¬ÛÃö¶i¦æªí¨M¡C
 set Manual12=¡@¡@¡³¿ïºq±o¤À¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
 set Manual13=»P¥DÃD¦³Ãö¡]¤@¥bªí¨Mª±®a»{¬°¬ÛÃö¡^¡@©Ð¥D¡@±o¤­¤À¡@¡@¡@¡@¡@¡]¡Ï¢´¡^¡@¡@¡@¡@
 set Manual14=»P¥DÃDµLÃö¡]¹L¥bªí¨Mª±®a»{¬°µLÃö¡^¡@©Ð¥D¡@µL±o¤À¡@¡@¡@¡@¡@¡]¡Ï¢¯¡^¡@¡@¡@¡@
@@ -1444,31 +1467,34 @@ set Manual64=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡
 set Manual65=¡@¦pªG©Ð¥D¶Ç¨ì¤F³Ì¤U¦ìª±®a¡A¨Ã¥B¦¹ª±®aµ²§ô¤F¥Lªº¦^¦X¡A«h§¹¦¨¤@½ü¡A¶·«Å¥¬¤U
 set Manual66=¤@­Ó¥DÃD¡A¨Ã±N©Ð¥D¸ê®æµ¹»P¦h¤H¹CÀ¸©Ð¤¤ªº²Ä¤@¦ìª±®a¡AÄ~Äò¤U¤@½ü¡C¡@¡@¡@¡@¡@
 set Manual67=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual68=¡@¦pªG¦b¦h¤H¹CÀ¸©Ð¤¤¥ô·N¤Á´«¦ì¸m¡A±N·|Ãg»@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual68=¡@¦pªG¦b¦h¤H¹CÀ¸©Ð¤¤¥ô·N¤Á´«¦ì¸m®É¥¼¸g¦P·N©Î¬O¤w¶i¤JÂ½Âà¦^¦X¡A±N·|Ãg»@¡C¡@
 set Manual69=¡@¡@¡³¥ô·N¤Á´«Ãg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
 set Manual70=¥ô·N¤Á´«¦ì¸m¡@¤@¦¸¦©¤­¤À¡B¶ÀµP¤@±i¡]¡Ð¢´¡¯¤Á´«¦ì¸m¨ì­ì¦ì¸m«e¦¸¼Æ¡AX¡Ï¢°¡^ 
-set Manual71=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual72=¡@¦pªG¬Y¦ìª±®a¦¬¨ì¤F¤T±i¶ÀµP¡A«h¦³¤jÃg»@¡A¨Ã¥B­«­p¶ÀµP¼Æ¶q¡C¡@¡@¡@¡@¡@¡@¡@
-set Manual73=¡@¡@¡³¶ÀµPÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual74=¤T±i¶ÀµP¡@¡@¡@¦©¤G¤Q¤À¡@¡@¡@¡@¡@¡@¡]¡Ð¢±¢¯¡AX¡Ð¢²¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
-set Manual75=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual76=¡@¦pªGµ²§ô¤@½ü®É¡AÄvÁÉ§Y±N¨ì¹Fµ²§ô®É¶¡¡A«h±N©Ð¥D¸ê®æµ¹»P·í®É¿n¤À³Ì§Cªºª±®a
-set Manual77=¤§¤@¡A¨Ã¶i¤JÂ½Âà¦^¦X¡C¦pªG¿n¤À³Ì§Cªºª±®a¦P®É¥]¬A¤U¤@½ü³Q¸T¤î¿ïºq©M¥¼³Q¸T¤î
-set Manual78=ªºª±®a¡A«h¥u±N©Ð¥D¸ê®æµ¹»P¥¼³Q¸T¤îªºª±®a¤§¤@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual79=¡@Â½Âà¦^¦Xªº©Ð¥D¡A¦pªGÄ¹±o¦¹¦^¦Xªº²Ä¤@¦W¡A«h¥i¥H±o¨ìÂ½Âà¼úÀy¡A§_«h°£¤F¿n¤À
-set Manual80=²Ä¤@¦W¥~ªº¨ä¥Lª±®aÀò±o¼úÀy¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual81=¡@¡@¡³Â½Âà¼úÀy¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual82=Â½Âà¦¨¥\¡@Â½Âà¦^¦X©Ð¥D¡@¡@¡@¡@¡@¡@¦^¦X±o¤À¤­­¿¡]¦^¦X±o¤À¡¯¢´¡^¡@¡@¡@¡@¡@¡@
-set Manual83=Â½Âà¥¢±Ñ¡@¿n¤À«D²Ä¤@¦Wªº¨ä¥Lª±®a¡@¦^¦X±o¤À¤­­¿¡]¦^¦X±o¤À¡¯¢´¡^¡@¡@¡@¡@¡@¡@
-set Manual84=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual85=¡@¦^¦X±o¤À¤]¥]¬A¥¼§¹¦¨ºq¦±®Éªº¦©¤­¤À¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual71=¡@¦pªG«Å¥¬¥DÃD«e¡A­ì©Ð¥D¸g¹L¦P·N§ó´«¤F¦ì¸m¡A¶·±N­ì©Ð¥D¸ê®æÅý»P­ì¦ì¸mªº¤W¤@
+set Manual72=¦ìª±®a¡F©Ð¥D¸g¹L¦P·N§ó´«¦ì¸m¡A©Ð¥D¸ê®æ¶Çµ¹¤U¤@©Ð¥D¡Aµø¦P¶i¤J¤U¤@¦^¦X¡C¡@¡@
+set Manual73=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual74=¡@¦pªG¬Y¦ìª±®a¦¬¨ì¤F¤T±i¶ÀµP¡A«h¦³¤jÃg»@¡A¨Ã¥B­«­p¶ÀµP¼Æ¶q¡C¡@¡@¡@¡@¡@¡@¡@
+set Manual75=¡@¡@¡³¶ÀµPÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual76=¤T±i¶ÀµP¡@¡@¡@¦©¤G¤Q¤À¡@¡@¡@¡@¡@¡@¡]¡Ð¢±¢¯¡AX¡Ð¢²¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
+set Manual77=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual78=¡@¦pªGµ²§ô¤@½ü®É¡AÄvÁÉ§Y±N¨ì¹Fµ²§ô®É¶¡¡A«h±N©Ð¥D¸ê®æµ¹»P·í®É¿n¤À³Ì§Cªºª±®a
+set Manual79=¤§¤@¡A¨Ã¶i¤JÂ½Âà¦^¦X¡C¦pªG¿n¤À³Ì§Cªºª±®a¦P®É¥]¬A¤U¤@½ü³Q¸T¤î¿ïºq©M¥¼³Q¸T¤î
+set Manual80=ªºª±®a¡A«h¥u±N©Ð¥D¸ê®æµ¹»P¥¼³Q¸T¤îªºª±®a¤§¤@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual81=¡@Â½Âà¦^¦Xªº©Ð¥D¡A¦pªGÄ¹±o¦¹¦^¦Xªº²Ä¤@¦W¡A«h¥i¥H±o¨ìÂ½Âà¼úÀy¡A§_«h°£¤F¿n¤À
+set Manual82=²Ä¤@¦W¥~ªº¨ä¥Lª±®aÀò±o¼úÀy¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual83=¡@¡@¡³Â½Âà¼úÀy¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual84=Â½Âà¦¨¥\¡@Â½Âà¦^¦X©Ð¥D¡@¡@¡@¡@¡@¡@¦^¦X±o¤À¤­­¿¡]¦^¦X±o¤À¡¯¢´¡^¡@¡@¡@¡@¡@¡@
+set Manual85=Â½Âà¥¢±Ñ¡@¿n¤À«D²Ä¤@¦Wªº¨ä¥Lª±®a¡@¦^¦X±o¤À¤­­¿¡]¦^¦X±o¤À¡¯¢´¡^¡@¡@¡@¡@¡@¡@
 set Manual86=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual87=¡@¥t¥~¡AÄvÁÉ¤¤©ó²á¤Ñ«Ç¨Ï¥Î²Ê¸Ü¡A±N·|Ãg»@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual88=¡@¡@¡³²Ê¸ÜÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual89=¨Ï¥Î²Ê¸Ü¡@¤@¦r¦©¤G¤À¡B¤@¦¸¶ÀµP¤@±i¡]¡Ð¢±¡¯¦r¼Æ¡AX¡Ï¢°¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
-set Manual90=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual91=¡@¦pªG»W·N©ìºCÄvÁÉ¶i«×¡A¤]·|Ãg»@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual92=¡@¡@¡³©ì©µÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual93=©ìºCÄvÁÉ¶i«×¡@¤@¦¸¦©¤­¤À¡B¶ÀµP¤@±i¡]¡Ð¢´¡AX¡Ï¢°¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
-set Manual94=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
-set Manual95=¡@¡@¡­»¡©ú§¹²¦¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual87=¡@¦^¦X±o¤À¤]¥]¬A¥¼§¹¦¨ºq¦±®Éªº¦©¤­¤À¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual88=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual89=¡@¥t¥~¡AÄvÁÉ¤¤©ó²á¤Ñ«Ç¨Ï¥Î²Ê¸Ü¡A±N·|Ãg»@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual90=¡@¡@¡³²Ê¸ÜÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual91=¨Ï¥Î²Ê¸Ü¡@¤@¦r¦©¤G¤À¡B¤@¦¸¶ÀµP¤@±i¡]¡Ð¢±¡¯¦r¼Æ¡AX¡Ï¢°¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
+set Manual92=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual93=¡@¦pªG»W·N©ìºCÄvÁÉ¶i«×¡A¤]·|Ãg»@¡C¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual94=¡@¡@¡³©ì©µÃg»@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual95=©ìºCÄvÁÉ¶i«×¡@¤@¦¸¦©¤­¤À¡B¶ÀµP¤@±i¡]¡Ð¢´¡AX¡Ï¢°¡^¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@ 
+set Manual96=¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set Manual97=¡@¡@¡­»¡©ú§¹²¦¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@¡@
+set eoManual=97
