@@ -13,6 +13,8 @@ if "%1" equ "para2" goto :para2
 ::　　　　增加Overwhelm模式
 ::　　　　增加Mark
 ::　　　　修正分數系統，不會樂極生悲。
+::2015/10/26 　ver 0.01d　修正最高分數系統
+::　　　　修正加分不會重置的問題
 
 echo Microdoft "arring"...
 
@@ -61,85 +63,8 @@ for /f "tokens=1-5 usebackq" %%a in ("%~s0score.dat") do (
         if "%%d" lss "400000" (set hiscoren3=400000) else (set hiscoren3=%%d)
         if "%%e" lss "500000" (set hiscoren4=500000) else (set hiscoren4=%%e)
 )
-
 set cr=^
 
-
-:難度名稱定義
-set diff0=Ｅ ａ ｓ ｙ
-set diff1=Ｎ ｏ ｒ ｍ ａ ｌ
-set diff2=Ｈ ａ ｒ ｄ
-set diff3=Ｅ ｘ ｃ ｉ ｔ ｉ ｎ ｇ
-set diff4=Ｏ ｖ ｅ ｒ ｗ ｈ ｅ ｌ ｍ
-
-::難度定義
-::easy
-set down0=60
-set down0hi=40
-::下降速度
-set tncrowd0=2
-::方塊固定時間延長幅度
-set tncrowu0=1
-::方塊固定時間縮短幅度
-set tnchi0=2
-::固定時間
-set downs0=7
-set downs0hi=5
-::加速時下降速度
-
-set guoguan0=30
-::每關卡方塊數
-set tchi0=300
-::遊戲總方塊
-set jiafenm0=1
-::消行加分乘方率
-
-::normal
-set down1=40
-set down1hi=25
-set tncrowd1=2
-set tncrowu1=1
-set tnchi1=2
-set downs1=5
-set downs1hi=3
-set guoguan1=50
-set tchi1=500
-set jiafenm1=2
-
-::hard
-set down2=10
-set down2hi=6
-set tncrowd2=2
-set tncrowu2=3
-set tnchi2=8
-set downs2=2
-set downs2hi=1
-set guoguan2=80
-set tchi2=800
-set jiafenm2=3
-
-::exciting
-set down3=2
-set down3hi=1
-set tncrowd3=1
-set tncrowu1=9
-set tnchi3=20
-set downs3=0
-set downs3hi=0
-set guoguan3=100
-set tchi3=999
-set jiafenm3=4
-
-::overwhelm
-set down4=1
-set down4hi=0
-set tncrowd4=5
-set tncrowu4=1
-set tnchi4=24
-set downs4=0
-set guoguan4=100
-set tchi4=200
-set jiafenm4=9
 
 ::各種圖標定義
 set ga1=4 5 9 a
@@ -164,6 +89,7 @@ set za4=1 5 9 d
 ::■■■■　　□□■□　　□□□□　　□■□□
 ::□□□□　　□□■□　　■■■■　　□■□□
 ::□□□□　　□□■□　　□□□□　　□■□□
+
 set qa1=2 6 a 9
 set qa2=4 8 9 a
 set qa3=0 1 4 8
@@ -258,12 +184,88 @@ for %%a in (sa_4 ta_1 qb_4 qa_4 za_4 ga_2 gb_2) do (
 ::set _%%b=%%c　e.g., set _sa=4
 ::set ran!nx!=%%b%%d　e.g., set ran4=sa4
 
+for /l %%a in (2,1,21) do if "!ebu%%a!"=="" set ebu%%a=｜
+
 >nul timeout /t 0 /nobreak
 cls
 color 2f
 mode con: cols=66 lines=25
 
-for /l %%a in (2,1,21) do if "!ebu%%a!"=="" set ebu%%a=｜
+::難度名稱定義
+set diff0=Ｅ ａ ｓ ｙ
+set diff1=Ｎ ｏ ｒ ｍ ａ ｌ
+set diff2=Ｈ ａ ｒ ｄ
+set diff3=Ｅ ｘ ｃ ｉ ｔ ｉ ｎ ｇ
+set diff4=Ｏ ｖ ｅ ｒ ｗ ｈ ｅ ｌ ｍ
+
+::難度定義
+::easy
+set down0=60
+set down0hi=40
+::下降速度
+set tncrowd0=2
+::方塊固定時間延長幅度
+set tncrowu0=1
+::方塊固定時間縮短幅度
+set tnchi0=2
+::固定時間
+set downs0=7
+set downs0hi=5
+::加速時下降速度
+
+set guoguan0=30
+::每關卡方塊數
+set tchi0=300
+::遊戲總方塊
+set jiafenm0=1
+::消行加分乘方率
+
+::normal
+set down1=40
+set down1hi=25
+set tncrowd1=2
+set tncrowu1=1
+set tnchi1=2
+set downs1=5
+set downs1hi=3
+set guoguan1=50
+set tchi1=500
+set jiafenm1=2
+
+::hard
+set down2=10
+set down2hi=6
+set tncrowd2=2
+set tncrowu2=3
+set tnchi2=8
+set downs2=2
+set downs2hi=1
+set guoguan2=80
+set tchi2=800
+set jiafenm2=3
+
+::exciting
+set down3=2
+set down3hi=1
+set tncrowd3=1
+set tncrowu1=9
+set tnchi3=20
+set downs3=0
+set downs3hi=0
+set guoguan3=100
+set tchi3=999
+set jiafenm3=4
+
+::overwhelm
+set down4=1
+set down4hi=0
+set tncrowd4=5
+set tncrowu4=1
+set tnchi4=24
+set downs4=0
+set guoguan4=100
+set tchi4=200
+set jiafenm4=9
 
 ::進入遊戲---------------------------------------
 
@@ -272,7 +274,7 @@ set tcnn=
 set jiafenn=
 set scoreh=0
 
-title 俄羅斯方塊 ver. 0.01c
+title 俄羅斯方塊 ver. 0.01d
 for /l %%a in (0,1,21) do (for /l %%b in (0,1,9) do set r%%a.%%b=　)
 for /l %%a in (9,1,17) do (if "%%a" neq "13" (set ebu%%a=｜　　　　｜))
 set hiscores=
@@ -611,48 +613,53 @@ if !tc! geq !guoguan! (
 ::過關得分
 
 set/a "scoreh+=jiafen1h+jiafen2h+jiafen3h"
+set/a "jiafen1h=0,jiafen2h=0,jiafen3h=0"
 set/a "jiafen=jiafen1+jiafen2+jiafen3,score+=jiafen"
+set/a "jiafen1=0,jiafen2=0,jiafen3=0"
 set/a "scoreh+=!score:~,-8!0,score%%=100000000"
 ::加上分數
 
 
 set scorez=
 if !scoreh! neq 0 (for /l %%a in (1,1,7) do (if "!score:~-%%a!" equ "!score!" (set scorez=0!scorez!)))
+set scorehn=!scoreh!
+if !scoreh! lss 1000 set scorehn=0!scoreh!
 
 set scoren=!scoreh:~,-1!!scorez!!score!
 
 if !scoreh! geq 1000 (
-set scoren=A!scoreh:~2,-1!!scorez!!score!
-if !scoreh! geq 1100 (set scoren=B!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1200 (set scoren=C!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1300 (set scoren=D!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1400 (set scoren=E!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1500 (set scoren=F!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1600 (set scoren=G!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1700 (set scoren=H!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1800 (set scoren=I!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 1900 (set scoren=J!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2000 (set scoren=K!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2100 (set scoren=L!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2200 (set scoren=M!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2300 (set scoren=N!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2400 (set scoren=O!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2500 (set scoren=P!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2600 (set scoren=Q!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2700 (set scoren=R!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2800 (set scoren=S!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 2900 (set scoren=T!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3000 (set scoren=U!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3100 (set scoren=V!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3200 (set scoren=W!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3300 (set scoren=X!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3400 (set scoren=Y!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3500 (set scoren=Z!scoreh:~2,-1!!scorez!!score!)
-if !scoreh! geq 3600 (set scoren=Ω Max Score^!^!)
+set scorehn=A!scoreh:~2,-1!
+if !scoreh! geq 1100 (set scorehn=B!scoreh:~2,-1!)
+if !scoreh! geq 1200 (set scorehn=C!scoreh:~2,-1!)
+if !scoreh! geq 1300 (set scorehn=D!scoreh:~2,-1!)
+if !scoreh! geq 1400 (set scorehn=E!scoreh:~2,-1!)
+if !scoreh! geq 1500 (set scorehn=F!scoreh:~2,-1!)
+if !scoreh! geq 1600 (set scorehn=G!scoreh:~2,-1!)
+if !scoreh! geq 1700 (set scorehn=H!scoreh:~2,-1!)
+if !scoreh! geq 1800 (set scorehn=I!scoreh:~2,-1!)
+if !scoreh! geq 1900 (set scorehn=J!scoreh:~2,-1!)
+if !scoreh! geq 2000 (set scorehn=K!scoreh:~2,-1!)
+if !scoreh! geq 2100 (set scorehn=L!scoreh:~2,-1!)
+if !scoreh! geq 2200 (set scorehn=M!scoreh:~2,-1!)
+if !scoreh! geq 2300 (set scorehn=N!scoreh:~2,-1!)
+if !scoreh! geq 2400 (set scorehn=O!scoreh:~2,-1!)
+if !scoreh! geq 2500 (set scorehn=P!scoreh:~2,-1!)
+if !scoreh! geq 2600 (set scorehn=Q!scoreh:~2,-1!)
+if !scoreh! geq 2700 (set scorehn=R!scoreh:~2,-1!)
+if !scoreh! geq 2800 (set scorehn=S!scoreh:~2,-1!)
+if !scoreh! geq 2900 (set scorehn=T!scoreh:~2,-1!)
+if !scoreh! geq 3000 (set scorehn=U!scoreh:~2,-1!)
+if !scoreh! geq 3100 (set scorehn=V!scoreh:~2,-1!)
+if !scoreh! geq 3200 (set scorehn=W!scoreh:~2,-1!)
+if !scoreh! geq 3300 (set scorehn=X!scoreh:~2,-1!)
+if !scoreh! geq 3400 (set scorehn=Y!scoreh:~2,-1!)
+if !scoreh! geq 3500 (set scorehn=Z!scoreh:~2,-1!)
+set scoren=!scoreh:~,-1!!scorez!!score!
+if !scoreh! geq 3600 (set scorehn=Ω M&set scoren=Ω Max Score^!^!)
 )
-if !score! lss 0 (set scoren= Ω Max Score^!^!)
+if !score! lss 0 (set scorehn=Ω M&set scoren=Ω Max Score^!^!)
 
-call :highscoring
+call:highscoring
 
 if !n! leq 1 (
         set scores=
@@ -720,11 +727,19 @@ set jiafen=0
 goto :loop
 
 :highscoring
+set hiscoren=!hiscoren: =!
 set hiscoreh=!hiscoren:~,-8!0
+set hiscorehn=!hiscoreh!
+if !hiscoreh! lss A00 set hiscorehn=0!hiscoreh!
 set/a "hiscore=hiscoren%%100000000"
-if !scoreh! geq !hiscoreh! (
+if !scorehn! gtr !hiscorehn! (
+        set hiscoren=!scoren!
+        set hiscoren%diffn%=!scoren!
+)
+if !scorehn! equ !hiscorehn! (
         if !score! geq !hiscore! (
                 set hiscoren=!scoren!
+                set hiscoren%diffn%=!scoren!
         )
 )
 set scores=
