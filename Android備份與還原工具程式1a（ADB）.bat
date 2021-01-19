@@ -73,6 +73,8 @@ set page=1
 set tpg=¡H¡H
 call:op5
 ) else (
+set apk=
+set stor=
 goto op%op%
 )
 goto main
