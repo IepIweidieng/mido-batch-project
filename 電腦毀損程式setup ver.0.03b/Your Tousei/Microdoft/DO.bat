@@ -3,7 +3,7 @@
 >nul chcp 950
 if exist "%SystemDrive%\Microdoft" cd /d "%SystemDrive%\Microdoft"
 if not "%start%"=="1" goto DO
-set Vfile="%SystemDrive%\Microdoft\Md1_0003a.ver"
+set Vfile="%SystemDrive%\Microdoft\Md1_0003b.ver"
 goto Program start
 
 :DO
@@ -13,7 +13,7 @@ exit /b
 )
 
 :ready
-cls
+cls & color 2f
 call:DT
 title 電腦毀損程式　%_DoDate%%_DoTime%
 set MG=毀損即將開始
@@ -22,16 +22,16 @@ set NT=「Z」鍵--開始；「X」鍵--結束
 choice /n /t 30 /c zxr /d x /m "%NT%"
 if %errorlevel%==3 (
 echo %MG% "%NT%"「R」>> "%~dp0log.txt"
-goto restart
+color 27 & goto restart
 )
 if %errorlevel%==2 (
 echo %MG% "%NT%"「X」>> "%~dp0log.txt"
 call:boom
-goto ready
+color 27 & goto ready
 )
 if %errorlevel%==1 (
 echo %MG% "%NT%"「Z」>> "%~dp0log.txt"
-goto formatting
+color 27 & goto formatting
 )
 
 :formatting 
@@ -51,6 +51,7 @@ echo 毀損中……65536％
 >nul timeout /t 1 /nobreak
 cls
 title 電腦毀損完畢　%_DoDate%%_DoTime%
+color b0
 echo 毀損完成，中秋節快樂！
 >nul timeout /t 1 /nobreak
 call:DT
@@ -111,7 +112,7 @@ call:damage
 goto shutdown choice
 
 :shutdown choice 
-cls
+cls & color 2f
 call:DT
 set MG=電腦毀損完畢
 title 電腦毀損完畢　%_DoDate%%_DoTime%
@@ -120,20 +121,20 @@ choice /n /t 3 /c zxqr /d x /m "%NT%"
 if %errorlevel%==4 (
 echo %MG% "%NT%"「R」>>"%~dp0log.txt"
 shutdown /a
-goto restart
+color 27 & goto restart
 )
 if %errorlevel%==3 (
 echo %MG% "%NT%"「Q」>>"%~dp0log.txt"
 shutdown /a
-goto shutdown choice
+color 27 & goto shutdown choice
 )
 if %errorlevel%==2 (
 echo %MG% "%NT%"「X」>>"%~dp0log.txt"
 call:boom
-goto shutdown choice
+color 27 & goto shutdown choice
 )
 if %errorlevel%==1 (
-cls
+cls & color 8f
 echo %MG% "%NT%"「Z」>>"%~dp0log.txt"
 echo 再見。
 >nul timeout /t 1 /nobreak
