@@ -61,8 +61,10 @@ set diff3=Ｅ ｘ ｃ ｉ ｔ ｉ ｎ ｇ
 set down0=60
 set down0hi=30
 ::下降速度
-set tncrow0=4
-::方塊固定時間改變幅度
+set tncrowd0=2
+::方塊固定時間延長幅度
+set tncrowu0=1
+::方塊固定時間縮短幅度
 set tnchi0=2
 ::固定時間
 set downs0=8
@@ -79,7 +81,8 @@ set jiafenm0=1
 ::normal
 set down1=40
 set down1hi=20
-set tncrow1=3
+set tncrowd1=2
+set tncrowu1=1
 set tnchi1=2
 set downs1=5
 set downs1hi=3
@@ -90,7 +93,8 @@ set jiafenm1=2
 ::hard
 set down2=10
 set down2hi=8
-set tncrow2=2
+set tncrowd2=2
+set tncrowu2=3
 set tnchi2=8
 set downs2=2
 set downs2hi=1
@@ -101,8 +105,9 @@ set jiafenm2=3
 ::exciting
 set down3=2
 set down3hi=1
-set tncrow3=1
-set tnchi3=40
+set tncrowd3=1
+set tncrowu1=9
+set tnchi3=20
 set downs3=0
 set downs3hi=0
 set guoguan3=100
@@ -336,13 +341,13 @@ set down=!down%diffn%!
 if !guan! geq 6 (set/a "down=((down%diffn%*(9-guan))>>2)+((down%diffn%hi*(guan-5))>>2)")
 if !guan! equ 10 (set down=!downs%diffn%!)
 
-set k3=tnc-=tncrow%diffn%,k-=2,k+=mx,k"%%"=mx,k+
-set k7=tnc-=tncrow%diffn%,k-=2,k+=mx,k"%%"=mx,k+
-set k8=tnc-=tncrow%diffn%,k"%%"=mx,k+
-set k4=tnc+=tncrow%diffn%,down=downs,t
-set k1=tnc-=tncrow%diffn%,m-
-set k2=tnc-=tncrow%diffn%,m+
-set k5=hold
+set k3=tnc-=tncrowd%diffn%,k-=2,k+=mx,k"%%"=mx,k+
+set k7=tnc-=tncrowd%diffn%,k-=2,k+=mx,k"%%"=mx,k+
+set k8=tnc-=tncrowd%diffn%,k"%%"=mx,k+
+set k4=tnc+=tncrowu%diffn%,down=downs,t
+set k1=tnc-=tncrowd%diffn%,m-
+set k2=tnc-=tncrowd%diffn%,m+
+set k5=tnc=0,hold
 ::按鍵定義
 
 set ebu2=　　!diffcultsp!!diffcult!
@@ -490,6 +495,7 @@ if !tn! gtr !down! (
         ) else (
                 (%d-e:#=21%)
                 endlocal
+                set tnc=0
         )
 )
 
