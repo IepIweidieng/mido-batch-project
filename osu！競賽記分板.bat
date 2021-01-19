@@ -17,7 +17,8 @@ if exist "%~dpn0log.txt" (
 goto BAT start continue
 
 :BAT start continue
-call:DT&>>"%~dpn0log.txt" echo;!_DT!　啟動了記分板程式
+call:DT
+>>"%~dpn0log.txt" echo;%_DT%　啟動了記分板程式
 echo;Microdoft "arring"...
 setlocal enabledelayedexpansion
 goto start
@@ -26,7 +27,8 @@ goto start
 if exist "%~dpn0存檔.dat" for /f "tokens=* usebackq" %%a in ("%~dpn0存檔.dat") do %%a
 set prompt=$G
 set cls=cls
-if not defined bellG set bellG=
+if not defined OP2V set bellG=
+if "%OP2V%"=="2" (set bellG=) else (set bellG=)
 call:osu！競記.dat
 goto :eof
 
@@ -85,6 +87,7 @@ if %errorlevel%==4 (
 if %errorlevel%==3 (
  >>"%~dpn0log.txt" echo;%_DT%　%MG% "%NT%" Q
  set MenuType=
+ call:storesave
  color 27&goto set00
 )
 if %errorlevel%==2 (
@@ -106,47 +109,47 @@ for /l %%a in (0,1,4) do (
   set SN%%a%%b=
  )
 )
-set SN01=玩家登錄　　&set Ex01=進行玩家的競賽登錄
-set SN02=自我介紹　　&set Ex02=進入自我介紹檢核表
-set SN03=宣布主題　　&set Ex03=進入歌曲主題的檢核表
-set SN04=選擇歌曲　　&set Ex04=進入選擇歌曲的檢核表
-set SN05=開始回合　　&set Ex05=進入計時室，並開始這個歌曲回合
-set SN06=下一回合　　&set Ex06=進入下一回合
-set SN07=翻轉回合　　&set Ex07=進入翻轉回合
-set SN08=秩序懲罰　　&set Ex08=開啟秩序懲罰選單
-set SN09=設定與說明　&set Ex09=進入設定和說明選單
-set SN00=退出　　　　&set Ex00=退出記分板程式
+set SN01=玩家登錄&set Ex01=進行玩家的競賽登錄
+set SN02=自我介紹&set Ex02=進入自我介紹檢核表
+set SN03=宣布主題&set Ex03=進入歌曲主題的檢核表
+set SN04=選擇歌曲&set Ex04=進入選擇歌曲的檢核表
+set SN05=開始回合&set Ex05=進入計時室，並開始這個歌曲回合
+set SN06=下一回合&set Ex06=進入下一回合
+set SN07=翻轉回合&set Ex07=進入翻轉回合
+set SN08=秩序懲罰&set Ex08=開啟秩序懲罰選單
+set SN09=設定與說明&set Ex09=進入設定和說明選單
+set SN00=退出&set Ex00=退出記分板程式
 
 set SN11=主題不能搜尋&set Ex11o=@宣布了沒有適當搜尋關鍵字的主題的原房主#處罰
 set SN12=主題過多&set Ex12o=@宣布了一個以上主題的原房主#處罰
 set SN13=主題為歌曲名&set Ex13o=@以歌曲名稱作為主題的原房主#處罰
 set SN15=給錯房主資格&set Ex15o=@將房主資格給錯玩家的原房主#處罰
-set SN10=離開　　　　&set Ex10=離開主題宣布檢核表
+set SN10=離開&set Ex10=離開主題宣布檢核表
 
 set SN21=歌曲重複懲罰&set Ex21o=@選擇了競賽中已被選過的歌曲的房主#處罰
-set SN23=高難度宣告　&set Ex23=切換房主提示所選歌曲將引發高難度回合的狀況
-set SN25=選歌評價　　&set Ex25=進行對房主所選的歌曲是否符合主題的表決
-set SN20=離開　　　　&set Ex20=離開歌曲選擇檢核表
+set SN23=高難度宣告&set Ex23=切換房主提示所選歌曲將引發高難度回合的狀況
+set SN25=選歌評價&set Ex25=進行對房主所選的歌曲是否符合主題的表決
+set SN20=離開&set Ex20=離開歌曲選擇檢核表
 
-set SN31=結束回合　　&set Ex31=停止計時，進入玩家排行登錄表
-set SN30=離開　　　　&set Ex30=離開歌曲選擇檢核表
+set SN31=結束回合&set Ex31=停止計時，進入玩家排行登錄表
+set SN30=離開&set Ex30=離開歌曲選擇檢核表
 
 set SN41=任意切換位置&set Ex41=懲罰任意切換位置的玩家
-set SN42=使用粗話　　&set Ex42=懲罰使用粗話的玩家
+set SN42=使用粗話&set Ex42=懲罰使用粗話的玩家
 set SN43=拖延競賽進度&set Ex43=懲罰拖延競賽進度的玩家
-set SN40=離開　　　　&set Ex40=離開秩序懲罰選單
+set SN40=離開&set Ex40=離開秩序懲罰選單
 
-set SN51=競賽說明　　&set Ex51=顯示競賽說明
-set SN52=操作聲音　　&set Ex52=切換進行操作時音效的有無
+set SN51=競賽說明&set Ex51=顯示競賽說明
+set SN52=操作聲音&set Ex52=切換進行操作時音效的有無
 set OP2L=2&set OP2V1=開啟&set OP2V2=關閉&set OP2DV=1
 set SN53=一次捲動行數&set Ex53=調整一次捲動競賽說明的行數
 set OP3L=5&set OP3V1=1&set OP3V2=2&set OP3V3=3&set OP3V4=4&set OP3V5=5&set OP3DV=3
-set SN59=重設設定　　&set Ex50=將所有設定還原為預設值
-set SN50=離開　　　　&set Ex50=離開設定與說明選單
+set SN59=重設設定&set Ex50=將所有設定還原為預設值
+set SN50=離開&set Ex50=離開設定與說明選單
 goto set-1
 
 :set-1
-title osu！競賽記分板 ver. 1.00a
+title osu！競賽記分板 ver. 1.00b
 set MG=選擇記分板項目
 set Hp=
 set CP=0
@@ -192,6 +195,7 @@ if %errorlevel%==6 (
 )
 if %errorlevel%==5 (
  call:DT& >>"%~dpn0log.txt" echo;!_DT!　%MG% "%NT%"　%SN%「Q」
+ call:storesave
  color 27&goto set00
 )
 if %errorlevel%==4 (
@@ -252,6 +256,7 @@ if %errorlevel%==8 (
 )
 if %errorlevel%==7 (
  call:DT& >>"%~dpn0log.txt" echo;!_DT!　%MG% "%NT%"　%SN%「Q」
+ call:storesave
  color 27&goto set00
 )
 if %errorlevel%==6 (
@@ -546,9 +551,15 @@ echo;%ESp%%Hp%
 echo.
 set EHpdiag=
 set EMopdiag=                
-for /l %%a in (0,1,6) do if "!Mop10:~,%%a!"=="!Mop10!" set EHpdiag=　!EHpdiag!
+for /l %%a in (0,1,6) do if "!Pl10:~,%%a!"=="!Pl10!" set EHpdiag= !EHpdiag!
+if not defined Pl10 set EHpdiag=      !EHpdiag!
+for /l %%a in (0,1,6) do if "!Mop10:~,%%a!"=="!Mop10!" set EHpdiag= !EHpdiag!
+if not defined Mop10 set EHpdiag=      !EHpdiag!
 for /l %%a in (10,1,32) do if not "!Hpdiag:~,%%a!"=="!Hpdiag!" set EMopdiag= !EMopdiag!
-for /l %%a in (0,1,6) do if "!Mop12:~,%%a!"=="!Mop12!" set EMopdiag=　!EMopdiag!
+for /l %%a in (0,1,6) do if "!Pl12:~,%%a!"=="!Pl12!" set EMopdiag=  !EMopdiag!
+if not defined Pl12 set EMopdiag=      !EMopdiag!
+for /l %%a in (0,1,6) do if "!Mop12:~,%%a!"=="!Mop12!" set EMopdiag= !EMopdiag!
+if not defined Mop12 set EMopdiag=      !EMopdiag!
 for /l %%a in (0,1,32) do if not "!Mopdiag:~,%%a!"=="!Mopdiag!" set EMopdiag=!EMopdiag:~,-1!
 for /l %%a in (1,1,16) do (
  if %%a==10 (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a! !EHpdiag!!Hpdiag!) else (
@@ -1394,7 +1405,6 @@ goto set-1
 title 記分結束
 call:DT
 >>"%~dpn0log.txt" echo;%_DT%　結束了記分板程式
->>"%~dpn0log.txt" echo;---------------------------------------------------------- 
 >nul timeout /t 1
 endlocal
 goto :eof
