@@ -5,7 +5,7 @@ echo Microdoft "arring"
 goto start
 
 :start
-if "%1"=="" (
+if 1:%1==1: (
 cls & color 2f
 set /p F=請輸入檔案路徑或直接拖入檔案。　
 call "%~f0" !F!
