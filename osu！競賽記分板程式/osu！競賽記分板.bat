@@ -2,25 +2,31 @@
 @title 程式載入中…… Now Loading…&echo off&setlocal enableextensions&if not "%1"=="" goto %1
 >nul chcp 950&call:DT
 if exist "%~dpn0log.txt" (
- for /f "tokens=* delims= usebackq" %%a in ("%~dpn0log.txt") do (
+ for /f "tokens=* usebackq" %%a in ("%~dpn0log.txt") do (
   if "%%a"=="微哆動作紀錄 --------------------------------------------- " (
-   >>"%~dpn0log.txt" echo ---------------------------------------------------------- 
+   >>"%~dpn0log.txt" echo;---------------------------------------------------------- 
+   goto BAT start continue
   ) else (
-   >"%~dpn0log.txt" echo 微哆動作紀錄 --------------------------------------------- 
+   >"%~dpn0log.txt" echo;微哆動作紀錄 --------------------------------------------- 
   )
  )
 ) else (
- >"%~dpn0log.txt" echo 微哆動作紀錄 --------------------------------------------- 
+ >"%~dpn0log.txt" echo;微哆動作紀錄 --------------------------------------------- 
 )
->>"%~dpn0log.txt" echo %_DT%　啟動了記分板程式
+goto BAT start continue
+
+:BAT start continue
+>>"%~dpn0log.txt" echo;%_DT%　啟動了記分板程式
 echo Microdoft "arring"...
 setlocal enabledelayedexpansion
-call:readsave
 goto start
 
 :readsave
-for /f "tokens=1 delims=| usebackq" %%a in ("%~dpn0存檔.dat") do %%a
+if exist "%~dpn0存檔.dat" for /f "tokens=* usebackq" %%a in ("%~dpn0存檔.dat") do %%a
+set prompt=$G
 set cls=cls
+if not defined bellG set bellG=
+call:osu！競記.dat
 goto :eof
 
 :storesave
@@ -41,16 +47,17 @@ set _DT=%_DoDate%%_DoTime%
 goto :eof
 
 :start
+call:readsave
 %cls%&title 程式開始中…… Now Loading...
-%cls%&echo Microdoft "arring"
+echo Microdoft "arring"
 call:DT
 >>"%~dpn0log.txt" echo %_DT%　開始了記分板程式
 >nul timeout /t 1 /nobreak
 color 27&goto ready
 
 :restart
-%cls%&color
-title 程式重新開始中…… Now Loading...
+call:storesave&call:readsave
+%cls%&color&title 程式重新開始中…… Now Loading...
 echo Microdoft re"arring"
 call:DT
 >>"%~dpn0log.txt" echo %_DT%　重開了記分板程式
@@ -61,7 +68,7 @@ color 27&goto ready
 %cls%&color 2f
 title 記分板
 set MG=請按下選項
-echo;　　%MG%。
+echo;　　%MG%%bellG%。
 echo.
 set NT=Ｚ鍵　進入記分板；Ｘ鍵　結束
 echo 　%NT:~,8%
@@ -83,7 +90,7 @@ if %errorlevel%==1 (
  >>"%~dpn0log.txt" echo %_DT%　%MG% "%NT%" Z
  set CP=0
  set C=1
- color 27&echo;&goto setdefining
+ color 27&set/p=%bellG% <nul&goto setdefining
 )
 goto ready
 
@@ -101,10 +108,11 @@ set SN05=開始回合　　&set Ex05=進入計時室，並開始這個歌曲回合&set ESp05=　　　　
 set SN06=下一回合　　&set Ex06=進入下一回合&set ESp06=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set SN07=翻轉回合　　&set Ex07=進入翻轉回合&set ESp07=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set SN08=秩序懲罰　　&set Ex08=開啟秩序懲罰選單&set ESp08=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set SN09=設定與說明　&set Ex09=進入設定和說明選單&set ESp09=　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set SN00=退出　　　　&set Ex00=退出記分板程式&set ESp00=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 
 set SN11=主題不能搜尋&set Ex11o=@宣布了沒有適當搜尋關鍵字的主題的原房主#處罰&set ESp11=　　　　　　　　　　　　　
-set SN12=主題過多　　&set Ex12o=@宣布了一個以上主題的原房主#處罰&set ESp12=　　　　　　　　　　　　　　　　　　　
+set SN12=主題過多&set Ex12o=@宣布了一個以上主題的原房主#處罰&set ESp12=　　　　　　　　　　　　　　　　　　　
 set SN13=主題為歌曲名&set Ex13o=@以歌曲名稱作為主題的原房主#處罰&set ESp13=　　　　　　　　　　　　　　　　　　　
 set SN15=給錯房主資格&set Ex15o=@將房主資格給錯玩家的原房主#處罰&set ESp15=　　　　　　　　　　　　　　　　　　　
 set SN10=離開　　　　&set Ex10=離開主題宣布檢核表&set ESp10=　　　　　　　　　　　　　　　　　　　　　　　　　　　　
@@ -121,6 +129,14 @@ set SN41=任意切換位置&set Ex41=懲罰任意切換位置的玩家&set ESp41=　　　　　　　　
 set SN42=使用粗話　　&set Ex42=懲罰使用粗話的玩家&set ESp42=　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 set SN43=拖延競賽進度&set Ex43=懲罰拖延競賽進度的玩家&set ESp43=　　　　　　　　　　　　　　　　　　　　　　　　　　
 set SN40=離開　　　　&set Ex40=離開秩序懲罰選單&set ESp40=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+
+set SN51=競賽說明　　&set Ex51=顯示競賽說明&set ESp51=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set SN52=操作聲音　　&set Ex52=切換進行操作時音效的有無&set ESp52=　　　　　　　　　　　　　　　　　　　　　　　　　
+set OP2L=2&set OP2V1=開啟&set OP2V2=關閉&set OP2DV=1
+set SN53=一次捲動行數&set Ex53=調整一次捲動競賽說明的行數&set ESp53=　　　　　　　　　　　　　　　　　　　　　　　　
+set OP3L=5&set OP3V1=1&set OP3V2=2&set OP3V3=3&set OP3V4=4&set OP3V5=5&set OP3DV=3
+set SN59=重設設定　　&set Ex50=將所有設定還原為預設值&set ESp59=　　　　　　　　　　　　　　　　　　　　　　　　　　
+set SN50=離開　　　　&set Ex50=離開設定與說明選單&set ESp50=　　　　　　　　　　　　　　　　　　　　　　　　　　　　
 goto set-1
 
 :set-1
@@ -154,10 +170,14 @@ call:Menu
 if %CP%==4 (
  set NT=Ｗ/Ｓ鍵 上下選擇　Ｚ鍵 確定　Ｘ鍵 離開
 ) else (
- set NT=Ｗ/Ｓ鍵 上下選擇　Ｚ鍵 確定　Ｘ鍵 離開　Ｃ鍵 秩序懲罰選單
+ set NT=Ｗ/Ｓ鍵 上下選擇　Ｚ鍵 確定　Ｘ鍵 離開　Ｃ鍵 秩序懲罰
 )
-if "%CP%""!F05R%R%!"=="3""2" (choice /n /c swzxqrc0 /t 1 /d 0 /m "%NT%") else (choice /n /c swzxqrc /m "%NT%")
-if %errorlevel%==8 (call:set05Timer&goto ScoreMenu)
+if "%CP%""!F05R%R%!"=="3""2" (choice /n /c swzxqrcp0 /t 1 /d 0 /m "%NT%") else (choice /n /c swzxqrcp /m "%NT%")
+if %errorlevel%==9 (call:set05Timer&goto ScoreMenu)
+if %errorlevel%==8 (
+ if defined R (echo;%PlSn:~1%|clip) else (set MGEx=錯誤：競賽尚未開始，玩家比分未定義&call:mgdiag)
+ goto ScoreMenu
+)
 if %errorlevel%==7 (if not %CP%==4 call:set08Menu&goto ScoreMenu)
 if %errorlevel%==6 (
  call:DT& >>"%~dpn0log.txt" echo !_DT!　%MG% "%NT%"　%SN%「R」
@@ -169,28 +189,92 @@ if %errorlevel%==5 (
 )
 if %errorlevel%==4 (
  if %C%==0 (
- set Vd=2&echo;&goto setdiag
+ set Vd=2&set/p=%bellG% <nul&goto setdiag
  ) else (
   set C=0&goto ScoreMenu
  )
 )
 if %errorlevel%==3 (
  if "%CP%""!F05R%R%!"=="3""2" call:set05Timer
- set Vd=2&echo;&goto setdiag
+ set Vd=2&set/p=%bellG% <nul&goto setdiag
 )
 if %errorlevel%==2 (
  :ScoreMenuW
- if %C% leq 0 (set C=10) else (set /a C-=1)
+ if !C! leq 0 (set C=10) else (set /a C-=1)
  if not defined SN!CP!!C! goto ScoreMenuW
  goto ScoreMenu
 )
 if %errorlevel%==1 (
  :ScoreMenuS
- if %C% geq 10 (set C=0) else (set /a C+=1)
+ if !C! geq 10 (set C=0) else (set /a C+=1)
  if not defined SN!CP!!C! goto ScoreMenuS
  goto ScoreMenu
 )
 goto ScoreMenu
+
+:OptionMenu
+set MenuType=Menu
+set Hpdiag=
+set Mopdiag=
+if not defined SN%CP%%C% goto OptionMenuS
+for /l %%a in (0,1,9) do set Sl%%a= 
+set SN=!SN%CP%%C%!&set Ex=!Ex%CP%%C%!&set ESp=!ESp%CP%%C%!&set Sl%C%=》 
+for /l %%a in (1,1,9) do (
+ set Ml%%a=!Sl%%a!&set M%%a=!SN%CP%%%a!
+ set Mop%%a=
+ if defined SN%CP%%%a (
+  if not defined OP%%aV set OP%%aV=!OP%%aDV!
+  for /l %%b in (1,1,!OP%%aL!) do if %%b==!OP%%aV! (set OP%%aSl%%b=[]) else (set OP%%aSl%%b=  )
+  for /l %%b in (!OP%%aL!,-1,1) do set Mop%%a=!OP%%aSl%%b:~,1!!OP%%aV%%b!!OP%%aSl%%b:~1! !Mop%%a!
+  if not defined OP%%aL set Mop%%a=......
+ )
+)
+set Ml10=%Sl0%&set M10=!SN%CP%0!&set Mop10=......
+if "%OP2V%"=="1" (set bellG=) else (set bellG=)
+call:Menu
+set NT=Ｗ/Ｓ鍵 上下選擇　Ａ/Ｄ鍵 調整設定　Ｚ鍵 確定　Ｘ鍵 離開　Ｃ鍵 秩序懲罰
+choice /n /c adswzxqrcp /m "%NT%"
+if %errorlevel%==10 (
+ if defined R (echo;%PlSn:~1%|clip) else (set MGEx=錯誤：競賽尚未開始，玩家比分未定義&call:mgdiag)
+ goto OptionMenu
+)
+if %errorlevel%==9 (call:set08Menu&goto OptionMenu)
+if %errorlevel%==8 (
+ call:DT& >>"%~dpn0log.txt" echo !_DT!　%MG% "%NT%"　%SN%「R」
+ color 27&goto restart
+)
+if %errorlevel%==7 (
+ call:DT& >>"%~dpn0log.txt" echo !_DT!　%MG% "%NT%"　%SN%「Q」
+ color 27&goto set00
+)
+if %errorlevel%==6 (
+ set Vd=2&set/p=%bellG% <nul&goto set50
+)
+if %errorlevel%==5 (
+ if not defined OP%C%L set/p=%bellG% <nul&goto set%CP%%C%
+ goto OptionMenu
+)
+if %errorlevel%==4 (
+ :OptionMenuW
+ if !C! leq 0 (set C=10) else (set /a C-=1)
+ if not defined SN!CP!!C! goto OptionMenuW
+ goto OptionMenu
+)
+if %errorlevel%==3 (
+ :OptionMenuS
+ if !C! geq 10 (set C=0) else (set /a C+=1)
+ if not defined SN!CP!!C! goto OptionMenuS
+ goto OptionMenu
+)
+if %errorlevel%==2 (
+ if defined OP%C%L if !OP%C%V! geq !OP%C%L! (set OP%C%V=!OP%C%L!) else (set /a OP%C%V+=1)
+ goto OptionMenu
+)
+if %errorlevel%==1 (
+ if defined OP%C%L if !OP%C%V! leq 1 (set OP%C%V=1) else (set /a OP%C%V-=1)
+ goto OptionMenu
+)
+goto OptionMenu
 
 :CheckScoreMenu
 set MenuType=CheckMenu
@@ -213,12 +297,16 @@ for /l %%a in (1,1,16) do (
 set/a CMop=%MopNo%+1
 set CM17=清除標記
 call:CheckMenu
-set NT=Ｗ/Ｓ鍵 上下選擇　Ａ/Ｄ鍵 編輯標記^(0-!CMop!^)　Ｚ鍵 標記　Ｘ鍵 離開　Ｃ鍵 秩序懲罰選單
-choice /n /c adswzxc /m "%NT%"
+set NT=Ｗ/Ｓ鍵 上下選擇　Ａ/Ｄ鍵 編輯標記^(0-!CMop!^)　Ｚ鍵 標記　Ｘ鍵 離開　Ｃ鍵 秩序懲罰
+choice /n /c adswzxcp /m "%NT%"
+if %errorlevel%==8 (
+ if defined R (echo;%PlSn:~1%|clip) else (set MGEx=錯誤：競賽尚未開始，玩家比分未定義&call:mgdiag)
+ goto CheckScoreMenu
+)
 if %errorlevel%==7 (if not %CP%==4 call:set08Menu&goto CheckScoreMenu)
 if %errorlevel%==6 (
  if %VCM%==0 (
- set Vd=3&echo;&goto savediag
+ set Vd=3&set/p=%bellG% <nul&goto savediag
  ) else (
   set VCM=0
  )
@@ -233,7 +321,7 @@ if %errorlevel%==5 (
   )
   goto CheckScoreMenu
  )
- set Vd=3&echo;&goto savediag
+ set Vd=3&set/p=%bellG% <nul&goto savediag
  goto CheckScoreMenu
 )
 if %errorlevel%==4 (
@@ -276,13 +364,17 @@ call:CheckMenu
 if %CP%==4 (
  set NT=Ｗ/Ｓ鍵 上下選擇　Ａ/Ｄ鍵 編輯標記^(1-16^)　Ｚ鍵 標記　Ｘ鍵 離開
 ) else (
- set NT=Ｗ/Ｓ鍵 上下選擇　Ａ/Ｄ鍵 編輯標記^(1-16^)　Ｚ鍵 標記　Ｘ鍵 離開　Ｃ鍵 秩序懲罰選單
+ set NT=Ｗ/Ｓ鍵 上下選擇　Ａ/Ｄ鍵 編輯標記^(1-16^)　Ｚ鍵 標記　Ｘ鍵 離開　Ｃ鍵 秩序懲罰
 )
-choice /n /c adswzxc /m "%NT%"
+choice /n /c adswzxcp /m "%NT%"
+if %errorlevel%==8 (
+ if defined R (echo;%PlSn:~1%|clip) else (set MGEx=錯誤：競賽尚未開始，玩家比分未定義&call:mgdiag)
+ goto PunishScoreMenu
+)
 if %errorlevel%==7 (if not %CP%==4 call:set08Menu&goto PunishScoreMenu)
 if %errorlevel%==6 (
  if %VCM%==0 (
- set Vd=3&echo;&goto savediag
+ set Vd=3&set/p=%bellG% <nul&goto savediag
  ) else (
   set VCM=0
  )
@@ -297,7 +389,7 @@ if %errorlevel%==5 (
   )
   goto PunishScoreMenu
  )
- set Vd=3&echo;&goto savediag
+ set Vd=3&set/p=%bellG% <nul&goto savediag
  goto PunishScoreMenu
 )
 if %errorlevel%==4 (
@@ -340,7 +432,7 @@ set NT=Ｗ/Ｓ鍵 上下選擇　Ｚ鍵 輸入　Ｘ鍵 離開
 choice /n /c swzx /m "%NT%"
 if %errorlevel%==4 (
  if %VCM%==0 (
- set Vd=3&echo;&goto savediag
+ set Vd=3&set/p=%bellG% <nul&goto savediag
  ) else (
   set VCM=0
  )
@@ -358,7 +450,7 @@ if %errorlevel%==3 (
   )
   goto EnterNameMenu
  )
- set Vd=3&echo;&goto savediag
+ set Vd=3&set/p=%bellG% <nul&goto savediag
  goto EnterNameMenu
 )
 if %errorlevel%==2 (
@@ -371,9 +463,44 @@ if %errorlevel%==1 (
 )
 goto EnterNameMenu
 
+:ManualMenu
+set MenuType=Manual
+set Hpdiag=
+set Mopdiag=
+call:Manual
+set NT=Ｗ/Ｓ鍵 上下捲動　Ｘ鍵 離開　Ｃ鍵 秩序懲罰
+choice /n /c swxcp /m "%NT%"
+if %errorlevel%==5 (
+ if defined R (echo;%PlSn:~1%|clip) else (set MGEx=錯誤：競賽尚未開始，玩家比分未定義&call:mgdiag)
+ goto ManualMenu
+)
+if %errorlevel%==4 (call:set08Menu&goto ManualMenu)
+if %errorlevel%==3 (set/p=%bellG% <nul&goto set09)
+if %errorlevel%==2 (
+ set ManualMenu=0
+ :ManualMenuW
+ if %VCM% leq 0 (set VCM=0) else (set /a VCM-=1)
+ set/a ManualMenu+=1
+ if !ManualMenu! lss !OP3V! goto ManualMenuW
+ goto ManualMenu
+)
+if %errorlevel%==1 (
+ set ManualMenu=0
+ :ManualMenuS
+ set/a ManualSkip=VCM+20
+ call:readmanual
+ if not defined readerr set/a VCM+=1
+ set/a ManualMenu+=1
+ if !ManualMenu! lss !OP3V! goto ManualMenuS
+ goto ManualMenu
+)
+goto ManualMenu
+
 :Menu
+set EMG=
+for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG=!EMG! 
 %cls%&color 2f
-echo;　　　　　　　　　　　　　－%MG%－
+if %CP%%C%=05 (echo;%EMG%－%MG%－!Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!) else (echo;%EMG%－%MG%－)
 echo.
 for /l %%a in (1,1,10) do (
  if %%a==6 (echo;　!Ml%%a:~,1!　　　!M%%a!　　　　!Hpdiag!) else (
@@ -382,31 +509,77 @@ for /l %%a in (1,1,10) do (
  echo;　!Ml%%a:~1!　　　　　　　　　!Mop%%a!
 )
 echo.
-echo;　　回合:%R% %PlSn:~1%
-echo;　　房主:!Pl%ownerA%! 宣布主題:!Pl%ownerB%!
+echo;　　　　回合:%R%　比數:%PlSn:~1%　
+echo;　　房主:!Pl%ownerA%!　宣布主題:!Pl%ownerB%!
 echo;　　%ESp%%Ex%
 echo.
 goto :eof
 
 :CheckMenu
+set EMG=
+for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG=!EMG! 
 %cls%&color 2f
-echo;　　　　　　　　　　　　　－%MG%－
+echo;%EMG%－%MG%－
 echo.　　%Hp%
 echo.
 for /l %%a in (1,1,16) do (
  if %%a==10 (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a!　　　　!Hpdiag!) else (
-  if %%a==12 (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a!　　　　　　　　!Mopdiag!) else (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a!)
+  if %%a==12 (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a!　　　　　　　!Mopdiag!) else (echo;　!CMl%%a!　　　!Pl%%a!　　!Mop%%a!)
  )
 )
 echo.
 echo;　%CMl17%　　　%CM17%　　%Mop17%
 echo;　%CMl18%　　　離開　　　　%Mop18%
 echo.
-echo;　　回合:%R% %PlSn:~1%
-echo;　　房主:!Pl%ownerA%! 宣布主題:!Pl%ownerB%!
+echo;　　　　回合:%R%　比數:%PlSn:~1%
+echo;　　房主:!Pl%ownerA%!　宣布主題:!Pl%ownerB%!
 echo.
 echo.
 goto :eof
+
+:Manual
+set/a "ManualPage=VCM>>2"
+if %VCM% gtr 0 (set ManualRoll=W) else (set ManualRoll= )
+for /l %%a in (0,1,18) do (
+ if %ManualPage%==%%a (
+  set ManualRoll=!ManualRoll!#
+ ) else (
+  if "%%a""%ManualPage%"=="18""19" (
+   set ManualRoll=!ManualRoll!#
+  ) else (
+  set ManualRoll=!ManualRoll! 
+  )
+ )
+)
+if %VCM% lss 76 (set ManualRoll=!ManualRoll!S) else (set ManualRoll=!ManualRoll! )
+set EMG=
+for /l %%a in (0,1,37) do if "!MG:~,%%a!"=="!MG!" set EMG=!EMG! 
+%cls%&color 2f
+echo;%EMG%－%MG%－
+echo.
+echo; 0╭------------------------------------------------------------------------╮!ManualRoll:~,1!
+for /l %%a in (1,1,19) do (
+ set/a ManualSkip=VCM+%%a
+ call:readmanual
+ if !ManualSkip! lss 10 set ManualSkip= !ManualSkip!
+ echo;!ManualSkip!^|!ManualLine!^|!ManualRoll:~%%a,1!
+)
+echo;96╰------------------------------------------------------------------------╯!ManualRoll:~20,1!
+echo;　　　　回合:%R%　比數:%PlSn:~1%　　　　!Hpdiag!
+echo;　　房主:!Pl%ownerA%!　宣布主題:!Pl%ownerB%!
+echo;　　　　　　　　　　　　　　　　　　　!Mopdiag!
+echo.
+goto :eof
+
+:readmanual
+set ManualLine=!Manual%ManualSkip%!
+if defined ManualLine (
+ set readerr=
+ goto :eof
+) else (
+ set readerr=1
+ goto :eof
+)
 
 :setdiag
 :savediag
@@ -442,7 +615,7 @@ if %errorlevel%==4 (
 )
 if %errorlevel%==3 (
  if %Vd%==3 (
-  echo;&if %CP%%C%==01 (goto EnterNameMenu)
+  set/p=%bellG% <nul&if %CP%%C%==01 (goto EnterNameMenu)
   if %CP%%C%==02 (goto PunishScoreMenu)
   if %CP%==04 (goto PunishScoreMenu)
   goto CheckScoreMenu
@@ -455,7 +628,7 @@ if %errorlevel%==3 (
     call:storesave
     goto set%CP%%C%
    )
-   echo;&goto ScoreMenu
+   set/p=%bellG% <nul&goto ScoreMenu
   ) else (
    if "%VCM%"=="-1" (
     if %CP%%C%==01 (
@@ -503,7 +676,7 @@ if %errorlevel%==1 (
 goto savediag
 
 :mgdiag
-set Hpdiag=%MGEx%
+set Hpdiag=%MGEx%%bellG%
 call:DT&>>"%~dpn0log.txt" echo !_DT!　%MGEx%
 set Mopdiag=＞確定
 call:%MenuType%
@@ -763,16 +936,16 @@ if %Vd%==1 (
  if !RPtm! lss !RP! set/a RPt+=1
  set Pl%ownerA%S25R%R%=
  set Pl%ownerA%C25R%R%=
- if !ForRP! geq !RPt! (
-  set Pl%ownerA%S25R%R%=5
-  set Pl%ownerA%C25R%R%=
-  set MGEx=此歌曲與主題有關，房主!Pl%ownerA%!獲得了5分
-  call:mgdiag
- ) else (
   if !ForRP!==0 (
    set Pl%ownerA%S25R%R%=-5
    set Pl%ownerA%C25R%R%=1
    set MGEx=此歌曲與主題嚴重無關，已對房主!Pl%ownerA%!進行懲罰
+   call:mgdiag
+ ) else (
+  if !ForRP! geq !RPt! (
+   set Pl%ownerA%S25R%R%=5
+   set Pl%ownerA%C25R%R%=
+   set MGEx=此歌曲與主題有關，房主!Pl%ownerA%!獲得了5分
    call:mgdiag
   ) else (
    set MGEx=此歌曲與主題無關，房主!Pl%ownerA%!沒有獲得分數
@@ -794,8 +967,7 @@ goto set-1
 :set05
 if not defined F03R%R% (set MGEx=錯誤：還未進行主題宣布檢核&call:mgdiag&goto ScoreMenu) else (
  if not defined F04R%R% (set MGEx=錯誤：還未進行歌曲選擇檢核&call:mgdiag&goto ScoreMenu) else (
-  if not defined F05R%R% for %%a in (eta etb etc e) do (set Set05Tim%%a=0)
-  set MG=等待！計時室　!Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!
+  set MG=等待！計時室
   set Hp=
   set CP=3
   set C=1
@@ -832,7 +1004,6 @@ set/a Set05TimeEnd=((Set05Timeta*60+Set05Timetb)*60+Set05Timetc)*100+Set05Timetd
 if not "!Set05DateEnd!"=="!Set05DateStart!" (set/a Set05TimeEnd+=8640000)
 if !Set05TimeEnd! lss !Set05TimeStart! (set/a Set05TimeEnd+=4320000)
 set/a "Set05Time=Set05TimeEnd-Set05TimeStart,Set05TimeR=Set05Time,Set05Timeta=Set05Time/360000,Set05Time%%=360000,Set05Timetb=Set05Time/6000,Set05Time%%=6000,Set05Timetc=Set05Time/100,Set05Time%%=100"
-set MG=等待！計時室　!Set05Timeta!:!Set05Timetb!:!Set05Timetc!.!Set05Time!
 goto :eof
 
 :set31
@@ -944,21 +1115,18 @@ set C=5
 goto set-1
 
 :set06
-if not "!F04R%R%!!F05R%R%!"=="11" (set MGEx=錯誤：還未完成該回合&call:mgdiag&goto ScoreMenu) else (
- if "!UDTurn!"=="1" (set MGEx=錯誤：翻轉回合已結束，不可進入下一回合；競賽結束&call:mgdiag&goto ScoreMenu) else (
-  set/a "ownerAt%%=ownerL,ownerAt+=1"
-  if !ownerAt!==!ownerL! (set EnUDTurn=1) else (set EnUDTurn=)
-  if defined Pl!owner%ownerAt%!Skip (
-   set Pl!owner%ownerAt%!Skip=
-   goto set06
-  )
-  set ownerB=%ownerA%
-  set RB=%R%
-  set/a R+=1
-  set CP=0
-  set C=3
- )
-)
+if not "!F04R%R%!!F05R%R%!"=="11" (set MGEx=錯誤：還未完成該回合&call:mgdiag&goto ScoreMenu)
+if "!UDTurn!"=="1" (set MGEx=錯誤：翻轉回合已結束，不可進入下一回合；競賽結束&call:mgdiag&goto ScoreMenu)
+set/a "ownerAt%%=ownerL,ownerAt+=1"
+if !ownerAt!==!ownerL! (set EnUDTurn=1) else (set EnUDTurn=)
+if defined Pl!owner%ownerAt%!Skip (
+set Pl!owner%ownerAt%!Skip=
+goto set06
+set ownerB=%ownerA%
+set RB=%R%
+set/a R+=1
+set CP=0
+set C=3
 set ownerA=!owner%ownerAt%!
 set MGEx=已進入下一回合
 call:mgdiag
@@ -979,7 +1147,6 @@ if not "!F04R%R%!!F05R%R%!"=="11" (set MGEx=錯誤：還未完成該回合&call:mgdiag&got
      set ownerAt=%%a
     )
    )
-
    set RB=%R%
    set/a R+=1
    set CP=0
@@ -1065,6 +1232,26 @@ for /l %%a in (1,1,16) do (
 )
 goto :eof
 
+:set09
+set MG=設定與說明
+set Hp=
+set CP=5
+set C=1
+goto OptionMenu
+
+:set51
+set MG=競賽規則
+set VCM=0
+goto ManualMenu
+
+:set59
+for /l %%a in (1,1,10) do set OP%%aV=
+goto OptionMenu
+
+:set50
+set C=9
+goto set-1
+
 :set00
 title 記分結束
 call:storesave&call:DT
@@ -1072,3 +1259,101 @@ call:storesave&call:DT
 >>"%~dpn0log.txt" echo ---------------------------------------------------------- 
 >nul timeout /t 1
 endlocal
+goto :eof
+
+:osu！競記.dat
+set Manual1=　　　　第四次osu！競賽規則說明　　　　　　　　　　　　　　　　　　　　　 
+set Manual2=此後競賽採積分制，最終得分最高的玩家獲勝，使用記分板程式計分。　　　　　　
+set Manual3=使用ＲＣ語音，並且全程錄影。　　　　　　　　　　　　　　　　　　　　　　　
+set Manual4=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual5=　　＃規則說明　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual6=競賽開始前，所有玩家皆要使用osu！聊天功能進行自我介紹。　　　　　　　　　 
+set Manual7=　　○無自我介紹懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual8=無介紹　扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　　　　　　　　
+set Manual9=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual10=自我介紹完成後，此時多人遊戲房中的最上位玩家為第一位房主，須要宣布一個主題
+set Manual11=，並且選與主題有關的歌。　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual12=　　○選歌得分　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual13=與主題有關（至少一半表決玩家認為相關）　房主　得五分（＋５）　　　　　　　
+set Manual14=與主題無關（一半以下表決玩家認為相關）　房主　無得分（＋０）　　　　　　　
+set Manual15=與主題嚴重無關（沒有玩家認為相關）　房主　扣五分、黃牌一張（－５，╳＋１）
+set Manual16=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual17=歌曲選擇完畢，玩家準備完畢後，即可開始一個歌曲回合。　　　　　　　　　　　
+set Manual18=　　○回合得分　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual19=過關　得五分（＋５）　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual20=失敗　無得分（＋０）　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual21=未完成歌曲　扣五分（－５）　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual22=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual23=如果玩家皆表現優異，此回合的第一名可以選擇將全部玩家並列為第一名。　　　　
+set Manual24=　　○回合獎勵　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual25=第一名　多得四分（＋４）　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual26=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual27=如果難度過高，一半以上玩家失敗，則為高難度回合，過關的玩家可以得到獎勵。　
+set Manual28=　　○高難度獎勵　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual29=過關　多得四分（＋４）　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual30=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual31=如果房主沒有提示此歌曲可能引發高難度回合，或是連續發生高難度回合，則為越界
+set Manual32=高難度，房主要接受懲罰。　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual33=　　○越界高難度懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual34=越界高難度　房主　扣五分、高難度獎勵無效、黃牌一張（－５，－高難度獎勵，╳
+set Manual35=＋１）　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual36=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual37=如果譜面長度超過六分鐘半，房主要接受代價。　　　　　　　　　　　　　　　　
+set Manual38=　　○譜面過長代價　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual39=譜面過長　房主　下一輪不得選歌，直接將房主資格給與下一位玩家、黃牌一張（選
+set Manual40=歌次數－１，╳＋１）　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual41=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual42=回合結束後，此時的房主須要宣布下一個主題，並將房主資格給與多人遊戲房中最鄰
+set Manual43=近的下一位玩家，由新房主選擇與此主題有關的歌。　　　　　　　　　　　　　　
+set Manual44=主題只能有一個，並且須要是眾人皆知的，不得過細，例如使用某動畫的某角色作為
+set Manual45=主題是不行的，但如果可以在osu！中搜尋則可以，例如某動畫名附羅馬拼音。　　 
+set Manual46=不能直接以歌曲名作為主題。　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual47=主題也可以是抽象的，但要是可理解、且可在osu中搜尋的。　　　　　　　　　　 
+set Manual48=　　○主題不能搜尋懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual49=主題不能搜尋　原房主　扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　
+set Manual50=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual51=　　○主題過多懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual52=主題過多　原房主　扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　　　
+set Manual53=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual54=　　○以歌曲名作為主題懲罰　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual55=主題為歌曲名　原房主　扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　
+set Manual56=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual57=將房主資格給錯也須懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual58=　　○房主資格給錯懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual59=給錯房主資格　原房主　扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　
+set Manual60=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual61=選歌時，不得選擇競賽中已被選過的歌曲。　　　　　　　　　　　　　　　　　　
+set Manual62=　　○歌曲重複懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual63=歌曲重複　房主　扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　　　　
+set Manual64=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual65=如果輪到了最後一位當房主，並且此玩家結束了他的回合，則完成一輪，須宣布下一
+set Manual66=個主題，並將房主資格給與多人遊戲房中的第一位玩家，繼續下一輪。　　　　　　
+set Manual67=如果某一玩家此輪不得選歌，將房主資格給與下一位玩家，該玩家仍算輪過。　　　
+set Manual68=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual69=如果在多人遊戲房中任意切換位置，將會懲罰。　　　　　　　　　　　　　　　　
+set Manual70=　　○任意切換懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual71=任意切換位置　一次扣五分、黃牌一張（－５＊切換位置到原位置前次數，╳＋１）
+set Manual72=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual73=如果某位玩家收到了三張黃牌，則有大懲罰，並且重計黃牌數量。　　　　　　　　
+set Manual74=　　○黃牌懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual75=三張黃牌　扣二十分（－２０，╳＊０）　　　　　　　　　　　　　　　　　　　
+set Manual76=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual77=如果結束一輪時，競賽即將到達結束時間，則將房主資格給與當時積分最低的一位玩
+set Manual78=家，並進入翻轉回合。　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual79=翻轉回合的房主，如果贏得此回合的第一名，則可以得到翻轉獎勵，否則除了積分第
+set Manual80=一名的其他玩家獲得獎勵。　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual81=　　○翻轉獎勵　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual82=翻轉成功　翻轉回合房主　回合得分五倍（回合得分＊５）　　　　　　　　　　　
+set Manual83=翻轉失敗　積分非第一名的其他玩家　回合得分五倍（回合得分＊５）　　　　　　
+set Manual84=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual85=回合得分也包括未完成歌曲時的扣五分。　　　　　　　　　　　　　　　　　　　
+set Manual86=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual87=另外，競賽中於聊天室使用粗話，將會懲罰。　　　　　　　　　　　　　　　　　
+set Manual88=　　○粗話懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual89=使用粗話　一字扣二分、一次黃牌一張（－２＊字數，╳＋１）　　　　　　　　　
+set Manual90=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual91=如果蓄意拖慢競賽進度，也會懲罰。　　　　　　　　　　　　　　　　　　　　　
+set Manual92=　　○拖延懲罰　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual93=拖慢競賽進度　一次扣五分、黃牌一張（－５，╳＋１）　　　　　　　　　　　　
+set Manual94=　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+set Manual95=　　＃說明完畢　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
