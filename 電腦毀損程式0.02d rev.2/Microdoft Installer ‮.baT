@@ -2,7 +2,8 @@
 @echo off
 >nul chcp 950
 set NverN=0002d
-set Vfile="Your Tousei\Microdoft\Md1_0002d.ver"
+set NverV=0.02d
+set Vfile="Your Tousei\Microdoft\Md1_%NverN%.ver"
 goto Program start
 
 :Program start
@@ -90,7 +91,7 @@ cls
 title 程式執行中…… Now Running...
 echo 處理中……
 set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_?????.ver") do if exist %%B set /a found+=1
+for %%B in ("%SystemDrive%\Microdoft\Microdoft" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤" "%SystemDrive%\Microdoft\1" "%SystemDrive%\Microdoft\Md1_%NverN%.ver") do if exist %%B set /a found+=1
 goto %type%
 
 :copy
@@ -99,10 +100,13 @@ title 程式執行中…… Now Running...
 echo 處理中……
 call:DT
 echo 在%_DoDate%%_DoTime%開始了安裝>>"%~dp0log.txt"
->nul 2>&1 taskkill /f /fi "imagename eq wmplayer.exe" /fi "imagename eq dllhost.exe"
+>nul 2>&1 taskkill /f /fi "imagename eq wmplayer.exe"
+>nul 2>&1 taskkill /f /fi "windowtitle eq 系統錯誤*"
+>nul 2>&1 taskkill /f /fi "windowtitle eq *系統錯誤*"
+>nul 2>&1 taskkill /f /fi /fi "windowtitle eq *系統錯誤"
 setlocal enabledelayedexpansion
-if "%copy%"=="notmust" if !found! geq 5 (
-set Vfile="%SystemDrive%\Microdoft\Md1_0002d.ver"
+if "%copy%"=="notmust" if !found!==5 (
+set Vfile="%SystemDrive%\Microdoft\Md1_%NverN%.ver"
 call:Ver
 if !VF!==5 endlocal & goto error%type%
 )
@@ -125,19 +129,29 @@ echo 處理中……
 if exist "%SystemDrive%\Microdoft\Md1_?????.ver" (
 attrib -h "%SystemDrive%\Microdoft\Md1_?????.ver"
 for %%c in ("%SystemDrive%\Microdoft\Md1_?????.ver") do set Vfile=%%~fc & call:Ver
-if not !VF!==5 (
+if not !VF!==0 (
 for %%C in ("%SystemDrive%\Microdoft\Md1_?????.ver") do set Fver=%%~nC
 set ver=!Fver:~5,1!
 set rev=!Fver:~6,3!
 del /f /q /a "%SystemDrive%\Microdoft\*.ver"
 call:DT
-if !ver!.!rev!==0.02d (
+if !ver!.!rev!==%NverV% (
 echo 在!_DoDate!!_DoTime!進行了修復>>"%SystemDrive%\Microdoft\log.txt"
-echo 0.02d>>"%SystemDrive%\Microdoft\log.txt"
+echo %NverV%>>"%SystemDrive%\Microdoft\log.txt"
 ) else (
 echo 在!_DoDate!!_DoTime!進行了更新>>"%SystemDrive%\Microdoft\log.txt"
-echo !ver!.!rev! → 0.02d>>"%SystemDrive%\Microdoft\log.txt"
+echo !ver!.!rev! → %NverV%>>"%SystemDrive%\Microdoft\log.txt"
 )))
+if exist "%SystemDrive%\Microdoft" (
+if exist "%SystemDrive%\Microdoft\log.txt" (
+md "%SystemDrive%\Microdoft\work"
+>nul 2>&1 move /y "%SystemDrive%\Microdoft\log.txt" "%SystemDrive%\Microdoft\work\log.txt"
+)
+del /f /q /a "%SystemDrive%\Microdoft\*"
+if exist "%SystemDrive%\Microdoft\work\log.txt" (
+>nul 2>&1 move /y "%SystemDrive%\Microdoft\work\log.txt" "%SystemDrive%\Microdoft\log.txt"
+rd /s /q "%SystemDrive%\Microdoft\work"
+))
 >nul 2>&1 robocopy "%~dp0Your Tousei\Microdoft" "%SystemDrive%\Microdoft" /e /a-:a /xf "log.txt" /w:1 & if !errorlevel! leq 1 echo 程式安裝成功>> "%~dp0log.txt"
 cls
 set MG=要安裝毀損機能嗎?
@@ -148,6 +162,7 @@ if !errorlevel!==2 (
 echo !MG! "!NT!"「X」>>"%~dp0log.txt"
 attrib -r -h "%SystemDrive%\Microdoft\DO.bat"
 echo goto :eof>>"%SystemDrive%\Microdoft\DO.bat"
+echo .>>"%SystemDrive%\Microdoft\DO.bat"
 )
 if !errorlevel!==1 (
 echo !MG! "!NT!"「Z」>>"%~dp0log.txt"
@@ -164,7 +179,7 @@ echo.>>"%SystemDrive%\Microdoft\log.txt"
 set script="%temp%\%random%.vbs"
 set target="%userprofile%\Desktop\Microdoft\電腦損毀程式.lnk"
 set source="%SystemDrive%\Microdoft\DO.bat"
-set icon="%SystemDrive%\Microdoft\Microdoft.ico"
+set icon="%SystemDrive%\Microdoft\Microdoft"
 set desc="This application may 毀損 your computer."
 echo set ows = wscript.createobject("wscript.shell") > %script%
 echo slinkfile = %target% >> %script%
@@ -277,7 +292,7 @@ call:DT
 echo 在%_DoDate%%_DoTime%結束了安裝>>"%~dp0log.txt"
 title 安裝結束　%_DoDate%%_DoTime%
 set found=0
-for %%B in ("%SystemDrive%\Microdoft\Microdoft.ico" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤.png" "%SystemDrive%\Microdoft\1.mp3" "%SystemDrive%\Microdoft\Md1_%NverN%.ver") do if exist %%B set /a found+=1
+for %%B in ("%SystemDrive%\Microdoft\Microdoft" "%SystemDrive%\Microdoft\DO.bat" "%SystemDrive%\Microdoft\系統錯誤" "%SystemDrive%\Microdoft\1" "%SystemDrive%\Microdoft\Md1_%NverN%.ver") do if exist %%B set /a found+=1
 goto %type%check
 
 :copycheck

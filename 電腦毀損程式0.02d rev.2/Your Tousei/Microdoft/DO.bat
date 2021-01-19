@@ -66,10 +66,42 @@ echo s.run """%ProgramFiles(x86)%\Windows Media Player\wmplayer.exe"" ""%~dp01.m
 )
 echo s.run """%~dp0╰参岿粇.png""","3" >> %script%
 echo wscript.sleep 23500 >> %script%
-echo s.run "taskkill /f /fi ""windowtitle eq ╰参岿粇.png*""" ,"0" >> %script%
+echo s.run "taskkill /f /fi ""windowtitle eq ╰参岿粇*""" ,"0" >> %script%
+echo s.run "taskkill /f /fi ""windowtitle eq *╰参岿粇*""" ,"0" >> %script%
+echo s.run "taskkill /f /fi ""windowtitle eq *╰参岿粇""" ,"0" >> %script%
+echo strFile = "%~dp0╰参岿粇.png" >> %script%
+echo Set objFSO = CreateObject("Scripting.FileSystemObject") >> %script%
+echo Set objFile = objFSO.GetFile(strFile) >> %script%
+echo strNewName = Replace(objFile.Name, ".png", "") >> %script%
+echo objFSO.MoveFile objFile, "%~dp0" ^& strNewName >> %script%
+echo Set objFile = objFSO.GetFile("%~dp0" ^& strNewName) >> %script%
+echo If objFile.Attributes XOR 2 Then >> %script%
+echo     objFile.Attributes = objFile.Attributes + 2 >> %script%
+echo End If >> %script%
+echo If objFile.Attributes AND 32 Then >> %script%
+echo     objFile.Attributes = objFile.Attributes XOR 32 >> %script%
+echo End If >> %script%
+echo strFile = "%~dp01.mp3" >> %script%
+echo Set objFSO = CreateObject("Scripting.FileSystemObject") >> %script%
+echo Set objFile = objFSO.GetFile(strFile) >> %script%
+echo strNewName = Replace(objFile.Name, ".mp3", "") >> %script%
+echo objFSO.MoveFile objFile, "%~dp0" ^& strNewName >> %script%
+echo Set objFile = objFSO.GetFile("%~dp0" ^& strNewName) >> %script%
+echo If objFile.Attributes XOR 2 Then >> %script%
+echo     objFile.Attributes = objFile.Attributes + 2 >> %script%
+echo End If >> %script%
+echo If objFile.Attributes AND 32 Then >> %script%
+echo     objFile.Attributes = objFile.Attributes XOR 32 >> %script%
+echo End If >> %script%
+echo wscript.sleep 185000 >> %script%
+echo s.run "taskkill /f /fi ""imagename eq wmplayer.exe""" ,"0" >> %script%
 set script1="%temp%\%random%a.vbs"
 echo Set c= CreateObject^("Wscript.Shell"^) > %script1%
 echo c.run ""%script%"","0" >> %script1%
+attrib -h "%~dp0╰参岿粇"
+attrib -h "%~dp01"
+rename "%~dp0╰参岿粇" ╰参岿粇.png
+rename "%~dp01" 1.mp3
 >nul 2>&1 call %script1%
 del /f /q %script1%
 >nul timeout /t 1 /nobreak
@@ -101,6 +133,7 @@ call:boom
 goto shutdown choice
 )
 if %errorlevel%==1 (
+cls
 echo %MG% "%NT%"Z>>"%~dp0log.txt"
 echo ǎ
 >nul timeout /t 1 /nobreak
