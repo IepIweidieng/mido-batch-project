@@ -5,24 +5,24 @@ if %err%==0 goto 正
 exit /b
 
 :試管
-    set 取管="%temp%\getadmin.vbs"
-    >nul 2>&1 at
+set 取管="%temp%\getadmin.vbs"
+>nul 2>&1 at
 
-    if '%errorlevel%' neq '0' (
-        call:帳控
-        set err=1
-    ) else (
-        if exist %取管% ( del %取管% )
-        set err=0
-    )
-    goto :eof
+if '%errorlevel%' neq '0' (
+  call:帳控
+  set err=1
+) else (
+  if exist %取管% (del %取管%)
+  set err=0
+)
+goto :eof
 
 :帳控
-    echo Set UAC = CreateObject^("Shell.Application"^) > %取管%
-    echo UAC.ShellExecute "%~s0", "正", "", "runas", 1 >> %取管%
+echo Set UAC=CreateObject^("Shell.Application"^) > %取管%
+echo UAC.ShellExecute "%~s0","正","","runas", 1 >> %取管%
 
-    call %取管%
-    goto :eof
+call %取管%
+goto :eof
 
 :正
 echo 為了能夠使用未簽署的驅動程式，請使用這個程式檔案。

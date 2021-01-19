@@ -1,5 +1,5 @@
-@title 程式載入中…… Now Loading… & echo off & setlocal enableextensions & setlocal enabledelayedexpansion
->nul chcp 950
+@echo off & >nul chcp 950 & setlocal enableextensions enabledelayedexpansion
+title 程式載入中…… Now Loading… 
 goto start
 
 :start
@@ -25,7 +25,7 @@ set s2=::
 if %errorlevel%==1 (
 set s1=::
 )
-set n=1
+set n=0
 goto dots
 
 :dots
